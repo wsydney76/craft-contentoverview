@@ -7,42 +7,46 @@
     {% set settings =  craft.contentoverview.settings %}
     {% set site = craft.app.request.queryParam('site', craft.app.sites.primarySite.handle) %}
 
-    
-    {% for sectionSettings in settings.layout %}
+    {% for column in settings.layout.columns %}
 
-        {% set section = craft.app.sections.sectionByHandle(sectionSettings.handle) %}
+        <div class="column-{{ column.width }}">
+            {% for sectionSettings in column.sections %}
 
-        {% if currentUser.can("saveentries:#{section.uid}") %}
-            <div class="section">
+                {% set section = craft.app.sections.sectionByHandle(sectionSettings.handle) %}
 
-                {% set entries = craft.contentoverview.getEntries(section.handle, sectionSettings) %}
+                {% if currentUser.can("saveentries:#{section.uid}") %}
+                    <div class="section">
+
+                        {% set entries = craft.contentoverview.getEntries(section.handle, sectionSettings) %}
 
 
-                <div class="btns">
-                    <h2>{{ section.name|t('site') }}</h2>
-                    <a class="btn submit" href="{{ cpUrl("entries/#{section.handle}/new") }}">
-                        {{ "New entry"|t('contentoverview') }}
-                    </a>
-                </div>
+                        <div class="btns">
+                            <h2>{{ section.name|t('site') }}</h2>
+                            <a class="btn submit" href="{{ cpUrl("entries/#{section.handle}/new") }}">
+                                {{ "New entry"|t('contentoverview') }}
+                            </a>
+                        </div>
 
-                {% if sectionSettings.image is defined %}
-                    {% set entries = entries.with([
-                        [sectionSettings.image, {withTransforms: [transform]}]
-                    ]) %}
+                        {% if sectionSettings.image is defined %}
+                            {% set entries = entries.with([
+                                [sectionSettings.image, {withTransforms: [transform]}]
+                            ]) %}
+                        {% endif %}
+
+
+                        {% include 'contentoverview/partials/entrieslist.twig' %}
+
+                        <div class="btns">
+                            <a class="btn" href="{{ cpUrl("entries/#{section.handle}") }}">
+                                {{ "All entries"|t('contentoverview') }}
+                            </a>
+                        </div>
+
+                    </div>
                 {% endif %}
 
 
-                {% include 'contentoverview/partials/entrieslist.twig' %}
-
-                <div class="btns">
-                    <a class="btn" href="{{ cpUrl("entries/#{section.handle}") }}">
-                        {{ "All entries"|t('contentoverview') }}
-                    </a>
-                </div>
-
-            </div>
-        {% endif %}
-
+            {% endfor %}
+        </div>
     {% endfor %}
-
 </div>
