@@ -4,6 +4,8 @@ Shows an overview of a site's content.
 
 Work in progress...
 
+## Config
+
 Needs a config file in `config/contentoverview.php`
 
 Example:
@@ -68,3 +70,9 @@ return [
 ```
 
 ![screenshot](/images/screenshot1.jpg)
+
+## TODOS:
+
+* Responsive styles
+* Permissions...
+* Add drafts, unpublished entries, provisional drafts
