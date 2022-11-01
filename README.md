@@ -14,30 +14,57 @@ Example:
 return [
     // Whether and where to show contentOverview
     // widget/nav/''
-    'display' => 'widget',
+    'display' => 'nav',
 
     'layout' => [
-        [
-            'handle' => 'news',
-            'limit' => 10,
-            'info' => '{postDate|date("short")}',
-            'image' => 'featuredImage'
+
+        // width: number of columns in a 12 columns grid
+        // handle: section handle
+        // layout: list / cards / cardlets
+        
+        'columns' => [
+            [
+                'width' => 7,
+                'sections' => [
+                    [
+                        'handle' => 'news',
+                        'limit' => 6,
+                        'info' => '{tagline}, {postDate|date("short")}',
+                        'image' => 'featuredImage',
+                        'layout' => 'cards'
+                    ]
+                ]
+            ],
+            [
+                'width' => 5,
+                'sections' => [
+                    [
+                        'handle' => 'heroArea',
+                        'limit' => 2,
+                        'info' => '{heroTagline}',
+                        'image' => 'heroImage',
+                        'layout' => 'cardlets'
+                    ],
+                    [
+                        'handle' => 'page',
+                        'info' => '{type.name}',
+                        'icon' => '@appicons/globe.svg'
+                    ]
+                ]
+            ],
+            [
+                'width' => 4,
+                'sections' => [
+                    [
+                        'handle' => 'legal',
+                        'info' => '{type.name}'
+                    ]
+                ]
+            ]
         ],
-        [
-            'handle' => 'page',
-            'info' => '{type.name}',
-            'icon' => '@appicons/globe.svg'
-        ],
-        [
-            'handle' => 'heroArea',
-            'limit' => 10,
-            'info' => '{postDate|date("short")}',
-            'image' => 'featuredImage'
-        ],
-        [
-            'handle' => 'legal',
-            'info' => '{type.name}'
-        ],
+
     ]
 ];
 ```
+
+![screenshot](/images/screenshot1.jpg)
