@@ -17,17 +17,17 @@
             {% for sectionSettings in column.sections %}
 
                 {% set section = craft.app.sections.sectionByHandle(sectionSettings.handle) %}
-                {% set layout = sectionSettings['layout'] ?? 'list' %}
+                {% set layout = sectionSettings.layout ?? 'list' %}
                 {% set transform = transforms[layout] %}
+                {% set heading = sectionSettings.heading ?? section.name %}
 
                 {% if currentUser.can("saveentries:#{section.uid}") %}
                     <div class="section {{ layout }}">
 
                         {% set entries = craft.contentoverview.getEntries(section.handle, sectionSettings) %}
 
-
                         <div class="btns">
-                            <h2>{{ section.name|t('site') }}</h2>
+                            <h2>{{ heading|t('site') }}</h2>
                             <a class="btn submit" href="{{ cpUrl("entries/#{section.handle}/new") }}">
                                 {{ "New entry"|t('contentoverview') }}
                             </a>

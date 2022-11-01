@@ -59,9 +59,17 @@
 
 }
 
+.contentoverview .section {
+    margin-bottom: 48px;
+}
 
 .contentoverview .section .entry.published {
     background-color: var(--gray-050);
+}
+
+.contentoverview .section .entry.published:hover {
+    background-color: var(--gray-100);
+    transition: background-color ease-in-out 100ms;
 }
 
 .contentoverview .section .entry.draft.provisional {

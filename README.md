@@ -20,16 +20,14 @@ return [
 
     'layout' => [
 
-        // width: number of columns in a 12 columns grid
-        // handle: section handle
-        // layout: list / cards / cardlets
-        
+        // width: span in a 12 columns grid
         'columns' => [
             [
                 'width' => 7,
                 'sections' => [
                     [
                         'handle' => 'news',
+                        'heading' => 'Latest News',
                         'limit' => 6,
                         'info' => '{tagline}, {postDate|date("short")}',
                         'image' => 'featuredImage',
@@ -49,6 +47,7 @@ return [
                     ],
                     [
                         'handle' => 'page',
+                        'heading' => 'Page Structure',
                         'info' => '{type.name}',
                         'icon' => '@appicons/globe.svg'
                     ]
