@@ -1,0 +1,152 @@
+{% set transform = {width: 50, height: 50} %}
+
+<div class="custom-content">
+
+    {% set settings =  craft.contentoverview.settings %}
+    {% set site = craft.app.request.queryParam('site', craft.app.sites.primarySite.handle) %}
+
+    
+    {% for sectionSettings in settings.layout %}
+
+        {% set section = craft.app.sections.sectionByHandle(sectionSettings.handle) %}
+
+        {% if currentUser.can("saveentries:#{section.uid}") %}
+            <div class="section">
+
+                {% set query = craft.entries
+                    .section(section.handle)
+                    .status(null)
+                    .editable(true)
+                    .site('*')
+                    .unique()
+                    .preferSites([site])
+                 %}
+                
+                {% if sectionSettings.limit is defined %}
+                    {% do query.limit(sectionSettings.limit) %}
+                {% endif %}
+
+                {% set entries = query.collect %}
+
+                {% if sectionSettings.image is defined %}
+                    {% set entries = entries.with([
+                        [sectionSettings.image, {withTransforms: [transform]}]
+                    ]) %}
+                {% endif %}
+
+
+                <div class="btns">
+                    <h2>{{ section.name|t('site') }}</h2>
+                    <a class="btn submit" href="{{ cpUrl("entries/#{section.handle}/new") }}">
+                        {{ "New entry"|t('contentoverview') }}
+                    </a>
+                </div>
+
+                {% for entry in entries %}
+                    <div class="entry {{ entry.isDraft ? 'draft' : 'published' }} {{ entry.isUnpublishedDraft ? 'provisional' }}">
+
+                        <div class="image">
+                            {% set image = null %}
+                            {% if sectionSettings.image is defined %}
+                                {% set image = entry.getFieldValue(sectionSettings.image).one %}
+                            {% endif %}
+                            {% if image %}
+                                {{ image.img(transform) }}
+                                {% else %}
+                                    {{ svg(sectionSettings.icon ?? '@appicons/newspaper.svg')|attr({width:'20px', height: '20px'}) }}
+                            {% endif %}
+                        </div>
+
+                        <div class="content">
+                            {% set style = section.type == 'structure' ? "padding-left: #{(entry.level-1)*16}px" %}
+                            <div class="link" style="{{ style }}">
+                                <span class="status {{ entry.status }}"></span>
+                                    <a href="{{ entry.cpEditUrl }}" target="_blank">{{ entry.title }}</a>
+                            </div>
+                            <div class="postdate">
+                                {{ view.renderObjectTemplate(sectionSettings.info, entry) }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="btns">
+                    <a class="btn" href="{{ cpUrl("entries/#{section.handle}") }}">
+                        {{ "All entries"|t('contentoverview') }}
+                    </a>
+                </div>
+
+            </div>
+        {% endif %}
+
+    {% endfor %}
+
+</div>
+{% css %}
+.custom-content {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.custom-content .section {
+    margin-right: 36px;
+}
+
+.custom-content .section .entry {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border: 1px solid var(--gray-300);
+    margin: 8px 0;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+}
+
+.custom-content .section .entry.published {
+    background-color: var(--gray-050);
+}
+
+.custom-content .section .entry.draft.provisional {
+    background-color: var(--blue-050);
+}
+
+.custom-content .image {
+    width: 50px;
+    height: 50px;
+    background-color: var(--gray-200);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-content .section .entry .content {
+    margin-left: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px;
+    width: 400px;
+}
+
+.custom-content .section .entry .content .link {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    margin-right: 8px;
+}
+
+.custom-content .section .entry .postdate {
+    color: var(--gray-600);
+    font-weight: 500;
+    font-size: 14px;
+    text-align: right;
+}
+
+.custom-content .btns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 24px 0;
+}
+
+{% endcss %}

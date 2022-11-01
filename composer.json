@@ -1,0 +1,32 @@
+{
+  "name": "wsydney76/craft-contentoverview",
+  "description": "Content Overview",
+  "version": "1.0",
+  "type": "craft-plugin",
+  "keywords": ["craft", "plugin", "cp"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "wsydney76",
+      "homepage": "https://github.com/wsydney76"
+    }
+  ],
+  "support": {
+    "email": "wsydney@web.de",
+    "issues": "https://github.com/wsydney76/craft-contentoverview/issues?state=open",
+    "source": "https://github.com/wsydney76/craft-contentoverview",
+    "docs": "https://github.com/wsydney76/craft-contentoverview/blob/master/README.md"
+  },
+  "require": {
+    "craftcms/cms": "^4.3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "wsydney76\\contentoverview\\": "src/"
+    }
+  },
+  "extra": {
+    "name": "Content Overview",
+    "handle": "contentoverview"
+  }
+}
