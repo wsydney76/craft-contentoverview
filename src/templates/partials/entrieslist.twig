@@ -1,27 +1,32 @@
-{% for entry in entries %}
-    <div class="entry {{ entry.isDraft ? 'draft' : 'published' }} {{ entry.isUnpublishedDraft ? 'provisional' }}">
+<div class="entries">
+    {% for entry in entries %}
+        <a href="{{ entry.cpEditUrl }}" target="_blank"
+           class="entry {{ entry.isDraft ? 'draft' : 'published' }} {{ entry.isUnpublishedDraft ? 'provisional' }}">
 
-        <div class="image">
-            {% set image = null %}
-            {% if sectionSettings.image is defined %}
-                {% set image = entry.getFieldValue(sectionSettings.image).one %}
-            {% endif %}
-            {% if image %}
-                {{ image.img(transform) }}
-            {% else %}
-                {{ svg(sectionSettings.icon ?? '@appicons/newspaper.svg')|attr({width:'20px', height: '20px'}) }}
-            {% endif %}
-        </div>
+            <div class="image">
+                {% set image = null %}
+                {% if sectionSettings.image is defined %}
+                    {% set image = entry.getFieldValue(sectionSettings.image).one %}
+                {% endif %}
+                {% if image %}
+                    {{ image.img(transform) }}
+                {% else %}
+                    {{ svg(sectionSettings.icon ?? '@appicons/newspaper.svg')|attr({width:'20px', height: '20px'}) }}
+                {% endif %}
+            </div>
 
-        <div class="content">
-            {% set style = section.type == 'structure' ? "padding-left: #{(entry.level-1)*16}px" %}
-            <div class="link" style="{{ style }}">
-                <span class="status {{ entry.status }}"></span>
-                <a href="{{ entry.cpEditUrl }}" target="_blank">{{ entry.title }}</a>
+            <div class="content">
+                {% set style = section.type == 'structure' ? "padding-left: #{(entry.level-1)*24}px" %}
+                <div class="title" style="{{ style }}">
+                    <div>
+                        <span class="status {{ entry.status }}"></span>
+                    </div>
+                    <div>{{ entry.title }}</div>
+                </div>
+                <div class="info-text">
+                    {{ view.renderObjectTemplate(sectionSettings.info, entry) }}
+                </div>
             </div>
-            <div class="postdate">
-                {{ view.renderObjectTemplate(sectionSettings.info, entry) }}
-            </div>
-        </div>
-    </div>
-{% endfor %}
+        </a>
+    {% endfor %}
+</div>

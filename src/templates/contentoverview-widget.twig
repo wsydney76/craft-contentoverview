@@ -1,6 +1,10 @@
 {% do view.registerAssetBundle("wsydney76\\contentoverview\\assets\\ContentOverviewAssetBundle") %}
 
-{% set transform = {width: 50, height: 50} %}
+{% set transforms = {
+    list: {width: 50, height: 50},
+    cards: {width: 400, height: 200},
+    cardlets: {width: 150, height: 150},
+} %}
 
 <div class="contentoverview">
 
@@ -13,9 +17,11 @@
             {% for sectionSettings in column.sections %}
 
                 {% set section = craft.app.sections.sectionByHandle(sectionSettings.handle) %}
+                {% set layout = sectionSettings['layout'] ?? 'list' %}
+                {% set transform = transforms[layout] %}
 
                 {% if currentUser.can("saveentries:#{section.uid}") %}
-                    <div class="section">
+                    <div class="section {{ layout }}">
 
                         {% set entries = craft.contentoverview.getEntries(section.handle, sectionSettings) %}
 
