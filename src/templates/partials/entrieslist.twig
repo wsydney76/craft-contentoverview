@@ -25,7 +25,16 @@
                     <div>{{ entry.title }}</div>
                 </div>
                 <div class="co-info">
-                    {{ view.renderObjectTemplate(sectionSettings.info, entry) }}
+                    {% if sectionSettings.info is string %}
+                        {{ view.renderObjectTemplate(sectionSettings.info, entry) }}
+                    {% else %}
+                        {% for info in sectionSettings.info %}
+                        	<div>
+                                {{ view.renderObjectTemplate(info, entry) }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
                 </div>
             </div>
         </a>

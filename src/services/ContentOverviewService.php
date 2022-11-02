@@ -43,17 +43,29 @@ class ContentOverviewService extends Component
                 $query->drafts(true);
                 break;
             }
-            case 'provisional': {
+            case 'provisionaluser': {
                 $query
                     ->provisionalDrafts(true)
                     ->draftCreator(Craft::$app->user->identity);
-                ;
-
+                break;
+            }
+            case 'provisional': {
+                $query
+                    ->provisionalDrafts(true);
+                break;
+            }
+            case 'all': {
+                $query
+                    ->provisionalDrafts(null)
+                    ->drafts(null);
                 break;
             }
         }
 
-        return $query->collect();
+        return [
+            'entries' => $query->collect(),
+            'count' => $query->count()
+        ];
 
     }
 }

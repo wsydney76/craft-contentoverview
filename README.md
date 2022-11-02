@@ -8,6 +8,31 @@ Work in progress...
 
 Needs a config file in `config/contentoverview.php`
 
+Structure of the configuration file:
+
+
+- navLabel (string, label for primary navigation, page title)
+- widgetText (string, text for dashboard widget)
+- linkTarget (string, set to '_blank' to open edit screens in a new tab (default), else blank '')
+- tabs[] (array, tabs of the page)
+    - label (string, tab text)
+    - id (string, unique id, used as anchor)
+    - columns[] (array, columns inside the tab container, uses a 12 columns grid)
+        - width (int, number of columns occupied, 1-12)
+        - sections[] (array, sections display inside the column)
+            - handle (string, section handle)
+            - heading (string, optional, heading of the section, defaults to section name)
+            - limit (int, optional, number of entries to show)
+            - info (string|array, object template(s) to render in addition to the title)
+            - image (string, optional, name of the image field to use)
+            - layout (string, optional, (list (default)|cardlets|cards)
+            - scope (string, optional, whether drafts should be shown, drafts|provisional|provisionaluser|all, default: only published entries will be included)
+            - status (string|array, optional, see [docs](https://craftcms.com/docs/4.x/entries.html#status)
+            - orderBy (string|array, optional see [docs](https://craftcms.com/docs/4.x/entries.html#orderby)
+            - buttons (bool, optional whether buttion 'new entry', 'all entries' will be shown
+       
+
+
 Example:
 
 ```php
