@@ -1,8 +1,22 @@
 {% extends "_layouts/cp.twig" %}
-{% set title = "Content Overview"|t('contentoverview') %}
+{% set settings = craft.contentoverview.settings %}
 
+{% set title = settings.navLabel|t('contentoverview') %}
+
+{% set tabSettings = settings.tabs %}
+{% set tabs = [] %}
+
+{% for tab in tabSettings %}
+    {% set tabs = tabs|push({label: tab.label, url:"##{tab.id}"}) %}
+{% endfor %}
+
+{% block contextMenu %}
+
+    {% include "contentoverview/partials/sitemenu.twig" %}
+
+{% endblock %}
 
 {% block content %}
-    {% include 'contentoverview/contentoverview-widget.twig' %}
+    {% include 'contentoverview/partials/contentoverview.twig' %}
 {% endblock %}
 

@@ -13,8 +13,8 @@ class ContentOverviewVariable extends Component
         return Plugin::getInstance()->getSettings();
     }
 
-    public function getEntries(string $section, $sectionSettings, $scope = 'published')
+    public function getEntries($sectionSettings)
     {
-       return Plugin::getInstance()->contentoverviewService->getEntries($section, $sectionSettings, $scope);
+       return Plugin::getInstance()->contentoverviewService->getEntries($sectionSettings);
     }
 }

@@ -6,7 +6,9 @@ use Craft;
 use craft\base\Model;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterCpNavItemsEvent;
+use craft\events\RegisterUserPermissionsEvent;
 use craft\services\Dashboard;
+use craft\services\UserPermissions;
 use craft\web\twig\variables\Cp;
 use craft\web\twig\variables\CraftVariable;
 use wsydney76\contentoverview\models\Settings;
@@ -23,30 +25,40 @@ class Plugin extends \craft\base\Plugin
     {
         parent::init();
 
+        if (!Craft::$app->request->isCpRequest) {
+            return;
+        }
+
         $this->setComponents([
             'contentoverviewService' => ContentOverviewService::class
         ]);
 
-        if (!Craft::$app->request->isCpRequest) {
-            return;
-        }
 
         /** @var Settings $settings */
         $settings = $this->getSettings();
 
 
-        if ($settings->display === 'nav') {
+        Event::on(
+            Cp::class,
+            Cp::EVENT_REGISTER_CP_NAV_ITEMS,
+            function(RegisterCpNavItemsEvent $event) use ($settings) {
+                array_splice($event->navItems, 1, 0, [
+                    [
+                        'label' => Craft::t('contentoverview', $settings->navLabel),
+                        'url' => 'contentoverview',
+                        'fontIcon' => 'field'
+                    ]
+                ]);
+            }
+        );
 
-            $this->registerNavItem([
-                'label' => Craft::t('contentoverview', 'Content Overview'),
-                'url' => 'contentoverview',
-                'fontIcon' => 'field'
-            ], 1);
-        } elseif ($settings->display === 'widget') {
-            $this->registerWidgetTypes([
-                ContentOverviewWidget::class
-            ]);
-        }
+        Event::on(
+            Dashboard::class,
+            Dashboard::EVENT_REGISTER_WIDGET_TYPES,
+            function(RegisterComponentTypesEvent $event) {
+                $event->types[] = ContentOverviewWidget::class;
+            }
+        );
 
         Event::on(
             CraftVariable::class,
@@ -55,6 +67,23 @@ class Plugin extends \craft\base\Plugin
                 $event->sender->set('contentoverview', ContentOverviewVariable::class);
             }
         );
+
+        // Create Permissions
+        Event::on(
+            UserPermissions::class,
+            UserPermissions::EVENT_REGISTER_PERMISSIONS, function(RegisterUserPermissionsEvent $event) {
+            $event->permissions['Content Overview'] = [
+                'heading' => 'Content Overview Plugin',
+                'permissions' => [
+                    'accessPlugin-contentoverview' => [
+                        'label' => Craft::t('contentoverview', 'Access Content Overview Plugin'),
+                    ]
+                ]
+
+            ];
+        });
+
+        Craft::$app->view->registerAssetBundle('wsydney76\\contentoverview\\assets\\ContentOverviewAssetBundle');
     }
 
     protected function createSettingsModel(): ?Model
@@ -62,31 +91,4 @@ class Plugin extends \craft\base\Plugin
         return new Settings();
     }
 
-    protected function registerNavItem(array $navItem, $pos = null)
-    {
-        Event::on(
-            Cp::class,
-            Cp::EVENT_REGISTER_CP_NAV_ITEMS,
-            function(RegisterCpNavItemsEvent $event) use ($navItem, $pos) {
-                if ($pos) {
-                    array_splice($event->navItems, $pos, 0, [$navItem]);
-                } else {
-                    $event->navItems[] = $navItem;
-                }
-            }
-        );
-    }
-
-    protected function registerWidgetTypes(array $widgetTypes): void
-    {
-        Event::on(
-            Dashboard::class,
-            Dashboard::EVENT_REGISTER_WIDGET_TYPES,
-            function(RegisterComponentTypesEvent $event) use ($widgetTypes) {
-                foreach ($widgetTypes as $widgetType) {
-                    $event->types[] = $widgetType;
-                }
-            }
-        );
-    }
 }

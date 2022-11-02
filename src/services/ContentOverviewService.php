@@ -8,11 +8,15 @@ use craft\elements\Entry;
 
 class ContentOverviewService extends Component
 {
-    public function getEntries(string $section, $sectionSettings, $scope = 'published')
+    public function getEntries($sectionSettings)
     {
         $site = Craft::$app->request->getParam('site', Craft::$app->sites->primarySite->handle);
         $limit = $sectionSettings['limit'] ?? null;
         $orderBy = $sectionSettings['orderBy'] ?? null;
+        $section = $sectionSettings['handle'] ?? null;
+        $scope = $sectionSettings['scope'] ?? null;
+        $status = $sectionSettings['status'] ?? null;
+
 
         $query = Entry::find()
             ->section($section)
@@ -28,6 +32,25 @@ class ContentOverviewService extends Component
 
         if ($orderBy) {
             $query->orderBy($orderBy);
+        }
+
+        if ($status) {
+            $query->status($status);
+        }
+
+        switch ($scope) {
+            case 'drafts': {
+                $query->drafts(true);
+                break;
+            }
+            case 'provisional': {
+                $query
+                    ->provisionalDrafts(true)
+                    ->draftCreator(Craft::$app->user->identity);
+                ;
+
+                break;
+            }
         }
 
         return $query->collect();

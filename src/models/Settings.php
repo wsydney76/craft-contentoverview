@@ -6,7 +6,8 @@ use craft\base\Model;
 
 class Settings extends Model
 {
-    public $display = 'widget';
-    public $layout = [];
-
+    public $navLabel = 'Content Overview';
+    public $tabs = [];
+    public $widgetText = 'Get a quick overview of your content';
+    public $linkTarget = '_blank';
 }

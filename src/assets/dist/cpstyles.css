@@ -1,102 +1,137 @@
-.contentoverview {
+.co {
     display: grid;
     gap: 2rem; /* 32px */
 }
 
-@media (min-width: 1200px) {
-    .contentoverview {
+@media (min-width: 1400px) {
+    .co {
         grid-template-columns: repeat(12, minmax(0, 1fr));
     }
 
-    .contentoverview .column-1 {
+    .co-column-1 {
         grid-column: span 1 / span 1;
     }
 
-    .contentoverview .column-2 {
+    .co-column-2 {
         grid-column: span 2 / span 2;
     }
 
-    .contentoverview .column-3 {
+    .co-column-3 {
         grid-column: span 3 / span 3;
     }
 
-    .contentoverview .column-4 {
+    .co-column-4 {
         grid-column: span 4 / span 4;
     }
 
-    .contentoverview .column-5 {
+    .co-column-5 {
         grid-column: span 5 / span 5;
     }
 
-    .contentoverview .column-6 {
+    .co-column-6 {
         grid-column: span 6 / span 6;
     }
 
-    .contentoverview .column-7 {
+    .co-column-7 {
         grid-column: span 7 / span 7;
     }
 
-    .contentoverview .column-8 {
+    .co-column-8 {
         grid-column: span 8 / span 8;
     }
 
-    .contentoverview .column-9 {
+    .co-column-9 {
         grid-column: span 9 / span 9;
     }
 
-    .contentoverview .column-10 {
+    .co-column-10 {
         grid-column: span 10 / span 10;
     }
 
-    .contentoverview .column-11 {
+    .co-column-11 {
         grid-column: span 11 / span 11;
     }
 
-    .contentoverview .column-12 {
+    .co-column-12 {
         grid-column: span 12 / span 12;
     }
 
+    /* number of columns for entries depending of layout and column width */
+
+    .co-cards-1, .co-cards-2, .co-cards-3, .co-cards-4, .co-cardlets-1, .co-cardlets-2, .co-cardlets-3, .co-cardlets-4  {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    .co-cards-5, .co-cards-6, .co-cardlets-5, .co-cardlets-6, .co-cardlets-7, .co-cardlets-8 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .co-cards-7, .co-cards-8, .co-cardlets-9, .co-cardlets-10, .co-cardlets-11 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .co-cards-9, .co-cardlets-12 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .co-cards-10, .co-cards-11 {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .co-cards-12 {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
 
 }
 
-.contentoverview .section {
+.co-section {
     margin-bottom: 48px;
 }
 
-.contentoverview .section .entry.published {
+.co-entry.published {
     background-color: var(--gray-050);
 }
 
-.contentoverview .section .entry.published:hover {
+.co-entry.draft.provisional {
+    background-color: var(--blue-050);
+}
+
+.co-entry:hover, .co-entry.draft.provisional:hover {
     background-color: var(--gray-100);
     transition: background-color ease-in-out 100ms;
 }
 
-.contentoverview .section .entry.draft.provisional {
-    background-color: var(--blue-050);
-}
-
-.contentoverview .btns {
+.co-btns {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 24px 0;
 }
 
+.co-entries {
+    display: grid;
+    gap: 0.5rem; /* 32px */
+}
+
 /* ========================================
     List Layout
   ==========================================*/
 
-.contentoverview .list .entry {
+.co-list .co-entries {
+    display: block;
+}
+
+.co-list .co-entry {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     border: 1px solid var(--gray-300);
-    margin: 8px 0;
+    margin-bottom: 8px;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+    max-width: 800px;
 }
 
-.contentoverview .list .image {
+.co-list .co-image {
     width: 50px;
     height: 50px;
     background-color: var(--gray-200);
@@ -105,7 +140,7 @@
     align-items: center;
 }
 
-.contentoverview .list .entry .content {
+.co-list .co-content {
     margin-left: 8px;
     display: flex;
     justify-content: space-between;
@@ -115,7 +150,7 @@
 
 }
 
-.contentoverview .list .entry .content .title {
+.co-list .co-title {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -125,11 +160,12 @@
     display: flex;
 }
 
-.contentoverview .list .entry .info-text {
+.co-list .co-info {
     color: var(--gray-600);
     font-weight: 500;
     font-size: 14px;
     text-align: right;
+    padding-right: 8px;
 }
 
 
@@ -137,57 +173,31 @@
     Cards Layout
   ==========================================*/
 
-
-.contentoverview .entries {
-    display: grid;
-    gap: 0.5rem; /* 32px */
-}
-
-.contentoverview .list .entries {
-    display: block;
-}
-
-.contentoverview .column-4 .cards .entries, .contentoverview .column-5 .cardlets .entries {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.contentoverview .column-4 .cardlets .entries, .contentoverview .column-5 .cardlets .entries {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.contentoverview .column-6 .cards .entries, .contentoverview .column-7 .cards .entries {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.contentoverview .column-6 .cardlets .entries, .contentoverview .column-7 .cardlets .entries {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.contentoverview .cards .entry {
+.co-cards .co-entry {
     border: 1px solid var(--gray-300);
-    margin: 8px 0;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+    max-width: 400px;
 }
 
-.contentoverview .cards .image {
+.co-cards .co-image {
     background-color: var(--gray-200);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.contentoverview .cards .entry .content {
+.co-cards .co-entry .co-content {
     margin-left: 8px;
     padding: 12px 4px;
 }
 
-.contentoverview .cards .entry .content .title {
+.co-cards .co-entry .co-content .co-title {
     font-weight: 600;
     display: flex;
     justify-items: center;
 }
 
-.contentoverview .cards .entry .info-text {
+.co-cards .co-entry .co-info {
     color: var(--gray-600);
     font-weight: 500;
     font-size: 14px;
@@ -199,51 +209,49 @@
   ==========================================*/
 
 
-.contentoverview .cardlets .entry {
+.co-cardlets .co-entry {
     display: flex;
     justify-content: flex-start;
-    align-items: center;
     border: 1px solid var(--gray-300);
-    margin: 8px 0;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+    max-width: 500px;
 }
 
-.contentoverview .cardlets .image {
+.co-cardlets .co-image {
     background-color: var(--gray-200);
     display: flex;
+    flex-shrink: 0;
     justify-content: center;
     align-items: center;
     position: relative;
-    width: 100px;
-    height: 100%;
+    width: 70px;
 }
 
-.contentoverview .cardlets .image img {
+.co-cardlets .co-image img {
     object-fit: cover;
     width: 100%;
     height: 100%;
 }
 
-.contentoverview .cardlets .entry .content {
+.co-cardlets .co-content {
     margin-left: 8px;
+    padding: 2px;
     width: 100%;
-
+    flex-shrink: 1;
 }
 
-.contentoverview .cardlets .entry .content .title {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.co-cardlets .co-title {
     width: 100%;
     margin-right: 8px;
     flex-grow: 1;
     display: flex;
 }
 
-.contentoverview .cardlets .entry .info-text {
+.co-cardlets .co-info {
     color: var(--gray-600);
     font-size: 14px;
     margin-top: 4px;
+    margin-left: 20px;
 }
 
 
