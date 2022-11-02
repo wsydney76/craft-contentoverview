@@ -5,9 +5,13 @@ namespace wsydney76\contentoverview\services;
 use Craft;
 use craft\base\Component;
 use craft\elements\Entry;
+use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
 
 class ContentOverviewService extends Component
 {
+
+    public const EVENT_MODIFY_CONTENTOVERVIEW_QUERY = 'modifyContentoverviewQuery';
+
     public function getEntries($sectionSettings)
     {
         $site = Craft::$app->request->getParam('site', Craft::$app->sites->primarySite->handle);
@@ -60,6 +64,13 @@ class ContentOverviewService extends Component
                     ->drafts(null);
                 break;
             }
+        }
+
+        if ($this->hasEventHandlers(self::EVENT_MODIFY_CONTENTOVERVIEW_QUERY)) {
+            $this->trigger(self::EVENT_MODIFY_CONTENTOVERVIEW_QUERY, new ModifyContentOverviewQueryEvent([
+                'query' => $query,
+                'sectionSettings' => $sectionSettings
+            ]));
         }
 
         return [

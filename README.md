@@ -30,6 +30,7 @@ Structure of the configuration file:
             - status (string|array, optional, see [docs](https://craftcms.com/docs/4.x/entries.html#status)
             - orderBy (string|array, optional see [docs](https://craftcms.com/docs/4.x/entries.html#orderby)
             - buttons (bool, optional whether buttion 'new entry', 'all entries' will be shown
+            - any custom keys (mixed, can be used to modify the entries query via event, see below)
        
 
 
@@ -171,6 +172,25 @@ return [
 ![screenshot](/images/screenshot1.jpg)
 
 ![screenshot](/images/screenshot2.jpg)
+
+## Events
+
+Custom modules can extend the configuration by adding keys to the `sections` config array and modify the query via an event:
+
+```php
+use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
+use wsydney76\contentoverview\services\ContentOverviewService;
+
+
+Event::on(
+  ContentOverviewService::class,
+  ContentOverviewService::EVENT_MODIFY_CONTENTOVERVIEW_QUERY,
+  function(ModifyContentOverviewQueryEvent $event) {
+    if (isset($event->sectionSettings['tagline'])) {
+        $event->query->tagline($event->sectionSettings['tagline']);
+    }
+  });
+```
 
 ## TODOS:
 
