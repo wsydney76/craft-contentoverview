@@ -6,11 +6,11 @@ use Craft;
 use craft\base\Widget;
 use wsydney76\contentoverview\Plugin;
 
-class ContentOverviewWidget extends Widget
+class ContentOverviewLinksWidget extends Widget
 {
     public static function displayName(): string
     {
-        return Craft::t('contentoverview', Plugin::getInstance()->getSettings()->navLabel);
+        return Craft::t('contentoverview', Plugin::getInstance()->getSettings()->navLabel) . ' Links';
     }
 
     public static function icon(): ?string
@@ -20,6 +20,6 @@ class ContentOverviewWidget extends Widget
 
     public function getBodyHtml(): ?string
     {
-        return Craft::$app->view->renderTemplate('contentoverview/contentoverview-widget.twig');
+        return Craft::$app->view->renderTemplate('contentoverview/widgets/listwidget.twig');
     }
 }

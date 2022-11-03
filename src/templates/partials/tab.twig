@@ -1,0 +1,65 @@
+{% for column in tab.columns %}
+
+    <div class="co-column-{{ column.width }}">
+        {% for sectionSettings in column.sections %}
+
+            {% set section = craft.app.sections.sectionByHandle(sectionSettings.section) %}
+            {% set layout = sectionSettings.layout ?? settings.defaultLayout %}
+            {% set transform = settings.transforms[layout] %}
+            {% set heading = sectionSettings.heading ?? section.name %}
+            {% set showButtons = sectionSettings.buttons is defined ? sectionSettings.buttons : true %}
+
+            <div class="co-section co-{{ layout }}">
+
+
+                {% set userCanView = currentUser.can("viewentries:#{section.uid}") %}
+                {% set userCanSave = currentUser.can("saveentries:#{section.uid}") %}
+
+
+                <div class="co-btns">
+                    <h2>{{ heading|t('site') }}</h2>
+                    {% if showButtons and userCanSave %}
+                        <a class="btn submit" href="{{ cpUrl("entries/#{section.handle}/new") }}">
+                            {{ "New entry"|t('contentoverview') }}
+                        </a>
+                    {% endif %}
+                </div>
+
+                {% if userCanView %}
+                    {% set results = craft.contentoverview.getEntries(sectionSettings) %}
+                    {% set entries = results.entries %}
+
+                    <div class="co-entries co-{{ layout }}-{{ column.width }}">
+
+                        {% for entry in entries %}
+                            {% include 'contentoverview/partials/entry.twig' %}
+                        {% else %}
+                            {{ 'Nothing found'|t('contentoverview') }}
+                        {% endfor %}
+
+                    </div>
+
+                    {% if sectionSettings.limit is defined and results.count > sectionSettings.limit %}
+                        <div class="co-count">
+                            {{ results.count - sectionSettings.limit }} {{ "more entries"|t }}
+                        </div>
+                    {% endif %}
+
+
+                    {% if showButtons %}
+                        <div class="co-btns">
+                            <a class="btn" href="{{ cpUrl("entries/#{section.handle}") }}">
+                                {{ "All entries"|t('contentoverview') }}
+                            </a>
+                        </div>
+                    {% endif %}
+
+                {% else %}
+                    {{ 'No permission to view entries'|t('contentoverview') }}
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+    </div>
+{% endfor %}

@@ -15,5 +15,12 @@
 {% endblock %}
 
 {% block content %}
-    {% include 'contentoverview/partials/contentoverview.twig' %}
+    {% for tab in settings.tabs %}
+        <div id="{{ "#{tab.id}" }}" class="co {{ loop.index > 1 ? 'hidden' }}">
+            {% include 'contentoverview/partials/tab.twig' with {
+            	tab,
+                settings
+            } only %}
+        </div>
+    {% endfor %}
 {% endblock %}

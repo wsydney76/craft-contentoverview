@@ -41,11 +41,13 @@ Setup a config file in `config/contentoverview.php`
 Structure of the configuration file:
 
 
-- navLabel (string, optional, label for primary navigation, page title)
-- widgetText (string, optional, text for dashboard widget)
-- linkTarget (string, optional, set to '_blank' to open edit screens in a new tab (default), else blank '')
-- defaultLayout (string, optional, list (default)|cardlets|cards)
-- transforms (array, optional, image transforms for layouts) 
+- navLabel (?string, label for primary navigation, page title)
+- enableNav (?bool, default true, enable link item in primary navigation)
+- enableWidgets (?bool, default true, enable dashboard widgets that display a single tab)
+- widgetText (?string, text for dashboard link widget)
+- linkTarget (?string, set to '_blank' to open edit screens in a new tab (default), else blank '')
+- defaultLayout (?string, list (default)|cardlets|cards)
+- transforms (?array, image transforms for layouts) 
 - tabs[] (array, tabs of the page)
     - label (string, tab text)
     - id (string, unique id, used as anchor)
@@ -53,18 +55,19 @@ Structure of the configuration file:
         - width (int, number of columns occupied, 1-12)
         - sections[] (array, sections display inside the column)
             - section (string, section handle)
-            - heading (string, optional, heading of the section, defaults to section name)
-            - limit (int, optional, number of entries to show)
-            - info (string|array, object template(s) to render in addition to the title)
-            - popupInfo (string|array, object template(s) to render in an information popup)
-            - imageField (string, optional, name of the image field to use)
-            - layout (string, optional, (list (default)|cardlets|cards)
-            - scope (string, optional, whether drafts should be shown, drafts|provisional|provisionaluser|all, default: only published entries will be included)
-            - ownDraftsOnly (bool, if true and scope is defined: show only drafts created by the current user)
-            - status (string|array, optional, see [docs](https://craftcms.com/docs/4.x/entries.html#status)
-            - orderBy (string|array, optional see [docs](https://craftcms.com/docs/4.x/entries.html#orderby)
-            - buttons (bool, optional whether buttion 'new entry', 'all entries' will be shown
-            - any custom keys (mixed, can be used to modify the entries query via event, see below)
+            - heading (?string, heading of the section, defaults to section name)
+            - limit (?int, number of entries to show)
+            - info (?string|array, object template(s) to render in addition to the title)
+            - popupInfo (?string|array, object template(s) to render in an information popup)
+            - imageField (?string, name of the image field to use)
+            - layout (?string, (list (default)|cardlets|cards)
+            - scope (?string, whether drafts should be shown, drafts|provisional|provisionaluser|all, default: only published entries will be included)
+            - ownDraftsOnly (?bool, if true and scope is defined: show only drafts created by the current user)
+            - status (?string|array, see [docs](https://craftcms.com/docs/4.x/entries.html#status)
+            - allSites (?bool, true = display (unique) entries from all sites)
+            - orderBy (?string|array see [docs](https://craftcms.com/docs/4.x/entries.html#orderby)
+            - buttons (?bool whether buttion 'new entry', 'all entries' will be shown
+            - any custom keys (?mixed, can be used to modify the entries query via event, see below)
        
 
 
@@ -234,13 +237,22 @@ Event::on(
   });
 ```
 
-## Widget
+## Link Widget
 
 There is a small dashboard widget, offering quick links to each tab of the overview page.
 
 ![screenshot](/images/widget.jpg)
 
+## Tab Widget
+
+A single tab can be shown in a dashboad widget.
+
+Select a tab to show and set the widget width to 4 (full width)
+
+![screenshot](/images/widgetsettings.jpg)
+
 ## TODOS:
 
 * Improve responsive styles
-* Permissions...
+* Check permission handling
+* Some translations are missing...

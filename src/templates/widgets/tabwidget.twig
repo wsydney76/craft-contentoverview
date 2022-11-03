@@ -1,0 +1,13 @@
+{# @param tab array The selected tab config #}
+{# @param settings array The complete config  #}
+
+{% if tab %}
+    <div class="co">
+        {% include 'contentoverview/partials/tab.twig' with {
+            tab,
+            settings
+        } only %}
+    </div>
+{% else %}
+    <p>Invalid tab config</p>
+{% endif %}

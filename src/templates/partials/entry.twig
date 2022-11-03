@@ -1,0 +1,60 @@
+<a href="{{ entry.cpEditUrl }}" target="{{ settings.linkTarget }}"
+   class="co-entry {{ entry.isDraft ? 'draft' : 'published' }} {{ entry.isUnpublishedDraft ? 'provisional' }}">
+
+    <div class="co-image">
+        {% set image = null %}
+        {% if sectionSettings.imageField is defined %}
+            {% set image = entry.getFieldValue(sectionSettings.imageField).one %}
+        {% endif %}
+        {% if image %}
+            {{ image.img(transform) }}
+        {% else %}
+            {{ svg(sectionSettings.icon ?? '@appicons/newspaper.svg')|attr({width:'20px', height: '20px'}) }}
+        {% endif %}
+    </div>
+
+    <div class="co-content">
+        {% set style = section.type == 'structure' and layout == 'list' ? "padding-left: #{(entry.level-1)*24}px" %}
+        <div class="co-title" style="{{ style }}">
+            <div>
+                {% if entry.isDraft %}
+                    <span data-icon="draft" aria-hidden="true"></span>
+                {% else %}
+                    <span class="status {{ entry.status }}"></span>
+                {% endif %}
+
+            </div>
+            <div>{{ entry.title }}</div>
+        </div>
+
+        <div class="co-info">
+            {% if sectionSettings.popupInfo is defined %}
+                <span class="info" tabindex="0" aria-role="button" aria-label="{{ "Information"|t('contentoverview') }}">
+                            {% if sectionSettings.popupInfo is string %}
+                                {{ view.renderObjectTemplate(sectionSettings.popupInfo, entry)|raw }}
+                            {% else %}
+                                {% for info in sectionSettings.popupInfo %}
+                                    <div>
+                                        {{ view.renderObjectTemplate(info, entry)|raw }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </span>
+            {% endif %}
+            {% if sectionSettings.info is defined %}
+                <div>
+                    {% if sectionSettings.info is string %}
+                        {{ view.renderObjectTemplate(sectionSettings.info, entry)|raw }}
+                    {% else %}
+                        {% for info in sectionSettings.info %}
+                            <div>
+                                {{ view.renderObjectTemplate(info, entry)|raw }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</a>
