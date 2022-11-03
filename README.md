@@ -256,7 +256,10 @@ There is a small dashboard widget, offering quick links to each tab of the overv
 
 A single tab can be shown in a dashboad widget.
 
-Select a tab to show and set the widget width to 4 (full width)
+Select a tab to show and set the widget width to Full (full width), if you want to spread the widget over all dashboard columns,
+otherwise to Two (half width) in order to use it with two or three columns. 
+
+One column is too narrow to be useful. 
 
 ![screenshot](/images/widgetsettings.jpg)
 

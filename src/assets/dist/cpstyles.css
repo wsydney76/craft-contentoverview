@@ -57,8 +57,7 @@
     }
 
     /* number of columns for entries depending of layout and column width */
-
-    .co-cards-1, .co-cards-2, .co-cards-3, .co-cards-4, .co-cardlets-1, .co-cardlets-2, .co-cardlets-3, .co-cardlets-4  {
+    .co-cards-1, .co-cards-2, .co-cards-3, .co-cards-4, .co-cardlets-1, .co-cardlets-2, .co-cardlets-3, .co-cardlets-4 {
         grid-template-columns: repeat(1, minmax(0, 1fr));
     }
 
@@ -81,6 +80,86 @@
     .co-cards-12 {
         grid-template-columns: repeat(6, minmax(0, 1fr));
     }
+
+    /* half width widget */
+    .half.co {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .half.co-column-1 {
+        grid-column: span 1 / span 1;
+    }
+
+    .half.co-column-2 {
+        grid-column: span 2 / span 2;
+    }
+
+    .half.co-column-3 {
+        grid-column: span 3 / span 3;
+    }
+
+    .half.co-column-4 {
+        grid-column: span 4 / span 4;
+    }
+
+    .half.co-column-5 {
+        grid-column: span 5 / span 5;
+    }
+
+    .half.co-column-6 {
+        grid-column: span 6 / span 6;
+    }
+
+    .half.co-column-7 {
+        grid-column: span 6 / span 6;
+    }
+
+    .half.co-column-8 {
+        grid-column: span 6 / span 6;
+    }
+
+    .half.co-column-9 {
+        grid-column: span 6 / span 6;
+    }
+
+    .half.co-column-10 {
+        grid-column: span 6 / span 6;
+    }
+
+    .half.co-column-11 {
+        grid-column: span 6 / span 6;
+    }
+
+    .half.co-column-12 {
+        grid-column: span16 / span 6;
+    }
+
+    .half .co-cards-1, .half .co-cards-2, .half .co-cards-3, .half .co-cards-4, .half .co-cardlets-1, .half .co-cardlets-2, .half .co-cardlets-3, .half .co-cardlets-4 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    .half .co-cards-5, .half .co-cards-6, .half .co-cardlets-5, .half .co-cardlets-6, .half .co-cardlets-7, .half .co-cardlets-8 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .half .co-cards-7, .half .co-cards-8, .half .co-cardlets-9, .half .co-cardlets-10, .half .co-cardlets-11 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .half .co-cards-9, .half .co-cardlets-12 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .half .co-cards-10, .half .co-cards-11 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .half .co-cards-12 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+
 
 }
 
@@ -118,6 +197,7 @@
 .co-info {
 
 }
+
 .co-info .info {
     float: left;
     margin-right: 4px;

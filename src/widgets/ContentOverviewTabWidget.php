@@ -11,6 +11,7 @@ use wsydney76\contentoverview\Plugin;
 class ContentOverviewTabWidget extends Widget
 {
     public string $tabId = '';
+    public string $cols = 'full';
 
     public static function displayName(): string
     {
@@ -55,14 +56,25 @@ class ContentOverviewTabWidget extends Widget
                 'label' => $tab['label'],
                 'value' => $tab['id']
             ], $settings['tabs'])
-        ]);
+        ]) . Cp::selectFieldHtml([
+                'label' => Craft::t('contentoverview', 'Optimize grid for this number of columns'),
+                'id' => 'cols',
+                'name' => 'cols',
+                'value' => $this->cols,
+                'errors' => $this->getErrors('cols'),
+                'options' => [
+                    ['label' => Craft::t('contentoverview', 'Two (half width)'), 'value' => 'half'],
+                    ['label' => Craft::t('contentoverview', 'All (full width)'), 'value' => 'full'],
+                ]
+            ]);
     }
 
     public function getBodyHtml(): ?string
     {
         return Craft::$app->view->renderTemplate('contentoverview/widgets/tabwidget.twig', [
             'tab' => Plugin::getInstance()->contentoverviewService->getTabConfig($this->tabId),
-            'settings' => Plugin::getInstance()->getSettings()
+            'settings' => Plugin::getInstance()->getSettings(),
+            'cols' => $this->cols
         ]);
     }
 
