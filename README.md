@@ -4,6 +4,32 @@ Shows an overview of a site's content.
 
 Work in progress...
 
+## Installation
+
+Not yet on packagist.
+
+Add to `composer.json`:
+
+````json
+{
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "repositories": [
+     {
+        "type": "vcs",
+        "url": "https://github.com/wsydney76/craft-contentoverview"
+     }
+  ]
+}
+
+````
+
+Run `composer require wsydney76/craft-contentoverview`
+
+Run `craft plugin/install`
+
+## Screenshots
+
 ![screenshot](/images/screenshot1.jpg)
 
 ![screenshot](/images/screenshot2.jpg)
@@ -184,7 +210,8 @@ return [
 
 ## Events
 
-Custom modules can extend the configuration by adding keys to the `sections` config array and modify the query via an event:
+Custom modules can extend the configuration by adding keys to the `sections` config array and modify the query via an
+event:
 
 ```php
 use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
