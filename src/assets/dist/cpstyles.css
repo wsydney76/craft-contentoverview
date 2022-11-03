@@ -115,6 +115,14 @@
     gap: 0.5rem; /* 32px */
 }
 
+.co-info {
+
+}
+.co-info .info {
+    float: left;
+    margin-right: 4px;
+}
+
 [data-icon] {
     margin-right: 4px;
 }

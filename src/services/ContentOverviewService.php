@@ -30,7 +30,6 @@ class ContentOverviewService extends Component
         $query = Entry::find()
             ->section($section)
             ->status(null)
-            ->editable(true)
             ->site('*')
             ->unique()
             ->preferSites([$site]);

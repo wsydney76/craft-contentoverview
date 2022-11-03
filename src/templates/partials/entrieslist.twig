@@ -30,14 +30,31 @@
                     <div>{{ entry.title }}</div>
                 </div>
                 <div class="co-info">
-                    {% if sectionSettings.info is string %}
-                        {{ view.renderObjectTemplate(sectionSettings.info, entry) }}
-                    {% else %}
-                        {% for info in sectionSettings.info %}
-                            <div>
-                                {{ view.renderObjectTemplate(info, entry) }}
-                            </div>
-                        {% endfor %}
+                    {% if sectionSettings.popupInfo is defined %}
+                        <span class="info" tabindex="0" aria-role="button" aria-label="{{ "Information"|t('contentoverview') }}">
+                            {% if sectionSettings.popupInfo is string %}
+                                {{ view.renderObjectTemplate(sectionSettings.popupInfo, entry) }}
+                            {% else %}
+                                {% for info in sectionSettings.popupInfo %}
+                                    <div>
+                                        {{ view.renderObjectTemplate(info, entry) }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </span>
+                    {% endif %}
+                    {% if sectionSettings.info is defined %}
+                        <div>
+                            {% if sectionSettings.info is string %}
+                                {{ view.renderObjectTemplate(sectionSettings.info, entry) }}
+                            {% else %}
+                                {% for info in sectionSettings.info %}
+                                    <div>
+                                        {{ view.renderObjectTemplate(info, entry) }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
                     {% endif %}
 
                 </div>

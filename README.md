@@ -56,6 +56,7 @@ Structure of the configuration file:
             - heading (string, optional, heading of the section, defaults to section name)
             - limit (int, optional, number of entries to show)
             - info (string|array, object template(s) to render in addition to the title)
+            - popupInfo (string|array, object template(s) to render in an information popup)
             - imageField (string, optional, name of the image field to use)
             - layout (string, optional, (list (default)|cardlets|cards)
             - scope (string, optional, whether drafts should be shown, drafts|provisional|provisionaluser|all, default: only published entries will be included)
@@ -140,7 +141,12 @@ return [
                             'info' => [
                                 '{tagline}',
                                 '{postDate|date("short")}',
-                                'Draft created by {creator.name}',
+                            ],
+                            'popupInfo' => [
+                                Craft::t('site', 'Draft created by') . ' {creator.name}',
+                                Craft::t('site', 'Draft created at') . ' {draftCreatedAt|date("short")}',
+                                '{draftNotes ? "Draft Notes:"}',
+                                '{draftNotes}'
                             ],
                             'imageField' => 'featuredImage',
                             'layout' => 'cardlets',
