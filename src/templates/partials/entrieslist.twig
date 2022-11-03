@@ -6,8 +6,8 @@
 
             <div class="co-image">
                 {% set image = null %}
-                {% if sectionSettings.image is defined %}
-                    {% set image = entry.getFieldValue(sectionSettings.image).one %}
+                {% if sectionSettings.imageField is defined %}
+                    {% set image = entry.getFieldValue(sectionSettings.imageField).one %}
                 {% endif %}
                 {% if image %}
                     {{ image.img(transform) }}
@@ -20,7 +20,12 @@
                 {% set style = section.type == 'structure' and layout == 'list' ? "padding-left: #{(entry.level-1)*24}px" %}
                 <div class="co-title" style="{{ style }}">
                     <div>
-                        <span class="status {{ entry.status }}"></span>
+                        {% if entry.isDraft %}
+                            <span data-icon="draft" aria-hidden="true"></span>
+                        {% else %}
+                            <span class="status {{ entry.status }}"></span>
+                        {% endif %}
+
                     </div>
                     <div>{{ entry.title }}</div>
                 </div>
@@ -29,7 +34,7 @@
                         {{ view.renderObjectTemplate(sectionSettings.info, entry) }}
                     {% else %}
                         {% for info in sectionSettings.info %}
-                        	<div>
+                            <div>
                                 {{ view.renderObjectTemplate(info, entry) }}
                             </div>
                         {% endfor %}

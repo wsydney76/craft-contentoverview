@@ -1,13 +1,4 @@
-{% set transforms = {
-    list: {width: 50, height: 50},
-    cards: {width: 400, height: 200},
-    cardlets: {width: 150, height: 150},
-} %}
-
-
 {% set settings = settings ?? craft.contentoverview.settings %}
-{% set site = craft.app.request.queryParam('site', craft.app.sites.primarySite.handle) %}
-
 
 {% for tab in settings.tabs %}
     <div id="{{ "#{tab.id}" }}" class="co {{ loop.index > 1 ? 'hidden' }}">
@@ -16,9 +7,9 @@
             <div class="co-column-{{ column.width }}">
                 {% for sectionSettings in column.sections %}
 
-                    {% set section = craft.app.sections.sectionByHandle(sectionSettings.handle) %}
-                    {% set layout = sectionSettings.layout ?? 'list' %}
-                    {% set transform = transforms[layout] %}
+                    {% set section = craft.app.sections.sectionByHandle(sectionSettings.section) %}
+                    {% set layout = sectionSettings.layout ?? settings.defaultLayout %}
+                    {% set transform = settings.transforms[layout] %}
                     {% set heading = sectionSettings.heading ?? section.name %}
                     {% set showButtons = sectionSettings.buttons is defined ? sectionSettings.buttons : true %}
 
@@ -38,12 +29,6 @@
                                 {% endif %}
                             </div>
 
-                            {% if sectionSettings.image is defined %}
-                                {% set entries = entries.with([
-                                    [sectionSettings.image, {withTransforms: [transform]}]
-                                ]) %}
-                            {% endif %}
-
 
                             {% include 'contentoverview/partials/entrieslist.twig' %}
 
@@ -52,7 +37,6 @@
                                     {{ results.count - sectionSettings.limit }} {{ "more entries"|t }}
                                 </div>
                             {% endif %}
-
 
                             
                             {% if showButtons %}

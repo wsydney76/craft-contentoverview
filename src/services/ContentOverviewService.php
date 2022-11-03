@@ -6,18 +6,23 @@ use Craft;
 use craft\base\Component;
 use craft\elements\Entry;
 use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
+use wsydney76\contentoverview\models\Settings;
+use wsydney76\contentoverview\Plugin;
 
 class ContentOverviewService extends Component
 {
 
     public const EVENT_MODIFY_CONTENTOVERVIEW_QUERY = 'modifyContentoverviewQuery';
 
-    public function getEntries($sectionSettings)
+    public function getEntries($sectionSettings): array
     {
+        /** @var Settings $settings */
+        $settings = Plugin::getInstance()->getSettings();
         $site = Craft::$app->request->getParam('site', Craft::$app->sites->primarySite->handle);
         $limit = $sectionSettings['limit'] ?? null;
         $orderBy = $sectionSettings['orderBy'] ?? null;
-        $section = $sectionSettings['handle'] ?? null;
+        $section = $sectionSettings['section'] ?? null;
+        $imageField = $sectionSettings['imageField'] ?? null;
         $scope = $sectionSettings['scope'] ?? null;
         $status = $sectionSettings['status'] ?? null;
 
@@ -42,15 +47,17 @@ class ContentOverviewService extends Component
             $query->status($status);
         }
 
+        if ($imageField) {
+            $query->with([
+                [$imageField, [
+                    'withTransforms' =>  [$settings->transforms[$sectionSettings['layout'] ?? $settings->defaultLayout]]
+                ]]
+            ]);
+        }
+
         switch ($scope) {
             case 'drafts': {
                 $query->drafts(true);
-                break;
-            }
-            case 'provisionaluser': {
-                $query
-                    ->provisionalDrafts(true)
-                    ->draftCreator(Craft::$app->user->identity);
                 break;
             }
             case 'provisional': {
@@ -64,6 +71,10 @@ class ContentOverviewService extends Component
                     ->drafts(null);
                 break;
             }
+        }
+
+        if($scope && isset($sectionSettings['ownDraftsOnly']) && $sectionSettings['ownDraftsOnly'] ) {
+            $query->draftCreator(Craft::$app->user->identity);
         }
 
         if ($this->hasEventHandlers(self::EVENT_MODIFY_CONTENTOVERVIEW_QUERY)) {

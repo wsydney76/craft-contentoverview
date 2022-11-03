@@ -4,29 +4,36 @@ Shows an overview of a site's content.
 
 Work in progress...
 
+![screenshot](/images/screenshot1.jpg)
+
+![screenshot](/images/screenshot2.jpg)
+
 ## Config
 
-Needs a config file in `config/contentoverview.php`
+Setup a config file in `config/contentoverview.php`
 
 Structure of the configuration file:
 
 
-- navLabel (string, label for primary navigation, page title)
-- widgetText (string, text for dashboard widget)
-- linkTarget (string, set to '_blank' to open edit screens in a new tab (default), else blank '')
+- navLabel (string, optional, label for primary navigation, page title)
+- widgetText (string, optional, text for dashboard widget)
+- linkTarget (string, optional, set to '_blank' to open edit screens in a new tab (default), else blank '')
+- defaultLayout (string, optional, list (default)|cardlets|cards)
+- transforms (array, optional, image transforms for layouts) 
 - tabs[] (array, tabs of the page)
     - label (string, tab text)
     - id (string, unique id, used as anchor)
     - columns[] (array, columns inside the tab container, uses a 12 columns grid)
         - width (int, number of columns occupied, 1-12)
         - sections[] (array, sections display inside the column)
-            - handle (string, section handle)
+            - section (string, section handle)
             - heading (string, optional, heading of the section, defaults to section name)
             - limit (int, optional, number of entries to show)
             - info (string|array, object template(s) to render in addition to the title)
-            - image (string, optional, name of the image field to use)
+            - imageField (string, optional, name of the image field to use)
             - layout (string, optional, (list (default)|cardlets|cards)
             - scope (string, optional, whether drafts should be shown, drafts|provisional|provisionaluser|all, default: only published entries will be included)
+            - ownDraftsOnly (bool, if true and scope is defined: show only drafts created by the current user)
             - status (string|array, optional, see [docs](https://craftcms.com/docs/4.x/entries.html#status)
             - orderBy (string|array, optional see [docs](https://craftcms.com/docs/4.x/entries.html#orderby)
             - buttons (bool, optional whether buttion 'new entry', 'all entries' will be shown
@@ -54,11 +61,11 @@ return [
                     'width' => 7,
                     'sections' => [
                         [
-                            'handle' => 'news',
+                            'section' => 'news',
                             'heading' => 'Latest News',
                             'limit' => 6,
                             'info' => '{tagline}, {postDate|date("short")}',
-                            'image' => 'featuredImage',
+                            'imageField' => 'featuredImage',
                             'layout' => 'cards'
                         ]
                     ]
@@ -67,17 +74,18 @@ return [
                     'width' => 5,
                     'sections' => [
                         [
-                            'handle' => 'heroArea',
+                            'section' => 'heroArea',
                             'limit' => 2,
                             'info' => '{heroTagline}',
-                            'image' => 'heroImage',
+                            'imageField' => 'heroImage',
                             'layout' => 'cardlets'
                         ],
                         [
-                            'handle' => 'page',
+                            'section' => 'page',
                             'heading' => 'Page Structure',
-                            'info' => '{type.name}',
-                            'icon' => '@appicons/globe.svg'
+                            'info' => '{isDraft ? "Draft"} {type.name}',
+                            'icon' => '@appicons/globe.svg',
+                            'scope' => 'all'
                         ]
                     ]
                 ],
@@ -85,7 +93,7 @@ return [
                     'width' => 4,
                     'sections' => [
                         [
-                            'handle' => 'legal',
+                            'section' => 'legal',
                             'info' => '{type.name}'
                         ]
                     ]
@@ -97,37 +105,42 @@ return [
             'id' => 'tab2',
             'columns' => [
                 [
-                    'width' => 5,
+                    'width' => 6,
                     'sections' => [
                         [
                             'heading' => 'Drafts',
-                            'handle' => 'news',
+                            'section' => 'news',
                             'limit' => 12,
-                            'info' => '{tagline}, {postDate|date("short")}',
-                            'image' => 'featuredImage',
+                            'info' => [
+                                '{tagline}',
+                                '{postDate|date("short")}',
+                                'Draft created by {creator.name}',
+                            ],
+                            'imageField' => 'featuredImage',
                             'layout' => 'cardlets',
                             'orderBy' => 'postDate desc',
                             'scope' => 'drafts',
-                            'buttons' => true,
+                            'buttons' => false,
                         ],
 
                         [
                             'heading' => 'My Provisional Drafts',
-                            'handle' => 'news',
+                            'section' => 'news',
                             'limit' => 12,
                             'info' => '{tagline}, {postDate|date("short")}',
-                            'image' => 'featuredImage',
+                            'imageField' => 'featuredImage',
                             'layout' => 'cardlets',
                             'orderBy' => 'postDate desc',
                             'scope' => 'provisional',
+                            'ownDraftsOnly' => true,
                             'buttons' => false
                         ],
                         [
                             'heading' => 'Pending',
-                            'handle' => 'news',
+                            'section' => 'news',
                             'limit' => 12,
                             'info' => '{tagline}, {postDate|date("short")}',
-                            'image' => 'featuredImage',
+                            'imageField' => 'featuredImage',
                             'layout' => 'cardlets',
                             'orderBy' => 'postDate desc',
                             'status' => 'pending',
@@ -135,10 +148,10 @@ return [
                         ],
                         [
                             'heading' => 'Disabled',
-                            'handle' => 'news',
+                            'section' => 'news',
                             'limit' => 12,
                             'info' => '{tagline}, {postDate|date("short")}',
-                            'image' => 'featuredImage',
+                            'imageField' => 'featuredImage',
                             'layout' => 'cardlets',
                             'orderBy' => 'postDate desc',
                             'status' => 'disabled',
@@ -148,14 +161,14 @@ return [
                     ]
                 ],
                 [
-                    'width' => 7,
+                    'width' => 6,
                     'sections' => [
                         [
                             'heading' => 'Latest Live News',
-                            'handle' => 'news',
+                            'section' => 'news',
                             'limit' => 12,
                             'info' => '{postDate|date("short")}',
-                            'image' => 'featuredImage',
+                            'imageField' => 'featuredImage',
                             'layout' => 'list',
                             'orderBy' => 'postDate desc',
                             'status' => 'live'
@@ -168,10 +181,6 @@ return [
     ]
 ];
 ```
-
-![screenshot](/images/screenshot1.jpg)
-
-![screenshot](/images/screenshot2.jpg)
 
 ## Events
 
@@ -191,6 +200,12 @@ Event::on(
     }
   });
 ```
+
+## Widget
+
+There is a small dashboard widget, offering quick links to each tab of the overview page.
+
+![screenshot](/images/widget.jpg)
 
 ## TODOS:
 
