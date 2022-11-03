@@ -30,7 +30,11 @@ Run `craft plugin/install`
 
 ## Screenshots
 
+Show different sections in different layouts (cards, cardlets, list). Add section specific infos and image.
+
 ![screenshot](/images/screenshot1.jpg)
+
+Support your workflow and quality management: Show drafts / status / own provisional drafts
 
 ![screenshot](/images/screenshot2.jpg)
 
@@ -231,9 +235,14 @@ Event::on(
   ContentOverviewService::class,
   ContentOverviewService::EVENT_MODIFY_CONTENTOVERVIEW_QUERY,
   function(ModifyContentOverviewQueryEvent $event) {
+  
+    // Add selection criteria
     if (isset($event->sectionSettings['tagline'])) {
         $event->query->tagline($event->sectionSettings['tagline']);
     }
+    
+    // Add eager loading related elements that appear in info 
+    $event->query->with(['assignedTo ...'])
   });
 ```
 
