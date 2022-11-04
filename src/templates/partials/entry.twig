@@ -12,24 +12,20 @@
             {{ svg(sectionSettings.icon ?? '@appicons/newspaper.svg')|attr({width:'20px', height: '20px'}) }}
         {% endif %}
     </div>
+    {% set style = section.type == 'structure' and layout == 'list' ? "padding-left: #{(entry.level-1)*24}px" %}
+    <div class="co-content"  style="{{ style }};">
 
-    <div class="co-content">
-        {% set style = section.type == 'structure' and layout == 'list' ? "padding-left: #{(entry.level-1)*24}px" %}
-        <div class="co-title" style="{{ style }}">
-            <div>
+        <div class="co-status">
+
                 {% if entry.isDraft %}
-                    <span data-icon="draft" aria-hidden="true"></span>
+                    <div data-icon="draft" aria-hidden="true"></div>
                 {% else %}
-                    <span class="status {{ entry.status }}"></span>
+                    <div class="status {{ entry.status }}"></div>
                 {% endif %}
 
-            </div>
-            <div>{{ entry.title }}</div>
-        </div>
-
-        <div class="co-info">
             {% if sectionSettings.popupInfo is defined %}
-                <span class="info" tabindex="0" aria-role="button" aria-label="{{ "Information"|t('contentoverview') }}">
+                <div class="info" tabindex="0" aria-role="button"
+                      aria-label="{{ "Information"|t('contentoverview') }}">
                             {% if sectionSettings.popupInfo is string %}
                                 {{ view.renderObjectTemplate(sectionSettings.popupInfo, entry)|raw }}
                             {% else %}
@@ -39,22 +35,31 @@
                                     </div>
                                 {% endfor %}
                             {% endif %}
-                        </span>
+                        </div>
             {% endif %}
-            {% if sectionSettings.info is defined %}
-                <div>
-                    {% if sectionSettings.info is string %}
-                        {{ view.renderObjectTemplate(sectionSettings.info, entry)|raw }}
-                    {% else %}
-                        {% for info in sectionSettings.info %}
-                            <div>
-                                {{ view.renderObjectTemplate(info, entry)|raw }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-            {% endif %}
+        </div>
 
+
+        <div class="co-text" >
+            <div class="co-title">
+                {{ entry.title }}
+            </div>
+
+            <div class="co-info">
+                {% if sectionSettings.info is defined %}
+                    <div>
+                        {% if sectionSettings.info is string %}
+                            {{ view.renderObjectTemplate(sectionSettings.info, entry)|raw }}
+                        {% else %}
+                            {% for info in sectionSettings.info %}
+                                <div>
+                                    {{ view.renderObjectTemplate(info, entry)|raw }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </a>

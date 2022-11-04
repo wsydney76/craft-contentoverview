@@ -34,7 +34,7 @@ class ContentOverviewTabWidget extends Widget
             return self::displayName();
         }
 
-        $tabConfig = Plugin::getInstance()->contentoverviewService->getTabConfig($this->tabId);
+        $tabConfig = Plugin::getInstance()->contentOverviewService->getTabConfig($this->tabId);
         if (!$tabConfig) {
             return self::displayName();
         }
@@ -44,19 +44,21 @@ class ContentOverviewTabWidget extends Widget
 
     public function getSettingsHtml(): ?string
     {
-        $settings = Plugin::getInstance()->getSettings();
-
         return Cp::selectFieldHtml([
-            'label' => Craft::t('contentoverview', 'Tab'),
-            'id' => 'tabId',
-            'name' => 'tabId',
-            'value' => $this->tabId,
-            'errors' => $this->getErrors('tabId'),
-            'options' => array_map(fn($tab) => [
-                'label' => $tab['label'],
-                'value' => $tab['id']
-            ], $settings['tabs'])
-        ]) . Cp::selectFieldHtml([
+                'label' => Craft::t('contentoverview', 'Tab'),
+                'id' => 'tabId',
+                'name' => 'tabId',
+                'value' => $this->tabId,
+                'errors' => $this->getErrors('tabId'),
+                'options' => Plugin::getInstance()->contentOverviewService->getTabs('widget')->map(function ($tab) {
+                    return [
+                        'label' => $tab['label'],
+                        'value' => $tab['id']
+                    ];
+                })
+            ]) .
+
+            Cp::selectFieldHtml([
                 'label' => Craft::t('contentoverview', 'Optimize grid for this number of columns'),
                 'id' => 'cols',
                 'name' => 'cols',
@@ -72,7 +74,7 @@ class ContentOverviewTabWidget extends Widget
     public function getBodyHtml(): ?string
     {
         return Craft::$app->view->renderTemplate('contentoverview/widgets/tabwidget.twig', [
-            'tab' => Plugin::getInstance()->contentoverviewService->getTabConfig($this->tabId),
+            'tab' => Plugin::getInstance()->contentOverviewService->getTabConfig($this->tabId),
             'settings' => Plugin::getInstance()->getSettings(),
             'cols' => $this->cols
         ]);

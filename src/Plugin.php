@@ -31,7 +31,7 @@ class Plugin extends \craft\base\Plugin
         }
 
         $this->setComponents([
-            'contentoverviewService' => ContentOverviewService::class
+            'contentOverviewService' => ContentOverviewService::class
         ]);
 
 

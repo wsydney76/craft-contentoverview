@@ -238,11 +238,25 @@
 .co-list .co-content {
     margin-left: 8px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     padding: 4px;
     width: 100%;
 
+}
+
+.co-list .co-status {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+}
+
+.co-list .co-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-left: 8px;
 }
 
 .co-list .co-title {
@@ -270,7 +284,7 @@
 
 .co-cards .co-entry {
     border: 1px solid var(--gray-300);
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px;
     max-width: 400px;
 }
 
@@ -279,25 +293,39 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 150px;
+    min-height: 100px;
 }
 
 .co-cards .co-entry .co-content {
-    margin-left: 8px;
-    padding: 12px 4px;
+    margin: 8px;
+    display: flex;
+}
+
+.co-cards .co-status {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    margin-top: 6px;
+    margin-right: 6px;
+}
+
+.co-cards .info {
+    margin-top: 8px;
+}
+
+.co-cards .co-status .status, .co-cards .co-status [data-icon="draft"] {
+    margin-left: 3px
 }
 
 .co-cards .co-entry .co-content .co-title {
     font-weight: 600;
-    display: flex;
-    justify-items: center;
 }
 
 .co-cards .co-entry .co-info {
+    margin-top: 4px;
     color: var(--gray-600);
     font-weight: 500;
     font-size: 14px;
-    padding: 8px 4px 0 20px;
 }
 
 /* ========================================
@@ -334,10 +362,28 @@
     padding: 2px;
     width: 100%;
     flex-shrink: 1;
+    display: flex;
+}
+
+.co-cardlets .co-status {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    margin-top: 6px;
+    margin-right: 6px;
+}
+
+.co-cardlets .info {
+    margin-top: 8px;
+}
+
+.co-cardlets .co-status .status, .co-cardlets .co-status [data-icon="draft"] {
+    margin-left: 3px
 }
 
 .co-cardlets .co-title {
     width: 100%;
+    font-weight: 600;
     margin-right: 8px;
     flex-grow: 1;
     display: flex;
@@ -347,7 +393,8 @@
     color: var(--gray-600);
     font-size: 14px;
     margin-top: 4px;
-    margin-left: 20px;
 }
 
-
+.\? {
+    border: 1px solid red;
+}
