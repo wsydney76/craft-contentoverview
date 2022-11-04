@@ -73,9 +73,11 @@ class ContentOverviewTabWidget extends Widget
 
     public function getBodyHtml(): ?string
     {
+        $settings = Plugin::getInstance()->getSettings();
+
         return Craft::$app->view->renderTemplate('contentoverview/widgets/tabwidget.twig', [
-            'tab' => Plugin::getInstance()->getSettings()->getTabConfig($this->tabId),
-            'settings' => Plugin::getInstance()->getSettings(),
+            'tab' => $settings->getTabConfig($this->tabId),
+            'settings' => $settings,
             'cols' => $this->cols
         ]);
     }
