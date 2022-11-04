@@ -4,6 +4,6 @@
     {{ settings.widgetText }}
 </p>
 
-{% for tab in settings.tabs %}
+{% for tab in settings.getTabs('page') %}
     <a class="btn" href="{{ cpUrl('contentoverview') }}#{{ tab.id }}">{{ tab.label }}</a>
 {% endfor %}
