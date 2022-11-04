@@ -6,24 +6,6 @@ Work in progress...
 
 ## Installation
 
-Not yet on packagist.
-
-Add to `composer.json`:
-
-````json
-{
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "repositories": [
-     {
-        "type": "vcs",
-        "url": "https://github.com/wsydney76/craft-contentoverview"
-     }
-  ]
-}
-
-````
-
 Run `composer require wsydney76/craft-contentoverview`
 
 Run `craft plugin/install`
