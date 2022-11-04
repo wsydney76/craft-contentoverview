@@ -3,7 +3,7 @@
 
 {% set title = settings.navLabel|t('contentoverview') %}
 
-{% set tabSettings = craft.contentoverview.getTabs('page') %}
+{% set tabSettings = settings.getTabs('page') %}
 
 {# tabs is a cp variable, see https://craftcms.com/docs/4.x/extend/cp-templates.html#adding-tabs #}
 {% set tabs = [] %}

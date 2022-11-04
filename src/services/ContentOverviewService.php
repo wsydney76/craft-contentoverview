@@ -95,26 +95,5 @@ class ContentOverviewService extends Component
 
     }
 
-    public function getTabConfig($tabId): ?array
-    {
-        $settings = Plugin::getInstance()->getSettings();
-        return ArrayHelper::firstWhere($settings['tabs'], 'id', $tabId);
-    }
-    public function getTabs($scope = 'all')
-    {
-
-        $settings = Plugin::getInstance()->getSettings();
-        $tabs = collect($settings['tabs']);
-
-        if ($scope === 'all') {
-            return $tabs;
-        }
-
-        return $tabs->filter(function($tab) use ($scope) {
-            return !isset($tab['scope']) || $tab['scope'] === $scope;
-        });
-
-
-    }
 
 }

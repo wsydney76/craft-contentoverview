@@ -19,9 +19,4 @@ class ContentOverviewVariable extends Component
         return Plugin::getInstance()->contentOverviewService->getEntries($sectionSettings);
     }
 
-    public function getTabs($scope = 'all')
-    {
-        return Plugin::getInstance()->contentOverviewService->getTabs($scope);
-
-    }
 }

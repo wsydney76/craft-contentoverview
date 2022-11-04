@@ -34,7 +34,7 @@ class ContentOverviewTabWidget extends Widget
             return self::displayName();
         }
 
-        $tabConfig = Plugin::getInstance()->contentOverviewService->getTabConfig($this->tabId);
+        $tabConfig = Plugin::getInstance()->getSettings()->getTabConfig($this->tabId);
         if (!$tabConfig) {
             return self::displayName();
         }
@@ -50,7 +50,7 @@ class ContentOverviewTabWidget extends Widget
                 'name' => 'tabId',
                 'value' => $this->tabId,
                 'errors' => $this->getErrors('tabId'),
-                'options' => Plugin::getInstance()->contentOverviewService->getTabs('widget')->map(function ($tab) {
+                'options' => Plugin::getInstance()->getSettings()->getTabs('widget')->map(function ($tab) {
                     return [
                         'label' => $tab['label'],
                         'value' => $tab['id']
@@ -74,7 +74,7 @@ class ContentOverviewTabWidget extends Widget
     public function getBodyHtml(): ?string
     {
         return Craft::$app->view->renderTemplate('contentoverview/widgets/tabwidget.twig', [
-            'tab' => Plugin::getInstance()->contentOverviewService->getTabConfig($this->tabId),
+            'tab' => Plugin::getInstance()->getSettings()->getTabConfig($this->tabId),
             'settings' => Plugin::getInstance()->getSettings(),
             'cols' => $this->cols
         ]);
