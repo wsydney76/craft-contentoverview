@@ -2,6 +2,7 @@
 
 namespace wsydney76\contentoverview\services;
 
+use Craft;
 use craft\base\Component;
 use wsydney76\contentoverview\models\Column;
 use wsydney76\contentoverview\models\Section;
@@ -28,9 +29,9 @@ class ContentOverviewService extends Component
         ]);
     }
 
-    public function createSection(): Section
+    public function createSection(string $className = Section::class): Section
     {
-        return new Section();
+        return Craft::createObject($className);
     }
 
 }
