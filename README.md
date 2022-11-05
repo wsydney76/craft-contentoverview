@@ -204,6 +204,31 @@ return [
 ];
 ```
 
+**Tip:** As you can see, such configs can can long and messy.  
+
+You can avoid this by offloading each substructure to its own file and requiring this file in the main configuration:
+
+```php
+'tabs' =>   [
+        require 'contentoverview/tab1.php',
+        // ... more tabs
+    ]
+```
+
+```php
+// contentoverview/tab1.php
+
+<?php
+return [
+    'label' => 'Site',
+    'id' => 'tab1',
+    'columns' => [
+        // ... column config goes here
+    ],
+];
+
+```
+
 ## Events
 
 Custom modules can extend the configuration by adding keys to the `sections` config array and modify the query via an

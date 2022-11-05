@@ -3,7 +3,7 @@
 namespace wsydney76\contentoverview\models;
 
 use craft\base\Model;
-use craft\helpers\ArrayHelper;
+use Illuminate\Support\Collection;
 
 class Settings extends Model
 {
@@ -20,7 +20,7 @@ class Settings extends Model
         'cards' => ['width' => 400, 'height' => 200, 'format' => 'webp'],
     ];
 
-    public function getTabs($scope = 'all')
+    public function getTabs($scope = 'all'): Collection
     {
 
         $tabs = collect($this->tabs);
@@ -38,6 +38,6 @@ class Settings extends Model
 
     public function getTabConfig($tabId): ?array
     {
-        return ArrayHelper::firstWhere($this->tabs, 'id', $tabId);
+        return collect($this->tabs)->firstWhere('id', $tabId);
     }
 }
