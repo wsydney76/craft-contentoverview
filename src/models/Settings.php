@@ -31,7 +31,7 @@ class Settings extends Model
         }
 
         return $tabs->filter(function($tab) use ($scope) {
-            return !isset($tab['scope']) || $tab['scope'] === $scope;
+            return $tab->scope === 'all' || $tab->scope === $scope;
         });
 
 
