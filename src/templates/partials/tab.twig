@@ -1,13 +1,18 @@
+{# @var settings \wsydney76\contentoverview\models\Settings #}
+{# @var sectionConfig \wsydney76\contentoverview\models\Section #}
+
 {% for column in tab.columns %}
 
     <div class="co-column-{{ column.width }}">
-        {% for sectionSettings in column.sections %}
+        {% for sectionConfig in column.sections %}
 
-            {% set section = craft.app.sections.sectionByHandle(sectionSettings.section) %}
-            {% set layout = sectionSettings.layout ?? settings.defaultLayout %}
+            {% set sectionConfig = craft.contentoverview.normalizesectionConfig(sectionConfig) %}
+
+            {% set section = craft.app.sections.sectionByHandle(sectionConfig.section) %}
+            {% set layout = sectionConfig.layout ?? settings.defaultLayout %}
             {% set transform = settings.transforms[layout] %}
-            {% set heading = sectionSettings.heading ?? section.name %}
-            {% set showButtons = sectionSettings.buttons is defined ? sectionSettings.buttons : true %}
+            {% set heading = sectionConfig.heading ?? section.name %}
+            {% set showButtons = sectionConfig.buttons is defined ? sectionConfig.buttons : true %}
 
             <div class="co-section co-{{ layout }}">
 
@@ -26,7 +31,7 @@
                 </div>
 
                 {% if userCanView %}
-                    {% set results = craft.contentoverview.getEntries(sectionSettings) %}
+                    {% set results = sectionConfig.entries %}
                     {% set entries = results.entries %}
 
                     <div class="co-entries co-{{ layout }}-{{ column.width }}">
@@ -39,9 +44,9 @@
 
                     </div>
 
-                    {% if sectionSettings.limit is defined and results.count > sectionSettings.limit %}
+                    {% if sectionConfig.limit is defined and results.count > sectionConfig.limit %}
                         <div class="co-count">
-                            {{ results.count - sectionSettings.limit }} {{ "more entries"|t }}
+                            {{ results.count - sectionConfig.limit }} {{ "more entries"|t }}
                         </div>
                     {% endif %}
 

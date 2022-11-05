@@ -3,13 +3,13 @@
 
     <div class="co-image">
         {% set image = null %}
-        {% if sectionSettings.imageField is defined %}
-            {% set image = entry.getFieldValue(sectionSettings.imageField).one %}
+        {% if sectionConfig.imageField %}
+            {% set image = entry.getFieldValue(sectionConfig.imageField).one %}
         {% endif %}
         {% if image %}
             {{ image.img(transform) }}
         {% else %}
-            {{ svg(sectionSettings.icon ?? '@appicons/newspaper.svg')|attr({width:'20px', height: '20px'}) }}
+            {{ svg(sectionConfig.icon ?? '@appicons/newspaper.svg')|attr({width:'20px', height: '20px'}) }}
         {% endif %}
     </div>
     {% set style = section.type == 'structure' and layout == 'list' ? "padding-left: #{(entry.level-1)*24}px" %}
@@ -23,13 +23,13 @@
                     <div class="status {{ entry.status }}"></div>
                 {% endif %}
 
-            {% if sectionSettings.popupInfo is defined %}
+            {% if sectionConfig.popupInfo %}
                 <div class="info" tabindex="0" aria-role="button"
                       aria-label="{{ "Information"|t('contentoverview') }}">
-                            {% if sectionSettings.popupInfo is string %}
-                                {{ view.renderObjectTemplate(sectionSettings.popupInfo, entry)|raw }}
+                            {% if sectionConfig.popupInfo is string %}
+                                {{ view.renderObjectTemplate(sectionConfig.popupInfo, entry)|raw }}
                             {% else %}
-                                {% for info in sectionSettings.popupInfo %}
+                                {% for info in sectionConfig.popupInfo %}
                                     <div>
                                         {{ view.renderObjectTemplate(info, entry)|raw }}
                                     </div>
@@ -46,12 +46,12 @@
             </div>
 
             <div class="co-info">
-                {% if sectionSettings.info is defined %}
+                {% if sectionConfig.info %}
                     <div>
-                        {% if sectionSettings.info is string %}
-                            {{ view.renderObjectTemplate(sectionSettings.info, entry)|raw }}
+                        {% if sectionConfig.info is string %}
+                            {{ view.renderObjectTemplate(sectionConfig.info, entry)|raw }}
                         {% else %}
-                            {% for info in sectionSettings.info %}
+                            {% for info in sectionConfig.info %}
                                 <div>
                                     {{ view.renderObjectTemplate(info, entry)|raw }}
                                 </div>

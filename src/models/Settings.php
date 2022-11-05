@@ -19,6 +19,7 @@ class Settings extends Model
         'cardlets' => ['width' => 150, 'height' => 150, 'format' => 'webp'],
         'cards' => ['width' => 400, 'height' => 200, 'format' => 'webp'],
     ];
+    public string $sectionClass = Section::class;
 
     public function getTabs($scope = 'all'): Collection
     {

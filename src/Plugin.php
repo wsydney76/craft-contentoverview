@@ -12,7 +12,6 @@ use craft\services\UserPermissions;
 use craft\web\twig\variables\Cp;
 use craft\web\twig\variables\CraftVariable;
 use wsydney76\contentoverview\models\Settings;
-use wsydney76\contentoverview\services\ContentOverviewService;
 use wsydney76\contentoverview\variables\ContentOverviewVariable;
 use wsydney76\contentoverview\widgets\ContentOverviewLinksWidget;
 use wsydney76\contentoverview\widgets\ContentOverviewTabWidget;
@@ -29,11 +28,6 @@ class Plugin extends \craft\base\Plugin
         if (!Craft::$app->request->isCpRequest) {
             return;
         }
-
-        $this->setComponents([
-            'contentOverviewService' => ContentOverviewService::class
-        ]);
-
 
         /** @var Settings $settings */
         $settings = $this->getSettings();
