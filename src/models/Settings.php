@@ -37,7 +37,7 @@ class Settings extends Model
 
     }
 
-    public function getTabConfig($tabId): ?array
+    public function getTabConfig($tabId): ?Tab
     {
         return collect($this->tabs)->firstWhere('id', $tabId);
     }

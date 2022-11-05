@@ -6,13 +6,11 @@
     <div class="co-column-{{ column.width }}">
         {% for sectionConfig in column.sections %}
 
-            {% set sectionConfig = craft.contentoverview.normalizesectionConfig(sectionConfig) %}
-
             {% set section = craft.app.sections.sectionByHandle(sectionConfig.section) %}
             {% set layout = sectionConfig.layout ?? settings.defaultLayout %}
             {% set transform = settings.transforms[layout] %}
             {% set heading = sectionConfig.heading ?? section.name %}
-            {% set showButtons = sectionConfig.buttons is defined ? sectionConfig.buttons : true %}
+            {% set showButtons = sectionConfig.buttons %}
 
             <div class="co-section co-{{ layout }}">
 
@@ -44,7 +42,7 @@
 
                     </div>
 
-                    {% if sectionConfig.limit is defined and results.count > sectionConfig.limit %}
+                    {% if sectionConfig.limit and results.count > sectionConfig.limit %}
                         <div class="co-count">
                             {{ results.count - sectionConfig.limit }} {{ "more entries"|t }}
                         </div>
