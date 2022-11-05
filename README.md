@@ -57,8 +57,64 @@ Structure of the configuration file:
             - any custom keys (?mixed, can be used to modify the entries query via event, see below)
        
 
+TODO: Update example.
 
-Example:
+The array based config shown below is now replaced by a 'fluid' config using tab/column/section models
+
+```php
+// contentoverview.php
+
+<?php
+
+use wsydney76\contentoverview\services\ContentOverviewService;
+
+$co = new ContentOverviewService();
+
+return [
+
+    'navLabel' => 'Content Dashboard',
+
+    'tabs' => [
+        $co->createTab('Site', 'tab1', require 'contentoverview/tab1.php'),
+        $co->createTab('News', 'tab2', require 'contentoverview/tab2.php', 'page'),
+        $co->createTab('News (Work)', 'tab3', require 'contentoverview/tab3.php', 'widget'),
+    ]
+];
+
+// tab3.php
+<?php
+/** @var wsydney76\contentoverview\services\ContentOverviewService $co */
+
+use wsydney76\contentoverview\services\ContentOverviewService;
+
+return [
+    $co->createColumn(12, [
+        $co->createSection()
+            ->section('news')
+            ->heading('Drafts')
+            ->limit(6)
+            ->info('{tagline}, {postDate|date("short")}')
+            ->imageField('featuredImage')
+            ->layout('cardlets')
+            ->scope('drafts'),
+
+        $co->createSection()
+            ->section('news')
+            ->heading('My Provisional Drafts')
+            ->limit(6)
+            ->info('{tagline}, {postDate|date("short")}')
+            ->imageField('featuredImage')
+            ->layout('cardlets')
+            ->scope('provisional')
+            ->ownDraftsOnly(true)
+    ])
+
+];
+
+
+```
+
+Outdated example:
 
 ```php
 <?php
