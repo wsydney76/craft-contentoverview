@@ -20,12 +20,9 @@ Support your workflow and quality management: Show drafts / status / own provisi
 
 ![screenshot](/images/screenshot2.jpg)
 
-## Config
+## Plugin config
 
-Setup a config file in `config/contentoverview.php`
-
-Structure of the configuration file:
-
+If you want to overwrite the settings from the plugins setting page, create a file `contentoverview.php` in your config folder.
 
 - pluginTitle (?string, label for primary navigation, page title)
 - enableNav (?bool, default true, enable link item in primary navigation)
@@ -33,7 +30,22 @@ Structure of the configuration file:
 - widgetText (?string, text for dashboard link widget)
 - linkTarget (?string, set to '_blank' to open edit screens in a new tab (default), else blank '')
 - defaultLayout (?string, list (default)|cardlets|cards)
-- transforms (?array, image transforms for layouts) 
+- transforms (?array, image transforms for layouts)
+
+```php
+<?php
+
+return [
+    'enableNav' => false
+];
+```
+
+## Tab Config
+
+Setup a config file in `config/contentoverview_tabs.php`
+
+Structure of this file:
+
 - tabs[] (array, tabs of the page)
     - label (string, tab text)
     - id (string, unique id, used as anchor)
@@ -62,7 +74,7 @@ Example:
 We use a 'fluid' config using tab/column/section models.
 
 ```php
-// contentoverview.php
+// contentoverview_tabs.php
 
 <?php
 

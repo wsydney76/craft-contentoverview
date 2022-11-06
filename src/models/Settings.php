@@ -2,6 +2,7 @@
 
 namespace wsydney76\contentoverview\models;
 
+use Craft;
 use craft\base\Model;
 use Illuminate\Support\Collection;
 
@@ -10,7 +11,6 @@ class Settings extends Model
     public $pluginTitle = 'Content Overview';
     public $enableNav = true;
     public $enableWidgets = true;
-    public $tabs = [];
     public $widgetText = 'Get a quick overview of your content';
     public $linkTarget = '_blank';
     public $defaultLayout = 'list';
@@ -20,6 +20,8 @@ class Settings extends Model
         'cards' => ['width' => 400, 'height' => 200, 'format' => 'webp'],
     ];
     public string $sectionClass = Section::class;
+
+    protected array $_tabs = [];
 
     public function rules(): array
     {
@@ -31,7 +33,15 @@ class Settings extends Model
     public function getTabs($scope = 'all'): Collection
     {
 
-        $tabs = collect($this->tabs);
+        if (!$this->_tabs) {
+            $config = Craft::$app->config->getConfigFromFile('contentoverview_tabs');
+            if (!$config) {
+                return collect([]);
+            }
+            $this->_tabs = $config['tabs'];
+        }
+
+        $tabs = collect($this->_tabs);
 
         if ($scope === 'all') {
             return $tabs;
@@ -46,6 +56,6 @@ class Settings extends Model
 
     public function getTabConfig($tabId): ?Tab
     {
-        return collect($this->tabs)->firstWhere('id', $tabId);
+        return collect($this->getTabs())->firstWhere('id', $tabId);
     }
 }
