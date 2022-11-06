@@ -21,7 +21,7 @@ class Section extends Model
     public ?string $icon = null;
     public ?string $imageField = null;
     public array|string $info = '';
-    public string $layout = 'list';
+    public string $layout = '';
     public ?int $limit = null;
     public ?string $orderBy = null;
     public bool $ownDraftsOnly = false;

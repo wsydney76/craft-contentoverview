@@ -1,7 +1,7 @@
 {% extends "_layouts/cp.twig" %}
 {% set settings = craft.contentoverview.settings %}
 
-{% set title = settings.navLabel|t('contentoverview') %}
+{% set title = settings.pluginTitle|t('contentoverview') %}
 
 {% set tabSettings = settings.getTabs('page') %}
 

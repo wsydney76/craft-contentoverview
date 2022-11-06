@@ -1,7 +1,7 @@
 {% set settings = craft.contentoverview.settings %}
 
 <p>
-    {{ settings.widgetText }}
+    {{ settings.widgetText|t('site') }}
 </p>
 
 {% for tab in settings.getTabs('page') %}

@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 class Settings extends Model
 {
-    public $navLabel = 'Content Overview';
+    public $pluginTitle = 'Content Overview';
     public $enableNav = true;
     public $enableWidgets = true;
     public $tabs = [];
@@ -20,6 +20,13 @@ class Settings extends Model
         'cards' => ['width' => 400, 'height' => 200, 'format' => 'webp'],
     ];
     public string $sectionClass = Section::class;
+
+    public function rules(): array
+    {
+        return [
+            ['pluginTitle', 'string', 'max' => 30]
+        ];
+    }
 
     public function getTabs($scope = 'all'): Collection
     {

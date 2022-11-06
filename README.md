@@ -27,7 +27,7 @@ Setup a config file in `config/contentoverview.php`
 Structure of the configuration file:
 
 
-- navLabel (?string, label for primary navigation, page title)
+- pluginTitle (?string, label for primary navigation, page title)
 - enableNav (?bool, default true, enable link item in primary navigation)
 - enableWidgets (?bool, default true, enable dashboard widgets that display a single tab)
 - widgetText (?string, text for dashboard link widget)
@@ -57,9 +57,9 @@ Structure of the configuration file:
             - any custom keys (?mixed, can be used to modify the entries query via event, see below)
        
 
-TODO: Update example.
+Example:
 
-The array based config shown below is now replaced by a 'fluid' config using tab/column/section models
+We use a 'fluid' config using tab/column/section models.
 
 ```php
 // contentoverview.php
@@ -75,6 +75,7 @@ return [
     'navLabel' => 'Content Dashboard',
 
     'tabs' => [
+        // Params: Tab label, Tab Id (anchor), Tab Config (in separate files here for better readability), Scope (all (default)|page|widget)
         $co->createTab('Site', 'tab1', require 'contentoverview/tab1.php'),
         $co->createTab('News', 'tab2', require 'contentoverview/tab2.php', 'page'),
         $co->createTab('News (Work)', 'tab3', require 'contentoverview/tab3.php', 'widget'),
@@ -88,6 +89,7 @@ return [
 use wsydney76\contentoverview\services\ContentOverviewService;
 
 return [
+    // Params: Column width (in a 12 columns grid), Section config
     $co->createColumn(12, [
         $co->createSection()
             ->section('news')
@@ -106,184 +108,51 @@ return [
             ->imageField('featuredImage')
             ->layout('cardlets')
             ->scope('provisional')
-            ->ownDraftsOnly(true)
+            ->ownDraftsOnly(true),
+        
+        // Optinal param: Class name of a class extending wsydney76\contentoverview\models\Section,
+        // where you can set defaults to avoid repeating yourself.      
+        $co->createSection(NewsSection::class)
+            ->heading('Pending')
+            ->status('pending'),
+            
+        $co->createSection(NewsSection::class)
+            ->heading('Drafts')
+            ->scope('drafts')
+            ->popupInfo([
+                Craft::t('site', 'Draft created by') . ' {creator.name}',
+                Craft::t('site', 'Draft created at') . ' {draftCreatedAt|date("short")}',
+                '{draftNotes ? "Draft Notes:"}',
+                '{draftNotes}'
+            ]),
     ])
 
-];
-
-
-```
-
-Outdated example:
-
-```php
-<?php
-
-return [
-
-    'navLabel' => 'Content Dashboard',
-
-    'tabs' => [
-        [
-            'label' => 'Site',
-            'id' => 'tab1',
-
-            // width: span in a 12 columns grid
-            'columns' => [
-                [
-                    'width' => 7,
-                    'sections' => [
-                        [
-                            'section' => 'news',
-                            'heading' => 'Latest News',
-                            'limit' => 6,
-                            'info' => '{tagline}, {postDate|date("short")}',
-                            'imageField' => 'featuredImage',
-                            'layout' => 'cards'
-                        ]
-                    ]
-                ],
-                [
-                    'width' => 5,
-                    'sections' => [
-                        [
-                            'section' => 'heroArea',
-                            'limit' => 2,
-                            'info' => '{heroTagline}',
-                            'imageField' => 'heroImage',
-                            'layout' => 'cardlets'
-                        ],
-                        [
-                            'section' => 'page',
-                            'heading' => 'Page Structure',
-                            'info' => '{isDraft ? "Draft"} {type.name}',
-                            'icon' => '@appicons/globe.svg',
-                            'scope' => 'all'
-                        ]
-                    ]
-                ],
-                [
-                    'width' => 4,
-                    'sections' => [
-                        [
-                            'section' => 'legal',
-                            'info' => '{type.name}'
-                        ]
-                    ]
-                ]
-            ],
-        ],
-        [
-            'label' => 'News',
-            'id' => 'tab2',
-            'columns' => [
-                [
-                    'width' => 6,
-                    'sections' => [
-                        [
-                            'heading' => 'Drafts',
-                            'section' => 'news',
-                            'limit' => 12,
-                            'info' => [
-                                '{tagline}',
-                                '{postDate|date("short")}',
-                            ],
-                            'popupInfo' => [
-                                Craft::t('site', 'Draft created by') . ' {creator.name}',
-                                Craft::t('site', 'Draft created at') . ' {draftCreatedAt|date("short")}',
-                                '{draftNotes ? "Draft Notes:"}',
-                                '{draftNotes}'
-                            ],
-                            'imageField' => 'featuredImage',
-                            'layout' => 'cardlets',
-                            'orderBy' => 'postDate desc',
-                            'scope' => 'drafts',
-                            'buttons' => false,
-                        ],
-
-                        [
-                            'heading' => 'My Provisional Drafts',
-                            'section' => 'news',
-                            'limit' => 12,
-                            'info' => '{tagline}, {postDate|date("short")}',
-                            'imageField' => 'featuredImage',
-                            'layout' => 'cardlets',
-                            'orderBy' => 'postDate desc',
-                            'scope' => 'provisional',
-                            'ownDraftsOnly' => true,
-                            'buttons' => false
-                        ],
-                        [
-                            'heading' => 'Pending',
-                            'section' => 'news',
-                            'limit' => 12,
-                            'info' => '{tagline}, {postDate|date("short")}',
-                            'imageField' => 'featuredImage',
-                            'layout' => 'cardlets',
-                            'orderBy' => 'postDate desc',
-                            'status' => 'pending',
-                            'buttons' => false
-                        ],
-                        [
-                            'heading' => 'Disabled',
-                            'section' => 'news',
-                            'limit' => 12,
-                            'info' => '{tagline}, {postDate|date("short")}',
-                            'imageField' => 'featuredImage',
-                            'layout' => 'cardlets',
-                            'orderBy' => 'postDate desc',
-                            'status' => 'disabled',
-                            'buttons' => false
-                        ],
-
-                    ]
-                ],
-                [
-                    'width' => 6,
-                    'sections' => [
-                        [
-                            'heading' => 'Latest Live News',
-                            'section' => 'news',
-                            'limit' => 12,
-                            'info' => '{postDate|date("short")}',
-                            'imageField' => 'featuredImage',
-                            'layout' => 'list',
-                            'orderBy' => 'postDate desc',
-                            'status' => 'live'
-                        ],
-
-                    ]
-                ]
-            ]
-        ]
-    ]
-];
-```
-
-**Tip:** As you can see, such configs can can long and messy.  
-
-You can avoid this by offloading each substructure to its own file and requiring this file in the main configuration:
-
-```php
-'tabs' =>   [
-        require 'contentoverview/tab1.php',
-        // ... more tabs
-    ]
-```
-
-```php
-// contentoverview/tab1.php
+// modules/main/NewsSection.php
 
 <?php
-return [
-    'label' => 'Site',
-    'id' => 'tab1',
-    'columns' => [
-        // ... column config goes here
-    ],
+
+namespace modules\main;
+
+use wsydney76\contentoverview\models\Section;
+
+class NewsSection extends Section
+{
+    public array|string $section = 'news';
+    public ?int $limit = 12;
+    public ?string $imageField = 'featuredImage';
+    public string $layout = 'cardlets';
+    public bool $buttons = false;
+    public array|string $info = '{tagline}, {postDate|date("short")}';
+}
+
 ];
 
+
 ```
+
+Phpstorms autocompletion can give hints about the available settings and their parameters.
+
+![screenshot](/images/autocomplete.jpg)
 
 ## Events
 
@@ -292,22 +161,23 @@ event:
 
 ```php
 use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
-use wsydney76\contentoverview\services\ContentOverviewService;
+use wsydney76\contentoverview\models\Section;
 
 
 Event::on(
-  ContentOverviewService::class,
-  ContentOverviewService::EVENT_MODIFY_CONTENTOVERVIEW_QUERY,
-  function(ModifyContentOverviewQueryEvent $event) {
-  
-    // Add selection criteria
-    if (isset($event->sectionSettings['tagline'])) {
-        $event->query->tagline($event->sectionSettings['tagline']);
+    Section::class,
+    Section::EVENT_MODIFY_CONTENTOVERVIEW_QUERY,
+    function(ModifyContentOverviewQueryEvent $event) {
+        /** @var Section $sectionConfig */
+        $sectionConfig = $event->sender;
+        if (isset($sectionConfig->custom['tagline'])) {
+            $event->query->tagline($sectionConfig->custom['tagline']);
+        }
+        
+        // Add eager loading related elements that appear in info 
+        $event->query->with(['assignedTo ...'])
     }
-    
-    // Add eager loading related elements that appear in info 
-    $event->query->with(['assignedTo ...'])
-  });
+);
 ```
 
 ## Link Widget

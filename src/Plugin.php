@@ -11,6 +11,7 @@ use craft\services\Dashboard;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\Cp;
 use craft\web\twig\variables\CraftVariable;
+use wsydney76\contentoverview\assets\ContentOverviewAssetBundle;
 use wsydney76\contentoverview\models\Settings;
 
 use wsydney76\contentoverview\services\ContentOverviewService;
@@ -22,6 +23,8 @@ use function array_splice;
 
 class Plugin extends \craft\base\Plugin
 {
+
+    public bool $hasCpSettings = true;
 
     public function init()
     {
@@ -47,7 +50,7 @@ class Plugin extends \craft\base\Plugin
                 function(RegisterCpNavItemsEvent $event) use ($settings) {
                     array_splice($event->navItems, 1, 0, [
                         [
-                            'label' => Craft::t('contentoverview', $settings->navLabel),
+                            'label' => Craft::t('site', $settings->pluginTitle),
                             'url' => 'contentoverview',
                             'fontIcon' => 'field'
                         ]
@@ -56,16 +59,7 @@ class Plugin extends \craft\base\Plugin
             );
         }
 
-        Event::on(
-            Dashboard::class,
-            Dashboard::EVENT_REGISTER_WIDGET_TYPES,
-            function(RegisterComponentTypesEvent $event) use ($settings) {
-                $event->types[] = ContentOverviewLinksWidget::class;
-                if ($settings->enableWidgets) {
-                    $event->types[] = ContentOverviewTabWidget::class;
-                }
-            }
-        );
+
 
         Event::on(
             CraftVariable::class,
@@ -90,12 +84,20 @@ class Plugin extends \craft\base\Plugin
             ];
         });
 
-        Craft::$app->view->registerAssetBundle('wsydney76\\contentoverview\\assets\\ContentOverviewAssetBundle');
+        Craft::$app->view->registerAssetBundle(ContentOverviewAssetBundle::class);
     }
 
     protected function createSettingsModel(): ?Model
     {
         return new Settings();
+    }
+
+    protected function settingsHtml(): ?string
+    {
+        return Craft::$app->view->renderTemplate(
+            'contentoverview/settings.twig',
+            ['settings' => $this->getSettings()]
+        );
     }
 
 }

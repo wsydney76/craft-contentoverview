@@ -10,7 +10,7 @@ class ContentOverviewLinksWidget extends Widget
 {
     public static function displayName(): string
     {
-        return Craft::t('contentoverview', Plugin::getInstance()->getSettings()->navLabel) . ' Links';
+        return Craft::t('contentoverview', Plugin::getInstance()->getSettings()->pluginTitle) . ' Links';
     }
 
     public static function icon(): ?string
