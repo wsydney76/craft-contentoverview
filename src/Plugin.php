@@ -59,7 +59,16 @@ class Plugin extends \craft\base\Plugin
             );
         }
 
-
+        Event::on(
+            Dashboard::class,
+            Dashboard::EVENT_REGISTER_WIDGET_TYPES,
+            function(RegisterComponentTypesEvent $event) use ($settings) {
+                $event->types[] = ContentOverviewLinksWidget::class;
+                if ($settings->enableWidgets) {
+                    $event->types[] = ContentOverviewTabWidget::class;
+                }
+            }
+        );
 
         Event::on(
             CraftVariable::class,
