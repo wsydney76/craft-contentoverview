@@ -13,22 +13,6 @@
 
             {% set showButtons = sectionConfig.buttons %}
 
-            <div class="btngroup">
-                <button type="button" class="btn submit">{{ 'New'|t('app') }}</button>
-                <button type="button" class="btn submit menubtn"></button>
-                <div class="menu">
-                    <ul>
-                        <li>
-                            <a class="formsubmit">
-                                {{ "Save and continue editing"|t('app') }}
-                            </a>
-                        </li>
-                        <li><a class="formsubmit" data-redirect="{{ 'users/new#'|hash }}">{{ "Save and add another"|t('app') }}</a></li>
-                    </ul>
-                </div>
-            </div>
-
-
             <div class="co-section co-{{ layout }}">
 
                 <div class="co-btns">
