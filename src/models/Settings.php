@@ -56,6 +56,6 @@ class Settings extends Model
 
     public function getTabConfig($tabId): ?Tab
     {
-        return collect($this->getTabs())->firstWhere('id', $tabId);
+        return $this->getTabs()->firstWhere('id', $tabId);
     }
 }

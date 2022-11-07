@@ -247,6 +247,23 @@ class Section extends Model
         return $this;
     }
 
+    public function getHeading(): string
+    {
+        return $this->heading != '' ? $this->heading : Craft::$app->sections->getSectionByHandle($this->section)->name;
+    }
+
+    public function userCanView(): bool
+    {
+        return Craft::$app->user->identity
+            ->can('viewentries:'. Craft::$app->sections->getSectionByHandle($this->section)->uid);
+    }
+
+    public function userCanSave(): bool
+    {
+        return Craft::$app->user->identity
+            ->can('saveentries:'. Craft::$app->sections->getSectionByHandle($this->section)->uid);
+    }
+
     public function getEntries(): array
     {
         /** @var Settings $settings */
