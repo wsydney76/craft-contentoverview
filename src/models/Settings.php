@@ -6,15 +6,18 @@ use Craft;
 use craft\base\Model;
 use Illuminate\Support\Collection;
 
+
 class Settings extends Model
 {
-    public $pluginTitle = 'Content Overview';
-    public $enableNav = true;
-    public $enableWidgets = true;
-    public $widgetText = 'Get a quick overview of your content';
-    public $linkTarget = '_blank';
-    public $defaultLayout = 'list';
-    public $transforms = [
+    public string $pluginTitle = 'Content Overview';
+    public array $pages = [];
+    public bool $enableNav = true;
+    public bool $enableWidgets = true;
+    public string $widgetText = 'Get a quick overview of your content';
+    public string $linkTarget = '_blank';
+    public string $defaultLayout = 'list';
+    public string $defaultPage = 'default';
+    public array $transforms = [
         'list' => ['width' => 50, 'height' => 50, 'format' => 'webp'],
         'cardlets' => ['width' => 150, 'height' => 150, 'format' => 'webp'],
         'cards' => ['width' => 400, 'height' => 200, 'format' => 'webp'],
@@ -30,32 +33,44 @@ class Settings extends Model
         ];
     }
 
-    public function getTabs($scope = 'all'): Collection
+    public function getPages(): Collection
     {
+        $pages = $this->pages;
+        if (!$pages) {
+            // create a single page for use in list widgets
+            $pages = [
+                $this->defaultPage => [
+                    'label' => $this->pluginTitle,
+                    'url' => 'contentoverview'
+                ]
+            ];
+        }
 
-        if (!$this->_tabs) {
-            $config = Craft::$app->config->getConfigFromFile('contentoverview_tabs');
-            if (!$config) {
-                return collect([]);
+        return collect($pages)->filter(function($page) {
+            if (!isset($page['group'])) {
+                return true;
             }
-            $this->_tabs = $config['tabs'];
-        }
-
-        $tabs = collect($this->_tabs);
-
-        if ($scope === 'all') {
-            return $tabs;
-        }
-
-        return $tabs->filter(function($tab) use ($scope) {
-            return $tab->scope === 'all' || $tab->scope === $scope;
+            $currentUser = Craft::$app->user->identity;
+            return $currentUser->admin || $currentUser->isInGroup($page['group']);
         });
-
-
     }
 
-    public function getTabConfig($tabId): ?Tab
+    public function getTabs(string $page = 'tabs'): Collection
     {
-        return $this->getTabs()->firstWhere('id', $tabId);
+        $config = Craft::$app->config->getConfigFromFile("contentoverview/$page");
+        if (!$config) {
+            return collect([]);
+        }
+        return collect($config['tabs']);
+    }
+
+    public function getTabConfig(string $page, string $tabId): ?Tab
+    {
+        return $this->getTabs($page)->filter(fn($tab) => $tab->getId() === $tabId)->first();
+    }
+
+    public function getPageLabel(string $page): string
+    {
+        return $this->pages[$page]['label'] ?? '';
     }
 }

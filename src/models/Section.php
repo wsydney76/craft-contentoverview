@@ -269,6 +269,8 @@ class Section extends Model
         /** @var Settings $settings */
         $settings = Plugin::getInstance()->getSettings();
 
+        $currentSite = Craft::$app->request->getParam('site', Craft::$app->sites->primarySite->handle);
+
         $query = Entry::find()
             ->section($this->section)
             ->status(null);
@@ -289,7 +291,10 @@ class Section extends Model
             $query
                 ->site('*')
                 ->unique()
-                ->preferSites([Craft::$app->request->getParam('site', Craft::$app->sites->primarySite->handle)]);
+                ->preferSites([$currentSite]);
+        } else {
+            $query
+                ->site($currentSite);
         }
 
         if ($this->imageField) {

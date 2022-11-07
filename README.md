@@ -47,9 +47,7 @@ Setup a config file in `config/contentoverview_tabs.php`
 Structure of this file:
 
 - tabs[] (array, tabs of the page)
-    - label (string, tab text)
-    - id (string, unique id, used as anchor)
-    - scope (?string page|widget, whether to show this tab only on the page or in widgets)
+    - label (string, tab text) 
     - columns[] (array, columns inside the tab container, uses a 12 columns grid)
         - width (int, number of columns occupied, 1-12)
         - sections[] (array, sections display inside the column)

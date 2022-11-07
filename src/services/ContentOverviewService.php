@@ -11,13 +11,11 @@ use wsydney76\contentoverview\models\Tab;
 class ContentOverviewService extends Component
 {
 
-    public function createTab($label, $id, $columns, $scope = 'all')
+    public function createTab($label, $columns)
     {
         return new Tab([
             'label' => $label,
-            'id' => $id,
             'columns' => $columns,
-            'scope' => $scope
         ]);
     }
 

@@ -3,7 +3,14 @@
 
 {% set title = settings.pluginTitle|t('contentoverview') %}
 
-{% set tabSettings = settings.getTabs('page') %}
+{% if page is not defined %}
+    {% set page = settings.defaultPage %}
+{% endif %}
+{% set selectedSubnavItem  = page %}
+
+{% set title = title ~ ': ' ~ settings.getPageLabel(page) %}
+
+{% set tabSettings = settings.getTabs(page) %}
 
 {# tabs is a cp variable, see https://craftcms.com/docs/4.x/extend/cp-templates.html#adding-tabs #}
 {% set tabs = [] %}
@@ -17,10 +24,11 @@
 {% endblock %}
 
 {% block content %}
+
     {% for tab in tabSettings %}
         <div id="{{ "#{tab.id}" }}" class="co {{ loop.index > 1 ? 'hidden' }}">
             {% include 'contentoverview/partials/tab.twig' with {
-            	tab,
+                tab,
                 settings
             } only %}
         </div>

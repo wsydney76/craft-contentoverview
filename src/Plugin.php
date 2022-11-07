@@ -6,11 +6,14 @@ use Craft;
 use craft\base\Model;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterCpNavItemsEvent;
+use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
+use craft\helpers\UrlHelper;
 use craft\services\Dashboard;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\Cp;
 use craft\web\twig\variables\CraftVariable;
+use craft\web\UrlManager;
 use wsydney76\contentoverview\assets\ContentOverviewAssetBundle;
 use wsydney76\contentoverview\models\Settings;
 
@@ -19,6 +22,8 @@ use wsydney76\contentoverview\variables\ContentOverviewVariable;
 use wsydney76\contentoverview\widgets\ContentOverviewLinksWidget;
 use wsydney76\contentoverview\widgets\ContentOverviewTabWidget;
 use yii\base\Event;
+
+use function array_map;
 use function array_splice;
 
 class Plugin extends \craft\base\Plugin
@@ -48,14 +53,32 @@ class Plugin extends \craft\base\Plugin
                 Cp::class,
                 Cp::EVENT_REGISTER_CP_NAV_ITEMS,
                 function(RegisterCpNavItemsEvent $event) use ($settings) {
+
+                    $navItem = [
+                        'label' => Craft::t('site', $settings->pluginTitle),
+                        'url' => 'contentoverview',
+                        'fontIcon' => 'field'
+                    ];
+
+                    if ($settings->getPages()->count() > 1) {
+                        $navItem['subnav'] = $settings->getPages();
+                    }
+
+                    // \Craft::dd($navItem);
+
                     array_splice($event->navItems, 1, 0, [
-                        [
-                            'label' => Craft::t('site', $settings->pluginTitle),
-                            'url' => 'contentoverview',
-                            'fontIcon' => 'field'
-                        ]
+                        $navItem
                     ]);
                 }
+            );
+
+            Event::on(
+                UrlManager::class,
+                UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
+                $event->rules = array_merge($event->rules, [
+                    'contentoverview/<page:{slug}>' => ['template' => 'contentoverview/index']
+                ]);
+            }
             );
         }
 

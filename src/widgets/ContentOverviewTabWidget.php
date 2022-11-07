@@ -5,6 +5,7 @@ namespace wsydney76\contentoverview\widgets;
 use Craft;
 use craft\base\Widget;
 use craft\helpers\Cp;
+use craft\helpers\StringHelper;
 use wsydney76\contentoverview\Plugin;
 
 
@@ -34,7 +35,7 @@ class ContentOverviewTabWidget extends Widget
             return self::displayName();
         }
 
-        $tabConfig = Plugin::getInstance()->getSettings()->getTabConfig($this->tabId);
+        $tabConfig = Plugin::getInstance()->getSettings()->getTabConfig('widgets', $this->tabId);
         if (!$tabConfig) {
             return self::displayName();
         }
@@ -50,10 +51,10 @@ class ContentOverviewTabWidget extends Widget
                 'name' => 'tabId',
                 'value' => $this->tabId,
                 'errors' => $this->getErrors('tabId'),
-                'options' => Plugin::getInstance()->getSettings()->getTabs('widget')->map(function ($tab) {
+                'options' => Plugin::getInstance()->getSettings()->getTabs('widgets')->map(function ($tab) {
                     return [
-                        'label' => $tab['label'],
-                        'value' => $tab['id']
+                        'label' => $tab->label,
+                        'value' => $tab->getId()
                     ];
                 })
             ]) .
@@ -64,6 +65,8 @@ class ContentOverviewTabWidget extends Widget
                 'name' => 'cols',
                 'value' => $this->cols,
                 'errors' => $this->getErrors('cols'),
+                'instructions' => Craft::t('contentoverview',
+                    'Widget must be at least two columns wide if "Two" is selected, or at least four columns if "All" is selected'),
                 'options' => [
                     ['label' => Craft::t('contentoverview', 'Two (half width)'), 'value' => 'half'],
                     ['label' => Craft::t('contentoverview', 'All (full width)'), 'value' => 'full'],
@@ -76,7 +79,7 @@ class ContentOverviewTabWidget extends Widget
         $settings = Plugin::getInstance()->getSettings();
 
         return Craft::$app->view->renderTemplate('contentoverview/widgets/tabwidget.twig', [
-            'tab' => $settings->getTabConfig($this->tabId),
+            'tab' => $settings->getTabConfig('widgets', $this->tabId),
             'settings' => $settings,
             'cols' => $this->cols
         ]);

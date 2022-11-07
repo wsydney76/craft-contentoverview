@@ -3,23 +3,16 @@
 namespace wsydney76\contentoverview\models;
 
 use craft\base\Model;
+use craft\helpers\StringHelper;
 
 class Tab extends Model
 {
     public string $label = '';
-    public string $id = '';
     public array $columns = [];
-    public string $scope = 'all';
 
     public function label(string $label): self
     {
         $this->label = $label;
-        return $this;
-    }
-
-    public function id(string $id): self
-    {
-        $this->id = $id;
         return $this;
     }
 
@@ -29,10 +22,9 @@ class Tab extends Model
         return $this;
     }
 
-    public function scope(string $scope): self
+    public function getId()
     {
-        $this->scope = $scope;
-        return $this;
+        return StringHelper::toKebabCase($this->label);
     }
 
 }
