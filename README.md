@@ -4,7 +4,7 @@ This plugin shows configurable overviews of a site's content.
 
 ## Disclaimer
 
-* This plugin is developed as a side project for internal use only.
+* This plugin is developed as a side/training project for internal use only.
 * It works for us, but may not work everywhere.
 * There may be (well, is) an unlimited amount of
   * bugs
@@ -93,7 +93,7 @@ An additional param `group` can be added if this page should only be available f
 
 ### Widgets
 
-A single tab can be used in as dashboard widget.
+A single tab can be used as dashboard widget.
 
 Define them in a special `config/contentoverview/widgets.php` page config file.
 
@@ -138,7 +138,7 @@ Structure of this file:
             - allSites (?bool, true = display (unique) entries from all sites)
             - orderBy (?string|array see [docs](https://craftcms.com/docs/4.x/entries.html#orderby)
             - buttons (?bool whether buttion 'new entry', 'all entries' will be shown
-            - any custom keys (?mixed, can be used to modify the entries query via event, see below)
+            - custom  (?array, any custom keys, can be used to modify the entries query via event, see below)
        
 
 Example:
@@ -146,7 +146,7 @@ Example:
 We use a 'fluid' config using tab/column/section models.
 
 ```php
-// contentoverview_tabs.php
+// page1.php
 
 <?php
 
@@ -155,14 +155,10 @@ use wsydney76\contentoverview\services\ContentOverviewService;
 $co = new ContentOverviewService();
 
 return [
-
-    'navLabel' => 'Content Dashboard',
-
-    'tabs' => [
-        // Params: Tab label, Tab Id (anchor), Tab Config (in separate files here for better readability), Scope (all (default)|page|widget)
-        $co->createTab('Site', 'tab1', require 'tab1.php'),
-        $co->createTab('News', 'tab2', require 'tab2.php'),
-        $co->createTab('News (Work)', 'tab3', require 'tab3.php'),
+    'tabs' => [       
+        $co->createTab('Site', require 'tab1.php'),
+        $co->createTab('News', require 'tab2.php'),
+        $co->createTab('News (Work)', require 'tab3.php'),
     ]
 ];
 
