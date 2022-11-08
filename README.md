@@ -1,14 +1,29 @@
 # Content Overview
 
-Shows an overview of a site's content.
+This plugin shows configurable overviews of a site's content.
 
-Work in progress...
+## Disclaimer
+
+* This plugin is developed as a side project for internal use only.
+* It works for us, but may not work everywhere.
+* There may be (well, is) an unlimited amount of
+  * bugs
+  * rough edges (the CSS is a mess...) 
+  * incompatibilities
+  * lack of professional standards
+  * lack of documentation/inline comments
+  * missing features
+  * bad performance
+  * bad English.
+* Developed for Craft 4.3, but not guaranteed to survive any updates.
+* We are not able to offer any support.
+* But feel free to use it/fork it/do whatever you want with it.
 
 ## Installation
 
 Run `composer require wsydney76/craft-contentoverview`
 
-Run `craft plugin/install`
+Run `craft plugin/install contentoverview`
 
 ## Screenshots
 
@@ -27,10 +42,12 @@ If you want to overwrite the settings from the plugins setting page, create a fi
 - pluginTitle (?string, label for primary navigation, page title)
 - enableNav (?bool, default true, enable link item in primary navigation)
 - enableWidgets (?bool, default true, enable dashboard widgets that display a single tab)
+- defaultPage (?string, page key for the first/only page.)
 - widgetText (?string, text for dashboard link widget)
 - linkTarget (?string, set to '_blank' to open edit screens in a new tab (default), else blank '')
 - defaultLayout (?string, list (default)|cardlets|cards)
 - transforms (?array, image transforms for layouts)
+- pages (!array, defines subpages)
 
 ```php
 <?php
@@ -40,9 +57,66 @@ return [
 ];
 ```
 
-## Tab Config
+### Single Page Setup
 
-Setup a config file in `config/contentoverview_tabs.php`
+By default, a link to a single page is added to the navigation sidebar.
+
+![screenshot](/images/nav1.jpg)
+
+This requires a setup up file named after the `defaultPage` settings.
+
+
+### Multi Page Setup
+
+You can configure multiple pages by adding them to the `config/contenoverview.php` file.
+
+![screenshot](/images/nav2.jpg)
+
+```php
+<?php
+
+return [
+    'defaultPage' => 'page1',
+    'pages' => [
+        'page1' => ['label' => 'Site/News', 'url' => 'contentoverview/page1'],
+        'page2' => ['label' => 'In Progress', 'url' => 'contentoverview/page2', 'group' => 'reviewers'],
+    ]
+];
+```
+
+defaultPage: the page that is initially selected. Usually the first one.
+pages: an array of page configs in the form of [CP Sections Subnav](https://craftcms.com/docs/4.x/extend/cp-section.html#subnavs):
+    
+`'<pagename>' => ['label' => '<pageheading>', 'url' => 'contentoverview/<pagename>'],`
+
+An additional param `group` can be added if this page should only be available for admins/members of this group.
+
+### Widgets
+
+A single tab can be used in as dashboard widget.
+
+Define them in a special `config/contentoverview/widgets.php` page config file.
+
+````php
+<?php
+
+use wsydney76\contentoverview\services\ContentOverviewService;
+
+$co = new ContentOverviewService();
+
+return [
+    'tabs' => [
+        $co->createTab('Site', require 'tab1.php'),
+        $co->createTab('News', require 'tab2.php'),
+    ]
+];
+````
+
+## Page Config
+
+Setup config files in `config/contentoverview/<pagename>.php`.
+
+If you are using a single page, name this page according to the `defaultPage` setting.
 
 Structure of this file:
 
@@ -58,7 +132,7 @@ Structure of this file:
             - popupInfo (?string|array, object template(s) to render in an information popup)
             - imageField (?string, name of the image field to use)
             - layout (?string, (list (default)|cardlets|cards)
-            - scope (?string, whether drafts should be shown, drafts|provisional|provisionaluser|all, default: only published entries will be included)
+            - scope (?string, whether drafts should be shown, drafts|provisional|all, default: only published entries will be included)
             - ownDraftsOnly (?bool, if true and scope is defined: show only drafts created by the current user)
             - status (?string|array, see [docs](https://craftcms.com/docs/4.x/entries.html#status)
             - allSites (?bool, true = display (unique) entries from all sites)
@@ -86,9 +160,9 @@ return [
 
     'tabs' => [
         // Params: Tab label, Tab Id (anchor), Tab Config (in separate files here for better readability), Scope (all (default)|page|widget)
-        $co->createTab('Site', 'tab1', require 'contentoverview/tab1.php'),
-        $co->createTab('News', 'tab2', require 'contentoverview/tab2.php', 'page'),
-        $co->createTab('News (Work)', 'tab3', require 'contentoverview/tab3.php', 'widget'),
+        $co->createTab('Site', 'tab1', require 'tab1.php'),
+        $co->createTab('News', 'tab2', require 'tab2.php'),
+        $co->createTab('News (Work)', 'tab3', require 'tab3.php'),
     ]
 ];
 

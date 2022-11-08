@@ -1,3 +1,5 @@
+{# @var settings \wsydney76\contentoverview\models\Settings #}
+
 {% extends "_layouts/cp.twig" %}
 {% set settings = craft.contentoverview.settings %}
 
@@ -6,6 +8,12 @@
 {% if page is not defined %}
     {% set page = settings.defaultPage %}
 {% endif %}
+
+{% set availablePages = settings.getPages() %}
+{% if availablePages[page] is not defined  %}
+    {% exit 403 %}
+{% endif %}
+
 {% set selectedSubnavItem  = page %}
 
 {% set title = title ~ ': ' ~ settings.getPageLabel(page) %}
@@ -24,7 +32,6 @@
 {% endblock %}
 
 {% block content %}
-
     {% for tab in tabSettings %}
         <div id="{{ "#{tab.id}" }}" class="co {{ loop.index > 1 ? 'hidden' }}">
             {% include 'contentoverview/partials/tab.twig' with {

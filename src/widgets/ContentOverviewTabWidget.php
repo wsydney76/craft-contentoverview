@@ -5,7 +5,6 @@ namespace wsydney76\contentoverview\widgets;
 use Craft;
 use craft\base\Widget;
 use craft\helpers\Cp;
-use craft\helpers\StringHelper;
 use wsydney76\contentoverview\Plugin;
 
 
@@ -51,12 +50,10 @@ class ContentOverviewTabWidget extends Widget
                 'name' => 'tabId',
                 'value' => $this->tabId,
                 'errors' => $this->getErrors('tabId'),
-                'options' => Plugin::getInstance()->getSettings()->getTabs('widgets')->map(function ($tab) {
-                    return [
-                        'label' => $tab->label,
-                        'value' => $tab->getId()
-                    ];
-                })
+                'options' => Plugin::getInstance()->getSettings()->getTabs('widgets')->map(fn($tab) => [
+                    'label' => $tab->label,
+                    'value' => $tab->getId()
+                ])
             ]) .
 
             Cp::selectFieldHtml([
