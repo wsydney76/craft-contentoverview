@@ -30,7 +30,7 @@ class Section extends Model
     public ?string $scope = null;
     public ?string $status = null;
 
-    protected $_layouts = ['list', 'cardlets', 'cards'];
+    protected $_layouts = ['list', 'cardlets', 'cards', 'line'];
 
     /**
      * Whether to show (unique) entries from all sites
@@ -135,7 +135,7 @@ class Section extends Model
     /**
      * Layout in which the entries will be displayd
      *
-     * One of list|cardlets|cards
+     * One of list|cardlets|cards|line
      *
      * Default: list
      *

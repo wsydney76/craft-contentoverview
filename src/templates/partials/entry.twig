@@ -1,17 +1,21 @@
 <a href="{{ entry.cpEditUrl }}" target="{{ settings.linkTarget }}"
    class="co-entry {{ entry.isDraft ? 'draft' : 'published' }} {{ entry.isUnpublishedDraft ? 'provisional' }}">
 
-    <div class="co-image">
-        {% set image = null %}
-        {% if sectionConfig.imageField %}
-            {% set image = entry.getFieldValue(sectionConfig.imageField).one %}
-        {% endif %}
-        {% if image %}
-            {{ image.img(transform) }}
-        {% else %}
-            {{ svg(sectionConfig.icon ?? '@appicons/newspaper.svg')|attr({width:'20px', height: '20px'}) }}
-        {% endif %}
-    </div>
+
+    {% if sectionConfig.layout != 'line' %}
+        <div class="co-image">
+            {% set image = null %}
+            {% if sectionConfig.imageField %}
+                {% set image = entry.getFieldValue(sectionConfig.imageField).one %}
+            {% endif %}
+            {% if image %}
+                {{ image.img(transform) }}
+            {% else %}
+                {{ svg(sectionConfig.icon ?? '@appicons/newspaper.svg')|attr({width:'20px', height: '20px'}) }}
+            {% endif %}
+        </div>
+    {% endif %}
+
     {% set style = section.type == 'structure' and layout == 'list' ? "padding-left: #{(entry.level-1)*24}px" %}
     <div class="co-content"  style="{{ style }};">
 

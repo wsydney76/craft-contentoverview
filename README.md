@@ -28,7 +28,7 @@ Run `craft plugin/install contentoverview`
 
 ## Screenshots
 
-Show different sections in different layouts (cards, cardlets, list). Add section specific infos and image.
+Show different sections in different layouts (cards, cardlets, list, line). Add section specific infos and image.
 
 ![screenshot](/images/screenshot1.jpg)
 
@@ -46,7 +46,7 @@ If you want to overwrite the settings from the plugins setting page, create a fi
 - defaultPage (?string, page key for the first/only page.)
 - widgetText (?string, text for dashboard link widget)
 - linkTarget (?string, set to '_blank' to open edit screens in a new tab (default), else blank '')
-- defaultLayout (?string, list (default)|cardlets|cards)
+- defaultLayout (?string, list (default)|cardlets|cards|line)
 - transforms (?array, image transforms for layouts)
 - pages (!array, defines subpages)
 
@@ -132,7 +132,7 @@ Structure of this file:
             - info (?string|array, object template(s) to render in addition to the title)
             - popupInfo (?string|array, object template(s) to render in an information popup)
             - imageField (?string, name of the image field to use)
-            - layout (?string, (list (default)|cardlets|cards)
+            - layout (?string, (list (default)|cardlets|cards|line)
             - scope (?string, whether drafts should be shown, drafts|provisional|all, default: only published entries will be included)
             - ownDraftsOnly (?bool, if true and scope is defined: show only drafts created by the current user)
             - status (?string|array, see [docs](https://craftcms.com/docs/4.x/entries.html#status)

@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 class Settings extends Model
 {
     // see read me for doc
-    public string $pluginTitle = 'Content Overview';
+    public string $pluginTitle   = 'Content Overview';
     public array $pages = [];
     public bool $enableNav = true;
     public bool $enableWidgets = true;
@@ -22,6 +22,7 @@ class Settings extends Model
         'list' => ['width' => 50, 'height' => 50, 'format' => 'webp'],
         'cardlets' => ['width' => 150, 'height' => 150, 'format' => 'webp'],
         'cards' => ['width' => 400, 'height' => 200, 'format' => 'webp'],
+        'line' => ['width' => 50, 'height' => 50, 'format' => 'webp'] // no image in line layout
     ];
     public string $sectionClass = Section::class;
 

@@ -8,7 +8,7 @@
 
             {% set section = craft.app.sections.sectionByHandle(sectionConfig.section) %}
             {% set layout = sectionConfig.layout  ? sectionConfig.layout : settings.defaultLayout %}
-            
+
             {% set transform = settings.transforms[layout] %}
 
             {% set showButtons = sectionConfig.buttons %}

@@ -396,3 +396,56 @@
 .\? {
     border: 1px solid red;
 }
+
+/* ========================================
+    Line Layout
+  ==========================================*/
+
+.co-line .co-entries {
+    display: block;
+}
+
+.co-line .co-entry {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.co-line .co-content {
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    width: 100%;
+
+}
+
+.co-line .co-status {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+}
+
+.co-line .co-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+    margin-left: 8px;
+}
+
+.co-line .co-title {
+    margin-right: 8px;
+    flex-grow: 1;
+    display: flex;
+}
+
+.co-line .co-info {
+    color: var(--gray-600);
+    font-weight: 500;
+    font-size: 14px;
+    text-align: right;
+    padding-right: 8px;
+}
