@@ -11,7 +11,14 @@ use wsydney76\contentoverview\models\Tab;
 class ContentOverviewService extends Component
 {
 
-    public function createTab($label, $columns)
+    /**
+     * Create a Tab model
+     *
+     * @param string $label Tab label, will also be used as kebap formatted id
+     * @param array $columns Array of column models
+     * @return Tab
+     */
+    public function createTab(string $label, array $columns): Tab
     {
         return new Tab([
             'label' => $label,
@@ -19,7 +26,14 @@ class ContentOverviewService extends Component
         ]);
     }
 
-    public function createColumn($width = 12, $sections = [])
+    /**
+     * Create a Column model
+     *
+     * @param int $width Number of columns 1-12
+     * @param array $sections Array of section models
+     * @return Column
+     */
+    public function createColumn(int $width = 12, array $sections = []): Column
     {
         return new Column([
             'width' => $width,
@@ -27,6 +41,13 @@ class ContentOverviewService extends Component
         ]);
     }
 
+    /**
+     * Create a Section model
+     *
+     * @param string $className Class name of a class inherited from Section
+     * @return Section
+     * @throws \yii\base\InvalidConfigException
+     */
     public function createSection(string $className = Section::class): Section
     {
         return Craft::createObject($className);

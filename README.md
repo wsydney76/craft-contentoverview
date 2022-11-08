@@ -16,8 +16,9 @@ This plugin shows configurable overviews of a site's content.
   * bad performance
   * bad English.
 * Developed for Craft 4.3, but not guaranteed to survive any updates.
-* We are not able to offer any support.
-* But feel free to use it/fork it/do whatever you want with it.
+* Supports only entries element type.
+* **We are not able to offer any support.**
+* Feel free to use it/fork it/adopt it/do whatever you want with it.
 
 ## Installation
 
@@ -282,3 +283,4 @@ One column is too narrow to be useful.
 * Improve responsive styles
 * Check permission handling
 * Some translations are missing...
+* Some inline comments are missing...

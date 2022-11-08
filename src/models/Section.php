@@ -26,7 +26,7 @@ class Section extends Model
     public ?string $orderBy = null;
     public bool $ownDraftsOnly = false;
     public array|string $popupInfo = '';
-    public array|string $section = '';
+    public string $section = '';
     public ?string $scope = null;
     public ?string $status = null;
 
@@ -75,7 +75,7 @@ class Section extends Model
      *
      * Will be translated in 'site' category
      *
-     * Default: Section name(s)
+     * Default: Section name
      *
      * @param string $heading
      * @return $this
@@ -206,10 +206,10 @@ class Section extends Model
     /**
      * Section handle or array of section handles
      *
-     * @param array|string $section section handle(s)
+     * @param string $section section handle
      * @return $this
      */
-    public function section(array|string $section): self
+    public function section(string $section): self
     {
         $this->section = $section;
         return $this;
@@ -247,23 +247,44 @@ class Section extends Model
         return $this;
     }
 
+    /**
+     * Get heading for the section, from config if set, else section name
+     *
+     * @return string
+     */
     public function getHeading(): string
     {
         return $this->heading != '' ? $this->heading : Craft::$app->sections->getSectionByHandle($this->section)->name;
     }
 
+    /**
+     * Is current user allowed to view the section?
+     *
+     * @return bool
+     */
     public function userCanView(): bool
     {
         return Craft::$app->user->identity
             ->can('viewentries:'. Craft::$app->sections->getSectionByHandle($this->section)->uid);
     }
 
+    /**
+     * Is current user allowd to save entries in the section?
+     *
+     * @return bool
+     */
     public function userCanSave(): bool
     {
         return Craft::$app->user->identity
             ->can('saveentries:'. Craft::$app->sections->getSectionByHandle($this->section)->uid);
     }
 
+
+    /**
+     * Returns entries and entry count for this section
+     *
+     * @return array with keys entries: array of entries (respecting a limit, if set), count: number of entries (without limit)
+     */
     public function getEntries(): array
     {
         /** @var Settings $settings */

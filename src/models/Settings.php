@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 
 class Settings extends Model
 {
+    // see read me for doc
     public string $pluginTitle = 'Content Overview';
     public array $pages = [];
     public bool $enableNav = true;
@@ -33,6 +34,11 @@ class Settings extends Model
         ];
     }
 
+    /**
+     * Returns a collection of page configs available for the current user
+     *
+     * @return Collection
+     */
     public function getPages(): Collection
     {
         $pages = $this->pages;
@@ -55,7 +61,13 @@ class Settings extends Model
         });
     }
 
-    public function getTabs(string $page = 'tabs'): Collection
+    /**
+     * Returns an array of Tab models for a given page
+     *
+     * @param string $page
+     * @return Collection
+     */
+    public function getTabs(string $page = 'default'): Collection
     {
         $config = Craft::$app->config->getConfigFromFile("contentoverview/$page");
         if (!$config) {
@@ -64,11 +76,24 @@ class Settings extends Model
         return collect($config['tabs']);
     }
 
+
+    /**
+     * Returns a tab model for given page/tabId
+     *
+     * @param string $page
+     * @param string $tabId
+     * @return Tab|null
+     */
     public function getTabConfig(string $page, string $tabId): ?Tab
     {
         return $this->getTabs($page)->filter(fn($tab) => $tab->getId() === $tabId)->first();
     }
 
+
+    /**
+     * @param string $page
+     * @return string
+     */
     public function getPageLabel(string $page): string
     {
         return $this->pages[$page]['label'] ?? '';
