@@ -1,7 +1,7 @@
 {
   "name": "wsydney76/craft-contentoverview",
   "description": "Content Overview",
-  "version": "2.0.0-beta.5",
+  "version": "2.0.0",
   "type": "craft-plugin",
   "keywords": ["craft", "plugin", "cp"],
   "license": "MIT",
