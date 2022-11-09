@@ -13,14 +13,4 @@ class ContentOverviewVariable extends Component
         return Plugin::getInstance()->getSettings();
     }
 
-
-    public function normalizeSectionConfig($sectionConfig)
-    {
-        if ($sectionConfig instanceof Section) {
-            return $sectionConfig;
-        }
-
-        return new Section($sectionConfig);
-    }
-
 }
