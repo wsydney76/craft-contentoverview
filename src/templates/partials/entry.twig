@@ -16,7 +16,7 @@
         </div>
     {% endif %}
 
-    {% set style = section.type == 'structure' and layout == 'list' ? "padding-left: #{(entry.level-1)*24}px" %}
+    {% set style = section.type == 'structure' and (layout == 'list' or layout == 'line') ? "padding-left: #{(entry.level-1)*24}px" %}
     <div class="co-content"  style="{{ style }};">
 
         <div class="co-status">
