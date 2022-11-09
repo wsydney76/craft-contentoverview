@@ -38,7 +38,7 @@ Support your workflow and quality management: Show drafts / status / own provisi
 
 ## Plugin config
 
-If you want to overwrite the settings from the plugins setting page, create a file `contentoverview.php` in your config folder.
+Create a file `contentoverview.php` in your config folder.
 
 - pluginTitle (?string, label for primary navigation, page title)
 - enableNav (?bool, default true, enable link item in primary navigation)
@@ -234,6 +234,38 @@ class NewsSection extends Section
 Phpstorms autocompletion can give hints about the available settings and their parameters.
 
 ![screenshot](/images/autocomplete.jpg)
+
+## Layouts
+
+Entries can be shown in different layouts.
+
+List and line layouts can show indentations for different levels in a structure.
+
+### Cards
+
+A vertical layout that allows unlimited multi line content.
+
+![Layout Cards](/images/layout_cards.jpg)
+
+### Cardlets
+
+A more compact layout, less space for info
+
+![Layout Cardlets](/images/layout_cardlets.jpg)
+
+### List
+
+Horizontal layout, keep info on one line! 
+
+![Layout List](/images/layout_list.jpg)
+
+### Line
+
+Horizontal layout without image. The most compact layout.
+
+![Layout Line](/images/layout_line.jpg)
+
+Do not specify a `imageField` for this layout.
 
 ## Events
 
