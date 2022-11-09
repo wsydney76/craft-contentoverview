@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.2 2022-11-09
+
+Added layout documentation to README.
+
 ## 2.0.1 2022-11-09
 
 Disabled settings page for now. Because it handled only a subset of settings,
