@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.1 2022-11-09
+
+Disabled settings page for now. Because it handled only a subset of settings,
+possible conflicts could occur if making changes in different places in a weird order.
+
 ## 2.0.0 2022-11-08
 
 Initial release.

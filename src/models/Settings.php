@@ -22,7 +22,7 @@ class Settings extends Model
         'list' => ['width' => 50, 'height' => 50, 'format' => 'webp'],
         'cardlets' => ['width' => 150, 'height' => 150, 'format' => 'webp'],
         'cards' => ['width' => 400, 'height' => 200, 'format' => 'webp'],
-        'line' => ['width' => 50, 'height' => 50, 'format' => 'webp'] // no image in line layout
+        'line' => null // no image in line layout
     ];
     public string $sectionClass = Section::class;
 

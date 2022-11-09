@@ -8,7 +8,6 @@ use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterCpNavItemsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
-use craft\helpers\UrlHelper;
 use craft\services\Dashboard;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\Cp;
@@ -16,20 +15,18 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use wsydney76\contentoverview\assets\ContentOverviewAssetBundle;
 use wsydney76\contentoverview\models\Settings;
-
 use wsydney76\contentoverview\services\ContentOverviewService;
 use wsydney76\contentoverview\variables\ContentOverviewVariable;
 use wsydney76\contentoverview\widgets\ContentOverviewLinksWidget;
 use wsydney76\contentoverview\widgets\ContentOverviewTabWidget;
 use yii\base\Event;
-
-use function array_map;
 use function array_splice;
 
 class Plugin extends \craft\base\Plugin
 {
 
-    public bool $hasCpSettings = true;
+    // Disable for now because of possible conflicts
+    public bool $hasCpSettings = false;
 
     public function init()
     {
