@@ -8,4 +8,5 @@ return [
     'Page' => 'Seite',
     'of' => 'von',
     'total entries' => 'Einträge insgesamt',
+    'Search' => 'Suchen',
 ];

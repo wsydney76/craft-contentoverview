@@ -3,7 +3,6 @@
 namespace wsydney76\contentoverview\controllers;
 
 use Craft;
-
 use craft\web\Controller;
 use wsydney76\contentoverview\models\Section;
 use wsydney76\contentoverview\Plugin;
@@ -18,6 +17,7 @@ class SectionController extends Controller
         // in the form of page-tabIndex-columnIndex-sectionIndex e.g. page1-1-1-0
         $sectionPath = Craft::$app->request->getRequiredBodyParam('sectionPath');
         $pageNo = Craft::$app->request->getRequiredBodyParam('pageNo');
+        $q = Craft::$app->request->getBodyParam('q');
 
         $segments = explode('-', $sectionPath);
 
@@ -34,7 +34,7 @@ class SectionController extends Controller
             throw new ForbiddenHttpException();
         }
 
-        $results = $section->getEntries($pageNo);
+        $results = $section->getEntries($pageNo, $q);
 
         return $this->asJson([
             'entriesHtml' => $this->view->renderTemplate('contentoverview/partials/section.twig', [

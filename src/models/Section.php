@@ -28,6 +28,7 @@ class Section extends Model
     public ?string $orderBy = null;
     public bool $ownDraftsOnly = false;
     public array|string $popupInfo = '';
+    public bool $search = false;
     public string $section = '';
     public ?string $scope = null;
     public ?string $status = null;
@@ -169,7 +170,8 @@ class Section extends Model
 
 
     /**
-     * Page key the section heading will be linked to
+     * Page key the section heading will be linked to. Can include a tab id as anchor
+     * e.g. page2#tab1
      *
      * @param string $linkToPage
      * @return $this
@@ -248,6 +250,19 @@ class Section extends Model
         return $this;
     }
 
+
+    /**
+     * Whether the section is searchable
+     *
+     * @param bool $search
+     * @return $this
+     */
+    public function search(bool $search): self
+    {
+        $this->search = $search;
+        return $this;
+    }
+
     /**
      * Filter by entry status. Will be passed as is to the entry query status setting.
      *
@@ -300,7 +315,7 @@ class Section extends Model
      *
      * @return array with keys entries: array of entries (respecting a limit, if set), count: number of entries (without limit)
      */
-    public function getEntries($pageNo = 1): Paginator
+    public function getEntries($pageNo = 1, $q = ''): Paginator
     {
         /** @var Settings $settings */
         $settings = Plugin::getInstance()->getSettings();
@@ -362,6 +377,13 @@ class Section extends Model
 
         if ($this->scope && $this->ownDraftsOnly) {
             $query->draftCreator(Craft::$app->user->identity);
+        }
+
+        $q = trim($q);
+        if ($q) {
+            $query
+                ->search($q)
+                ->orderBy('score desc');
         }
 
         if ($this->hasEventHandlers(self::EVENT_MODIFY_CONTENTOVERVIEW_QUERY)) {

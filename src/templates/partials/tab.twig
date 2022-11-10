@@ -24,8 +24,9 @@
                 <div class="co-btns">
                     {% set heading = sectionConfig.getHeading()|t('site') %}
                     <h2>
-                        {% if sectionConfig.linkToPage is defined %}
-                            <a class="go" href="{{ cpUrl("contentoverview/#{sectionConfig.linkToPage}") }}">{{ heading }}</a>
+                        {% if sectionConfig.linkToPage %}
+                            <a class="go"
+                               href="{{ cpUrl("contentoverview/#{sectionConfig.linkToPage}") }}">{{ heading }}</a>
                         {% else %}
                             {{ heading }}
                         {% endif %}
@@ -40,6 +41,19 @@
 
                 {% if sectionConfig.userCanView %}
                     {% set results = sectionConfig.entries %}
+
+                    {% if sectionConfig.search %}
+                        {% set inputId = "#{sectionPath}-search" %}
+                        <div class="co-search-container">
+                            <input type="text"
+                                   id="{{ inputId }}"
+                                   class="co-search text fullwidth"
+                                   placeholder="{{ 'Search'|t('contentoverview') }} ..."
+                            >
+                            <button class="btn" onclick="co_resetSearch('{{ sectionPath }}')">{{ "Reset"|t }}</button>
+                            <button class="btn" onclick="co_getSectionHtml('{{ sectionPath }}')">{{ "Search"|t }}</button>
+                        </div>
+                    {% endif %}
 
                     <div id="{{ sectionPath }}">
                         <div class="co-entries co-{{ layout }}-{{ column.width }}">
