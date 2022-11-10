@@ -1,12 +1,27 @@
+{% import '_includes/forms' as forms %}
+
 {% set inputId = "#{sectionPath}-search" %}
+{% set selectId = "#{sectionPath}-search-attribute" %}
+
 <div class="co-search-container">
-    <input type="text"
-           id="{{ inputId }}"
-           class="co-search text fullwidth"
-           title="Press enter"
-           placeholder="{{ 'Search'|t('contentoverview') }} ..."
-    >
+
+    {% if sectionConfig.searchAttributes %}
+        {{ forms.select({
+            id: selectId ,
+            options: sectionConfig.searchAttributes
+        }) }}
+    {% endif %}
+
+    {{ forms.text({
+        id: inputId,
+        class: "co-search #{sectionConfig.searchAttributes ? 'co-margin-left'}",
+        placeholder: 'Search'|t('contentoverview') ~ '...'
+    })
+
+    }}
+
     <button class="btn" onclick="co_resetSearch('{{ sectionPath }}')">{{ "Reset"|t }}</button>
+    <button class="btn" onclick="co_getSectionHtml('{{ sectionPath }}')">{{ "Search"|t }}</button>
 </div>
 
 {% js %}

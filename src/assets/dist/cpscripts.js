@@ -19,7 +19,18 @@ function co_getSearchValue(sectionPath) {
     if (input === null) {
         return '';
     }
-    return input.value
+
+    value = input.value
+
+    select = co_getSearchAttributesSelect(sectionPath)
+    if (select !== null)  {
+        attribute = select.value
+        if (attribute !== '') {
+            value = attribute + ':' + value
+        }
+    }
+
+    return value
 }
 
 function co_resetSearch(sectionPath) {
@@ -29,6 +40,10 @@ function co_resetSearch(sectionPath) {
 
 function co_getSearchInput(sectionPath) {
     return document.getElementById(sectionPath + '-search')
+}
+
+function co_getSearchAttributesSelect(sectionPath) {
+    return document.getElementById(sectionPath + '-search-attribute')
 }
 
 function co_registerSearchInput(sectionPath) {

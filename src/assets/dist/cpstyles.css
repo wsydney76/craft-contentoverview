@@ -209,12 +209,16 @@
 }
 
 .co-search-container {
-    margin-bottom: 6px;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
 }
 
 .co-search-container button {
+    margin-left: 8px;
+}
+
+.co-search-container input.co-margin-left {
     margin-left: 8px;
 }
 

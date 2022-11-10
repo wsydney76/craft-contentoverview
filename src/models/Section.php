@@ -29,6 +29,7 @@ class Section extends Model
     public bool $ownDraftsOnly = false;
     public array|string $popupInfo = '';
     public bool $search = false;
+    public array $searchAttributes = [];
     public string $section = '';
     public ?string $scope = null;
     public ?bool $sortByScore = false;
@@ -261,6 +262,18 @@ class Section extends Model
     public function search(bool $search): self
     {
         $this->search = $search;
+        return $this;
+    }
+
+    /**
+     * Array
+     *
+     * @param array $searchAttributes array with label / value
+     * @return $this
+     */
+    public function searchAttributes(array $searchAttributes): self
+    {
+        $this->searchAttributes = $searchAttributes;
         return $this;
     }
 
