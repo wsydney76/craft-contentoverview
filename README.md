@@ -142,6 +142,7 @@ Structure of this file:
             - buttons (?bool whether buttion 'new entry', 'all entries' will be shown
             - linkToPage (?string, the key of a page the heading is linked to. May contain an anchor, e.g. `page1#tab1`)
             - search (?bool, whether search will be enabled)
+            - sortByScore (?bool, whether search results will be sorted by score. default=false)
             - custom  (?array, any custom keys, can be used to modify the entries query via event, see below)
        
 
