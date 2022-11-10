@@ -13,11 +13,13 @@ function co_getSectionHtml(sectionPath, pageNo = 1) {
 
 function co_getSearchValue(sectionPath) {
     input = document.getElementById(sectionPath + '-search')
+    if (input === null) {
+        return '';
+    }
     return input.value
 }
 
-function co_resetSearch(sectionPath)
-{
+function co_resetSearch(sectionPath) {
     input = document.getElementById(sectionPath + '-search')
     input.value = ''
     co_getSectionHtml(sectionPath, 1)
