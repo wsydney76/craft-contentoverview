@@ -6,13 +6,16 @@ function co_getSectionHtml(sectionPath, pageNo = 1) {
         .then((response) => {
             containerElement = document.getElementById(sectionPath)
             containerElement.children[0].innerHTML = response.data.entriesHtml
-            containerElement.children[1].innerHTML = response.data.paginateHtml
+            if (containerElement.children.length > 1) {
+                // Has pagination html?
+                containerElement.children[1].innerHTML = response.data.paginateHtml
+            }
         });
 }
 
 
 function co_getSearchValue(sectionPath) {
-    input = document.getElementById(sectionPath + '-search')
+    input = co_getSearchInput(sectionPath)
     if (input === null) {
         return '';
     }
@@ -20,7 +23,19 @@ function co_getSearchValue(sectionPath) {
 }
 
 function co_resetSearch(sectionPath) {
-    input = document.getElementById(sectionPath + '-search')
-    input.value = ''
+    co_getSearchInput(sectionPath).value = ''
     co_getSectionHtml(sectionPath, 1)
+}
+
+function co_getSearchInput(sectionPath) {
+    return document.getElementById(sectionPath + '-search')
+}
+
+function co_registerSearchInput(sectionPath) {
+    co_getSearchInput(sectionPath).addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            co_getSectionHtml(sectionPath);
+        }
+    })
 }

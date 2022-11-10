@@ -1,0 +1,14 @@
+{% set inputId = "#{sectionPath}-search" %}
+<div class="co-search-container">
+    <input type="text"
+           id="{{ inputId }}"
+           class="co-search text fullwidth"
+           title="Press enter"
+           placeholder="{{ 'Search'|t('contentoverview') }} ..."
+    >
+    <button class="btn" onclick="co_resetSearch('{{ sectionPath }}')">{{ "Reset"|t }}</button>
+</div>
+
+{% js %}
+co_registerSearchInput('{{ sectionPath }}')
+{% endjs %}

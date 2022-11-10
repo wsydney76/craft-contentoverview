@@ -43,16 +43,7 @@
                     {% set results = sectionConfig.entries %}
 
                     {% if sectionConfig.search %}
-                        {% set inputId = "#{sectionPath}-search" %}
-                        <div class="co-search-container">
-                            <input type="text"
-                                   id="{{ inputId }}"
-                                   class="co-search text fullwidth"
-                                   placeholder="{{ 'Search'|t('contentoverview') }} ..."
-                            >
-                            <button class="btn" onclick="co_resetSearch('{{ sectionPath }}')">{{ "Reset"|t }}</button>
-                            <button class="btn" onclick="co_getSectionHtml('{{ sectionPath }}')">{{ "Search"|t }}</button>
-                        </div>
+                        {% include 'contentoverview/partials/search.twig' %}
                     {% endif %}
 
                     <div id="{{ sectionPath }}">
