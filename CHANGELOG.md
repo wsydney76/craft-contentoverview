@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.0 2022-11-10
+
+* Added pagination to sections.
+* Added search to sections.
+* Section heading can now link to other page.
+
 ## 2.0.2 2022-11-09
 
 Added layout documentation to README.

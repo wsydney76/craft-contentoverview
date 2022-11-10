@@ -29,6 +29,7 @@ Run `craft plugin/install contentoverview`
 ## Screenshots
 
 Show different sections in different layouts (cards, cardlets, list, line). Add section specific infos and image.
+Search and pagination is supported.
 
 ![screenshot](/images/screenshot1.jpg)
 
@@ -139,6 +140,8 @@ Structure of this file:
             - allSites (?bool, true = display (unique) entries from all sites)
             - orderBy (?string|array see [docs](https://craftcms.com/docs/4.x/entries.html#orderby)
             - buttons (?bool whether buttion 'new entry', 'all entries' will be shown
+            - linkToPage (?string, the key of a page the heading is linked to. May contain an anchor, e.g. `page1#tab1`)
+            - search (?bool, whether search will be enabled)
             - custom  (?array, any custom keys, can be used to modify the entries query via event, see below)
        
 
@@ -179,7 +182,8 @@ return [
             ->info('{tagline}, {postDate|date("short")}')
             ->imageField('featuredImage')
             ->layout('cardlets')
-            ->scope('drafts'),
+            ->scope('drafts')
+            ->search(true),
 
         $co->createSection()
             ->section('news')
