@@ -159,8 +159,22 @@
     }
 
 
+}
 
+.co-paginate {
+    margin-top: 24px;
+}
 
+.co-paginate button {
+    font-weight: bolder;
+}
+
+.co-paginate .co-inactive {
+    color: var(--gray-200)
+}
+
+.co-paginate .co-pages {
+    margin: 0 12px;
 }
 
 .co-section {

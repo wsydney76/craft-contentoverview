@@ -35,11 +35,11 @@ class ContentOverviewTabWidget extends Widget
         }
 
         $tabConfig = Plugin::getInstance()->getSettings()->getTabConfig('widgets', $this->tabId);
-        if (!$tabConfig) {
+        if (!$tabConfig['tab']) {
             return self::displayName();
         }
 
-        return $tabConfig['label'];
+        return $tabConfig['tab']['label'];
     }
 
     public function getSettingsHtml(): ?string
@@ -75,8 +75,11 @@ class ContentOverviewTabWidget extends Widget
     {
         $settings = Plugin::getInstance()->getSettings();
 
+        $tabConfig = $settings->getTabConfig('widgets', $this->tabId);
+
         return Craft::$app->view->renderTemplate('contentoverview/widgets/tabwidget.twig', [
-            'tab' => $settings->getTabConfig('widgets', $this->tabId),
+            'tab' => $tabConfig['tab'],
+            'tabIndex' => $tabConfig['tabIndex'],
             'settings' => $settings,
             'cols' => $this->cols
         ]);

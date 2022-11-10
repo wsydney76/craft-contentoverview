@@ -1,0 +1,26 @@
+{# @var results \craft\db\Paginator #}
+
+
+<div class="co-paginate">
+    {% if results.currentPage > 1 %}
+        <button aria-label="{{ 'Previous page'|t('contentoverview') }}"
+                onclick="co_getSectionHtml('{{ sectionPath }}', {{ results.currentPage - 1 }})">&lt;
+        </button>
+    {% else %}
+        <span class="co-inactive" aria-hidden="true">&lt;</span>
+    {% endif %}
+
+    <span class="co-pages">
+        {{ "Page"|t('contentoverview') }} {{ results.currentPage }} {{ "of"|t('contentoverview') }} {{ results.totalPages }}
+
+    ({{ results.totalResults }} {{ "total entries"|t('contentoverview') }})
+    </span>
+
+    {% if results.currentPage < results.totalPages %}
+        <button aria-label="{{ 'Next page'|t('contentoverview') }}"
+                onclick="co_getSectionHtml('{{ sectionPath }}', {{ results.currentPage + 1 }})">&gt;
+        </button>
+    {% else %}
+        <span class="co-inactive" aria-hidden="true">&gt;</span>
+    {% endif %}
+</div>

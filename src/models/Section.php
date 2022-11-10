@@ -4,6 +4,7 @@ namespace wsydney76\contentoverview\models;
 
 use Craft;
 use craft\base\Model;
+use craft\db\Paginator;
 use craft\elements\Entry;
 use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
 use wsydney76\contentoverview\Plugin;
@@ -23,6 +24,7 @@ class Section extends Model
     public array|string $info = '';
     public string $layout = '';
     public ?int $limit = null;
+    public ?string $linkToPage = '';
     public ?string $orderBy = null;
     public bool $ownDraftsOnly = false;
     public array|string $popupInfo = '';
@@ -165,6 +167,19 @@ class Section extends Model
         return $this;
     }
 
+
+    /**
+     * Page key the section heading will be linked to
+     *
+     * @param string $linkToPage
+     * @return $this
+     */
+    public function linkToPage(string $linkToPage): self
+    {
+        $this->linkToPage = $linkToPage;
+        return $this;
+    }
+
     /**
      * Order criteria, will be passed as is to the entry query orderBy param.
      *
@@ -265,7 +280,7 @@ class Section extends Model
     public function userCanView(): bool
     {
         return Craft::$app->user->identity
-            ->can('viewentries:'. Craft::$app->sections->getSectionByHandle($this->section)->uid);
+            ->can('viewentries:' . Craft::$app->sections->getSectionByHandle($this->section)->uid);
     }
 
     /**
@@ -276,7 +291,7 @@ class Section extends Model
     public function userCanSave(): bool
     {
         return Craft::$app->user->identity
-            ->can('saveentries:'. Craft::$app->sections->getSectionByHandle($this->section)->uid);
+            ->can('saveentries:' . Craft::$app->sections->getSectionByHandle($this->section)->uid);
     }
 
 
@@ -285,7 +300,7 @@ class Section extends Model
      *
      * @return array with keys entries: array of entries (respecting a limit, if set), count: number of entries (without limit)
      */
-    public function getEntries(): array
+    public function getEntries($pageNo = 1): Paginator
     {
         /** @var Settings $settings */
         $settings = Plugin::getInstance()->getSettings();
@@ -295,10 +310,6 @@ class Section extends Model
         $query = Entry::find()
             ->section($this->section)
             ->status(null);
-
-        if ($this->limit) {
-            $query->limit($this->limit);
-        }
 
         if ($this->orderBy) {
             $query->orderBy($this->orderBy);
@@ -320,23 +331,28 @@ class Section extends Model
 
         if ($this->imageField) {
             $query->with([
-                [$this->imageField, [
-                    'withTransforms' =>  [$settings->transforms[$this->layout]]
-                ]]
+                [
+                    $this->imageField, [
+                    'withTransforms' => [$settings->transforms[$this->layout]]
+                ]
+                ]
             ]);
         }
 
         switch ($this->scope) {
-            case 'drafts': {
+            case 'drafts':
+            {
                 $query->drafts(true);
                 break;
             }
-            case 'provisional': {
+            case 'provisional':
+            {
                 $query
                     ->provisionalDrafts(true);
                 break;
             }
-            case 'all': {
+            case 'all':
+            {
                 $query
                     ->provisionalDrafts(null)
                     ->drafts(null);
@@ -344,7 +360,7 @@ class Section extends Model
             }
         }
 
-        if($this->scope && $this->ownDraftsOnly ) {
+        if ($this->scope && $this->ownDraftsOnly) {
             $query->draftCreator(Craft::$app->user->identity);
         }
 
@@ -354,11 +370,10 @@ class Section extends Model
             ]));
         }
 
-        return [
-            'entries' => $query->collect(),
-            'count' => $query->count()
-        ];
-
+        return new Paginator($query, [
+            'currentPage' => $pageNo,
+            'pageSize' => $this->limit ?? 99999
+        ]);
     }
 
 }

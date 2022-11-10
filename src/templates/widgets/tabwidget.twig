@@ -5,7 +5,9 @@
     <div class="co {{ cols }}">
         {% include 'contentoverview/partials/tab.twig' with {
             tab,
-            settings
+            settings,
+            page: 'widgets',
+            tabIndex
         } only %}
     </div>
 {% else %}

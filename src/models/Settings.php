@@ -79,15 +79,29 @@ class Settings extends Model
 
 
     /**
-     * Returns a tab model for given page/tabId
+     * Returns a tab model/tabIndex for given page/tabId
      *
      * @param string $page
      * @param string $tabId
      * @return Tab|null
      */
-    public function getTabConfig(string $page, string $tabId): ?Tab
+    public function getTabConfig(string $page, string $tabId): array
     {
-        return $this->getTabs($page)->filter(fn($tab) => $tab->getId() === $tabId)->first();
+        $i = 0;
+        $selectedTab = null;
+        foreach ($this->getTabs($page) as $tab) {
+            if ($tab->getId() === $tabId) {
+                $selectedTab = $tab;
+                break;
+            }
+            $i++;
+        }
+
+        return [
+            'tab' => $selectedTab,
+            'tabIndex' => $i
+        ];
+
     }
 
 

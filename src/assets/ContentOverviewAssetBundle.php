@@ -14,6 +14,10 @@ class ContentOverviewAssetBundle extends AssetBundle
             'cpstyles.css'
         ];
 
+        $this->js = [
+            'cpscripts.js'
+        ];
+
         parent::init();
     }
 

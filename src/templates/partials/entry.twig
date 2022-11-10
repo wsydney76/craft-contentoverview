@@ -9,16 +9,18 @@
                 {% set image = entry.getFieldValue(sectionConfig.imageField).one %}
             {% endif %}
             {% if image %}
-                {{ image.img(transform) }}
+                {{ image.img(settings.transforms[sectionConfig.layout]) }}
             {% else %}
                 {{ svg(sectionConfig.icon ?? '@appicons/newspaper.svg')|attr({width:'20px', height: '20px'}) }}
             {% endif %}
         </div>
     {% endif %}
 
-    {% set style = section.type == 'structure' and (layout == 'list' or layout == 'line') ? "padding-left: #{(entry.level-1)*24}px" %}
-    <div class="co-content"  style="{{ style }};">
 
+    {% set layout = sectionConfig.layout  ? sectionConfig.layout : settings.defaultLayout %}
+    {% set style = section.type == 'structure' and layout in ['list','line']  ? "padding-left: #{(entry.level-1)*32}px" : '' %}
+
+    <div class="co-content"  style="{{ style }};">
         <div class="co-status">
 
                 {% if entry.isDraft %}

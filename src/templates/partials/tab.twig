@@ -1,10 +1,16 @@
 {# @var settings \wsydney76\contentoverview\models\Settings #}
 {# @var sectionConfig \wsydney76\contentoverview\models\Section #}
+{# @var results \craft\db\Paginator #}
 
 {% for column in tab.columns %}
 
+    {% set columnIndex = loop.index0 %}
+
     <div class="co-column-{{ column.width }}">
         {% for sectionConfig in column.sections %}
+
+            {% set sectionIndex = loop.index0 %}
+            {% set sectionPath = "#{page}-#{tabIndex}-#{columnIndex}-#{sectionIndex}" %}
 
             {% set section = craft.app.sections.sectionByHandle(sectionConfig.section) %}
             {% set layout = sectionConfig.layout  ? sectionConfig.layout : settings.defaultLayout %}
@@ -16,7 +22,15 @@
             <div class="co-section co-{{ layout }}">
 
                 <div class="co-btns">
-                    <h2>{{ sectionConfig.getHeading()|t('site') }}</h2>
+                    {% set heading = sectionConfig.getHeading()|t('site') %}
+                    <h2>
+                        {% if sectionConfig.linkToPage is defined %}
+                            <a class="go" href="{{ cpUrl("contentoverview/#{sectionConfig.linkToPage}") }}">{{ heading }}</a>
+                        {% else %}
+                            {{ heading }}
+                        {% endif %}
+                    </h2>
+
                     {% if showButtons and sectionConfig.userCanSave %}
                         <a class="btn submit" href="{{ cpUrl("entries/#{section.handle}/new") }}">
                             {{ "New entry"|t('contentoverview') }}
@@ -26,24 +40,28 @@
 
                 {% if sectionConfig.userCanView %}
                     {% set results = sectionConfig.entries %}
-                    {% set entries = results.entries %}
 
-                    <div class="co-entries co-{{ layout }}-{{ column.width }}">
+                    <div id="{{ sectionPath }}">
+                        <div class="co-entries co-{{ layout }}-{{ column.width }}">
 
-                        {% for entry in entries %}
-                            {% include 'contentoverview/partials/entry.twig' %}
-                        {% else %}
-                            {{ 'Nothing found'|t('contentoverview') }}
-                        {% endfor %}
+                            {% include 'contentoverview/partials/section.twig' with {
+                                sectionConfig,
+                                settings,
+                                entries: results.pageResults
+                            } only %}
+
+                        </div>
+
+                        {% if results.totalPages > 1 %}
+                            <div>
+                                {% include 'contentoverview/partials/paginate.twig' with {
+                                    sectionPath,
+                                    results
+                                } only %}
+                            </div>
+                        {% endif %}
 
                     </div>
-
-                    {% if sectionConfig.limit and results.count > sectionConfig.limit %}
-                        <div class="co-count">
-                            {{ results.count - sectionConfig.limit }} {{ "more entries"|t }}
-                        </div>
-                    {% endif %}
-
 
                     {% if showButtons %}
                         <div class="co-btns">
