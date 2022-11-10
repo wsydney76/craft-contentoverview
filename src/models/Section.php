@@ -31,6 +31,7 @@ class Section extends Model
     public bool $search = false;
     public string $section = '';
     public ?string $scope = null;
+    public ?bool $sortByScore = false;
     public ?string $status = null;
 
     protected $_layouts = ['list', 'cardlets', 'cards', 'line'];
@@ -264,6 +265,18 @@ class Section extends Model
     }
 
     /**
+     * Whether search results will be sorted by score
+     *
+     * @param bool $sortByScore
+     * @return $this
+     */
+    public function sortByScore(bool $sortByScore): self
+    {
+        $this->sortByScore = $sortByScore;
+        return $this;
+    }
+
+    /**
      * Filter by entry status. Will be passed as is to the entry query status setting.
      *
      * live|pending|expired|disabled
@@ -381,9 +394,10 @@ class Section extends Model
 
         $q = trim($q);
         if ($q) {
-            $query
-                ->search($q)
-                ->orderBy('score desc');
+            $query->search($q);
+            if ($this->sortByScore) {
+                $query->orderBy('score');
+            }
         }
 
         if ($this->hasEventHandlers(self::EVENT_MODIFY_CONTENTOVERVIEW_QUERY)) {
