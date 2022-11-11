@@ -18,6 +18,7 @@ class SectionController extends Controller
         $sectionPath = Craft::$app->request->getRequiredBodyParam('sectionPath');
         $pageNo = Craft::$app->request->getRequiredBodyParam('pageNo');
         $q = Craft::$app->request->getBodyParam('q');
+        $filters = Craft::$app->request->getBodyParam('filters');
 
         $segments = explode('-', $sectionPath);
 
@@ -34,7 +35,7 @@ class SectionController extends Controller
             throw new ForbiddenHttpException();
         }
 
-        $results = $section->getEntries($pageNo, $q);
+        $results = $section->getEntries($pageNo, $q, $filters);
 
         return $this->asJson([
             'entriesHtml' => $this->view->renderTemplate('contentoverview/partials/section.twig', [

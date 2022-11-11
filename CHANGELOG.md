@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+Work in progress...
+
+* Added filtering by entries fields
+* Added predefined search attributes, like `title:`
+* Added `infoTemplage` section setting
+
 ## 2.1.0 2022-11-10
 
 * Added pagination to sections.

@@ -5,20 +5,26 @@
 
 <div class="co-search-container">
 
-    {% if sectionConfig.searchAttributes %}
-        {{ forms.select({
-            id: selectId ,
-            options: sectionConfig.searchAttributes|map(option => {label: option.label|t('site'), value: option.value})
-        }) }}
+    {% if sectionConfig.filters %}
+        {% include 'contentoverview/partials/filters.twig' %}
     {% endif %}
 
-    {{ forms.text({
-        id: inputId,
-        class: "co-search #{sectionConfig.searchAttributes ? 'co-margin-left'}",
-        placeholder: 'Search'|t('contentoverview') ~ '...'
-    })
+    {% if sectionConfig.searchAttributes %}
+        <div>
+            {{ forms.select({
+                id: selectId ,
+                options: sectionConfig.searchAttributes|map(option => {label: option.label|t('site'), value: option.value})
+            }) }}
+        </div>
+    {% endif %}
 
-    }}
+
+        {{ forms.text({
+            id: inputId,
+            class: "co-search",
+            placeholder: 'Search'|t('contentoverview') ~ '...'
+        }) }}
+
 
     <button class="btn" onclick="co_resetSearch('{{ sectionPath }}')">{{ "Reset"|t('contentoverview') }}</button>
     <button class="btn" onclick="co_getSectionHtml('{{ sectionPath }}')">{{ "Search"|t('contentoverview') }}</button>

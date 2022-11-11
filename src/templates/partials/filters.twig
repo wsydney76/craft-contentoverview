@@ -1,0 +1,45 @@
+{% import '_includes/forms' as forms %}
+
+
+{% for filter in sectionConfig.filters %}
+    <div>
+        {% switch filter.type %}
+
+        {% case "relation" %}
+
+            {% set field = craft.app.fields.fieldByHandle(filter.field) %}
+
+            {% if field.sources != '*' %}
+                {% set sections = [] %}
+                {% for source in field.sources %}
+                    {% set section = craft.app.sections.sectionByUid(source|split(':')[1]) %}
+                    {% set sections = sections|push(section.handle) %}
+                {% endfor %}
+            {% else %}
+                {% set sections = null %}
+            {% endif %}
+
+
+            {% set entries = craft.entries({
+                section: sections
+            })
+                .orderBy(filter.orderBy ?? null)
+            .collect %}
+
+            {{ forms.select({
+                name: "#{sectionPath}-filter",
+                options: entries
+                |map(entry => {label: entry.title, value: entry.id})
+                |unshift({label: filter.label|t('site'), value: ''}),
+                inputAttributes: {
+                    data: {
+                        'field': filter.field,
+                        'type': filter.type
+                    },
+                    onchange: "co_getSectionHtml('#{ sectionPath }')"
+                }
+            }) }}
+
+        {% endswitch %}
+    </div>
+{% endfor %}

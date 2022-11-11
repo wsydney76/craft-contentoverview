@@ -18,6 +18,7 @@ class Section extends Model
     public bool $allSites = false;
     public bool $buttons = true;
     public array $custom = [];
+    public ?array $filters = null;
     public ?string $heading = '';
     public ?string $icon = null;
     public ?string $imageField = null;
@@ -73,6 +74,20 @@ class Section extends Model
     public function custom(array $custom): self
     {
         $this->custom = $custom;
+        return $this;
+    }
+
+    /**
+     * Defines simple filters that can be applied to searches
+     *
+     * e.g. ['type' => 'relation', 'section' => 'topics' ]
+     *
+     * @param array $filters
+     * @return $this
+     */
+    public function filters(array $filters): self
+    {
+        $this->filters = $filters;
         return $this;
     }
 
@@ -354,7 +369,7 @@ class Section extends Model
      *
      * @return array with keys entries: array of entries (respecting a limit, if set), count: number of entries (without limit)
      */
-    public function getEntries($pageNo = 1, $q = ''): Paginator
+    public function getEntries(int $pageNo = 1, string $q = '', array $filters = []): Paginator
     {
         /** @var Settings $settings */
         $settings = Plugin::getInstance()->getSettings();
@@ -423,6 +438,23 @@ class Section extends Model
             $query->search($q);
             if ($this->sortByScore) {
                 $query->orderBy('score');
+            }
+        }
+
+        if ($filters) {
+            foreach ($filters as $filter) {
+                switch ($filter['type']) {
+                    case 'relation':
+                    {
+                        if ($filter['value']) {
+                            $query->andRelatedTo([
+                                'element' => $filter['value'],
+                                'field' => $filter['field']
+                            ]);
+                        }
+                        break;
+                    }
+                }
             }
         }
 

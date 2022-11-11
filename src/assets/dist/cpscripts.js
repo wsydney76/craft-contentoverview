@@ -1,7 +1,12 @@
 function co_getSectionHtml(sectionPath, pageNo = 1) {
     // TODO: Add error handling
 
-    const data = {sectionPath: sectionPath, pageNo: pageNo, q: co_getSearchValue(sectionPath)}
+    const data = {
+        sectionPath: sectionPath,
+        pageNo: pageNo,
+        q: co_getSearchValue(sectionPath),
+        filters: co_getFilters(sectionPath)
+    }
     Craft.sendActionRequest('POST', 'contentoverview/section/get-section-html', {data})
         .then((response) => {
             containerElement = document.getElementById(sectionPath)
@@ -23,7 +28,7 @@ function co_getSearchValue(sectionPath) {
     value = input.value
 
     select = co_getSearchAttributesSelect(sectionPath)
-    if (select !== null)  {
+    if (select !== null) {
         attribute = select.value
         if (attribute !== '') {
             value = attribute + ':' + value
@@ -39,6 +44,9 @@ function co_resetSearch(sectionPath) {
     if (select !== null) {
         select.value = ''
     }
+
+    co_getFilterElements().forEach(element => {element.value = ''})
+
     co_getSectionHtml(sectionPath)
 }
 
@@ -50,6 +58,10 @@ function co_getSearchAttributesSelect(sectionPath) {
     return document.getElementById(sectionPath + '-search-attribute')
 }
 
+function co_getFilterElements(sectionPath) {
+    return document.getElementsByName(sectionPath + '-filter')
+}
+
 function co_registerSearchInput(sectionPath) {
     co_getSearchInput(sectionPath).addEventListener('keyup', function(event) {
         if (event.key === 'Enter') {
@@ -57,4 +69,23 @@ function co_registerSearchInput(sectionPath) {
             co_getSectionHtml(sectionPath);
         }
     })
+}
+
+function co_getFilters(sectionPath) {
+    filters = [];
+
+
+    co_getFilterElements(sectionPath).forEach(element => {
+        filter = {
+            type: element.dataset['type'],
+            field: element.dataset['field'],
+            value: element.value
+        }
+        filters.push(filter)
+    })
+
+    console.log(filters)
+
+    return filters;
+
 }
