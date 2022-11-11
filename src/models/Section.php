@@ -6,9 +6,14 @@ use Craft;
 use craft\base\Model;
 use craft\db\Paginator;
 use craft\elements\Entry;
+use craft\fields\BaseOptionsField;
+use craft\fields\Users;
+use craft\helpers\ElementHelper;
+use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
 use wsydney76\contentoverview\Plugin;
 use yii\base\InvalidConfigException;
+use function collect;
 use function in_array;
 
 class Section extends Model
@@ -19,6 +24,7 @@ class Section extends Model
     public bool $buttons = true;
     public array $custom = [];
     public ?array $filters = null;
+    public string $filtersPosition = 'inline';
     public ?string $heading = '';
     public ?string $icon = null;
     public ?string $imageField = null;
@@ -88,6 +94,19 @@ class Section extends Model
     public function filters(array $filters): self
     {
         $this->filters = $filters;
+        return $this;
+    }
+
+
+    /**
+     * Where filters dropdown boxes will be positioned
+     *
+     * @param string $filtersPosition inline|top|bottom
+     * @return $this
+     */
+    public function filtersPosition(string $filtersPosition): self
+    {
+        $this->filtersPosition = $filtersPosition;
         return $this;
     }
 
@@ -363,6 +382,27 @@ class Section extends Model
             ->can('saveentries:' . Craft::$app->sections->getSectionByHandle($this->section)->uid);
     }
 
+    public function getFilters(): Collection
+    {
+        $filters = collect($this->filters)->transform(function($filter) {
+            $field = Craft::$app->fields->getFieldByHandle($filter['field']);
+            if (!$field) {
+                throw new InvalidConfigException("Invalid field handle");
+            }
+            $type = 'entriesField';
+            if ($field instanceof Users) {
+                $type = 'usersField';
+            }
+            if ($field instanceof BaseOptionsField) {
+                $type = 'optionsField';
+            }
+
+            $filter['type'] = $type;
+            return $filter;
+        });
+
+        return $filters;
+    }
 
     /**
      * Returns entries and entry count for this section
@@ -443,16 +483,26 @@ class Section extends Model
 
         if ($filters) {
             foreach ($filters as $filter) {
-                switch ($filter['type']) {
-                    case 'relation':
-                    {
-                        if ($filter['value']) {
+                if ($filter['value']) {
+                    switch ($filter['type']) {
+                        case 'entriesField':
+                        case 'usersField':
+                        {
                             $query->andRelatedTo([
                                 'element' => $filter['value'],
                                 'field' => $filter['field']
                             ]);
+                            break;
                         }
-                        break;
+                        case
+                        'optionsField':
+                        {
+                            $field = Craft::$app->fields->getFieldByHandle($filter['field']);
+                            $columnName = ElementHelper::fieldColumnFromField($field);
+
+                            $query->andWhere([$columnName => $filter['value']]);
+                            break;
+                        }
                     }
                 }
             }
@@ -469,5 +519,4 @@ class Section extends Model
             'pageSize' => $this->limit ?? 99999
         ]);
     }
-
 }

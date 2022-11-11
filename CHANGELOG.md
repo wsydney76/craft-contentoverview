@@ -1,12 +1,12 @@
 # Changelog
 
-## Unreleased
+## 2.2.0 2022-11-11
 
-Work in progress...
-
-* Added filtering by entries fields
+* Added filtering by entries fields, users fields, options fields.
 * Added predefined search attributes, like `title:`
-* Added `infoTemplage` section setting
+* Added `infoTemplate` section setting
+
+Status : Ready for testing.
 
 ## 2.1.0 2022-11-10
 

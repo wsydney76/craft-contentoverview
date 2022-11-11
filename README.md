@@ -7,14 +7,14 @@ This plugin shows configurable overviews of a site's content.
 * This plugin is developed as a side/training project for internal use only.
 * It works for us, but may not work everywhere.
 * There may be (well, is) an unlimited amount of
-  * bugs
-  * rough edges (the CSS is a mess...) 
-  * incompatibilities
-  * lack of professional standards
-  * lack of documentation/inline comments
-  * missing features
-  * bad performance
-  * bad English.
+    * bugs
+    * rough edges (the CSS is a mess...)
+    * incompatibilities
+    * lack of professional standards
+    * lack of documentation/inline comments
+    * missing features
+    * bad performance
+    * bad English.
 * Developed for Craft 4.3, but not guaranteed to survive any updates.
 * Supports only entries element type.
 * **We are not able to offer any support.**
@@ -67,7 +67,6 @@ By default, a link to a single page is added to the navigation sidebar.
 
 This requires a setup up file named after the `defaultPage` settings.
 
-
 ### Multi Page Setup
 
 You can configure multiple pages by adding them to the `config/contenoverview.php` file.
@@ -87,8 +86,9 @@ return [
 ```
 
 defaultPage: the page that is initially selected. Usually the first one.
-pages: an array of page configs in the form of [CP Sections Subnav](https://craftcms.com/docs/4.x/extend/cp-section.html#subnavs):
-    
+pages: an array of page configs in the form
+of [CP Sections Subnav](https://craftcms.com/docs/4.x/extend/cp-section.html#subnavs):
+
 `'<pagename>' => ['label' => '<pageheading>', 'url' => 'contentoverview/<pagename>'],`
 
 An additional param `group` can be added if this page should only be available for admins/members of this group.
@@ -123,7 +123,7 @@ If you are using a single page, name this page according to the `defaultPage` se
 Structure of this file:
 
 - tabs[] (array, tabs of the page)
-    - label (string, tab text) 
+    - label (string, tab text)
     - columns[] (array, columns inside the tab container, uses a 12 columns grid)
         - width (int, number of columns occupied, 1-12)
         - sections[] (array, sections display inside the column)
@@ -132,9 +132,12 @@ Structure of this file:
             - limit (?int, number of entries to show)
             - info (?string|array, object template(s) to render in addition to the title)
             - popupInfo (?string|array, object template(s) to render in an information popup)
+            - infoTemplate (?string, path to a twig template inside the projects templates folder. Will be called with
+              an entries variable)
             - imageField (?string, name of the image field to use)
             - layout (?string, (list (default)|cardlets|cards|line)
-            - scope (?string, whether drafts should be shown, drafts|provisional|all, default: only published entries will be included)
+            - scope (?string, whether drafts should be shown, drafts|provisional|all, default: only published entries
+              will be included)
             - ownDraftsOnly (?bool, if true and scope is defined: show only drafts created by the current user)
             - status (?string|array, see [docs](https://craftcms.com/docs/4.x/entries.html#status)
             - allSites (?bool, true = display (unique) entries from all sites)
@@ -143,8 +146,8 @@ Structure of this file:
             - linkToPage (?string, the key of a page the heading is linked to. May contain an anchor, e.g. `page1#tab1`)
             - search (?bool, whether search will be enabled)
             - sortByScore (?bool, whether search results will be sorted by score. default=false)
-            - custom  (?array, any custom keys, can be used to modify the entries query via event, see below)
-       
+            - filters (?array, Array of fields whose values can be applied as filters. See Search doc below)
+            - custom  (?array, any custom keys, can be used to modify the entries query via event, see Events below)
 
 Example:
 
@@ -190,7 +193,9 @@ return [
             ->section('news')
             ->heading('My Provisional Drafts')
             ->limit(6)
-            ->info('{tagline}, {postDate|date("short")}')
+            // template has an `entry` variable available.
+            // Using a regular template makes it easier to use more complex twig code like conditionals.
+            ->infoTemplate('_cp/newsinfo.twig')
             ->imageField('featuredImage')
             ->layout('cardlets')
             ->scope('provisional')
@@ -260,7 +265,7 @@ A more compact layout, less space for info
 
 ### List
 
-Horizontal layout, keep info on one line! 
+Horizontal layout, keep info on one line!
 
 ![Layout List](/images/layout_list.jpg)
 
@@ -271,6 +276,64 @@ Horizontal layout without image. The most compact layout.
 ![Layout Line](/images/layout_line.jpg)
 
 Do not specify a `imageField` for this layout.
+
+## Searching
+
+Add searching to a section by setting the `search` attribute to true:
+
+```php
+->search(true)
+```
+
+![Screenshot](/images/search1.jpg)
+
+The search will be executed respecting `defaultSearchTermOptions` in your general settings.
+
+### Search attributes
+
+A search can be narrowed down by adding a prefix that defines a field to search in, like `title:whatsoever`.
+
+You can add a `searchAttributes` section config setting to make that easier for your user.
+
+```php
+->searchAttributes([
+    ['label' => 'Title', 'value' =>  'title'],
+    ['label' => 'Body Content', 'value' =>  'bodyContent'],
+])
+```
+
+This will add a dropdown:
+
+![Screenshot](/images/search2.jpg)
+
+The prefix will be automatically added to the search query.
+
+## Filters
+
+Entries can be filtered by a custom field value.
+
+```php
+->filters([
+    ['field' => 'topics'],
+    ['field' => 'assignedTo', 'orderBy' => 'lastName, firstName', 'label' => 'Responsible'],
+    ['field' => 'workflowStatus'],
+])
+```
+
+Currently supported:
+
+* Entries fields
+* Users fields
+* Option fields (Dropdown)
+
+![Screenshot](/images/search3.jpg)
+
+Multiple filters can take up a lot of space if used together with searh, so you can push them
+below or on top of the search:
+
+```php
+->filtersPosition('bottom') // top|bottom
+```
 
 ## Events
 
@@ -308,10 +371,11 @@ There is a small dashboard widget, offering quick links to each tab of the overv
 
 A single tab can be shown in a dashboad widget.
 
-Select a tab to show and set the widget width to Full (full width), if you want to spread the widget over all dashboard columns,
-otherwise to Two (half width) in order to use it with two or three columns. 
+Select a tab to show and set the widget width to Full (full width), if you want to spread the widget over all dashboard
+columns,
+otherwise to Two (half width) in order to use it with two or three columns.
 
-One column is too narrow to be useful. 
+One column is too narrow to be useful.
 
 ![screenshot](/images/widgetsettings.jpg)
 

@@ -1,13 +1,15 @@
 {% import '_includes/forms' as forms %}
 
 
-{% for filter in sectionConfig.filters %}
+{% for filter in filters %}
+
+    {% set field = craft.app.fields.fieldByHandle(filter.field) %}
+    {% set label = (filter.label is defined ? filter.label : field.name)|t('site') %}
+
     <div>
         {% switch filter.type %}
 
-        {% case "relation" %}
-
-            {% set field = craft.app.fields.fieldByHandle(filter.field) %}
+        {% case "entriesField" %}
 
             {% if field.sources != '*' %}
                 {% set sections = [] %}
@@ -26,20 +28,36 @@
                 .orderBy(filter.orderBy ?? null)
             .collect %}
 
-            {{ forms.select({
-                name: "#{sectionPath}-filter",
-                options: entries
-                |map(entry => {label: entry.title, value: entry.id})
-                |unshift({label: filter.label|t('site'), value: ''}),
-                inputAttributes: {
-                    data: {
-                        'field': filter.field,
-                        'type': filter.type
-                    },
-                    onchange: "co_getSectionHtml('#{ sectionPath }')"
-                }
-            }) }}
+            {% set options = entries|map(entry => {label: entry.title, value: entry.id}) %}
+
+        {% case "usersField" %}
+
+
+            {% set users = craft.users()
+                .orderBy(filter.orderBy ?? null)
+            .collect %}
+
+            {% set options = users|map(user => {label: user.name, value: user.id}) %}
+
+
+        {% case "optionsField" %}
+
+            {% set options = field.options|filter(option => option.value != '') %}
 
         {% endswitch %}
+
+        {{ forms.select({
+            name: "#{sectionPath}-filter",
+            options: options
+            |unshift({label: label|t('site'), value: ''}),
+            inputAttributes: {
+                data: {
+                    'field': filter.field,
+                    'type': filter.type
+                },
+                onchange: "co_getSectionHtml('#{ sectionPath }')"
+            }
+        }) }}
+
     </div>
 {% endfor %}

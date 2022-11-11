@@ -1,22 +1,42 @@
+{# @var sectionConfig \wsydney76\contentoverview\models\Section #}
+
 {% import '_includes/forms' as forms %}
 
-{% set inputId = "#{sectionPath}-search" %}
-{% set selectId = "#{sectionPath}-search-attribute" %}
+{% set filtersPosition = sectionConfig.search ? sectionConfig.filtersPosition : 'top'%}
 
-<div class="co-search-container">
-
-    {% if sectionConfig.filters %}
+{% set filtersHtml %}
+    {% set filters = sectionConfig.getFilters() %}
+    {% if filters.count %}
         {% include 'contentoverview/partials/filters.twig' %}
     {% endif %}
+{% endset %}
 
-    {% if sectionConfig.searchAttributes %}
-        <div>
-            {{ forms.select({
-                id: selectId ,
-                options: sectionConfig.searchAttributes|map(option => {label: option.label|t('site'), value: option.value})
-            }) }}
-        </div>
-    {% endif %}
+{% if filtersPosition == 'top' %}
+    <div class="co-filters-container co-filters-top">
+        {{ filtersHtml }}
+    </div>
+{% endif %}
+
+{% if sectionConfig.search %}
+    <div class="co-search-container">
+
+        {% set inputId = "#{sectionPath}-search" %}
+        {% set selectId = "#{sectionPath}-search-attribute" %}
+
+        {% if filtersPosition == 'inline' %}
+            {{ filtersHtml }}
+        {% endif %}
+
+        {% if sectionConfig.searchAttributes %}
+            <div>
+                {{ forms.select({
+                    id: selectId ,
+                    options: sectionConfig.searchAttributes
+                    |map(option => {label: option.label|t('site'), value: option.value})
+                    |unshift({label: 'Search in'|t('contentoverview'), value: ''})
+                }) }}
+            </div>
+        {% endif %}
 
 
         {{ forms.text({
@@ -26,9 +46,17 @@
         }) }}
 
 
-    <button class="btn" onclick="co_resetSearch('{{ sectionPath }}')">{{ "Reset"|t('contentoverview') }}</button>
-    <button class="btn" onclick="co_getSectionHtml('{{ sectionPath }}')">{{ "Search"|t('contentoverview') }}</button>
-</div>
+        <button class="btn" onclick="co_resetSearch('{{ sectionPath }}')">{{ "Reset"|t('contentoverview') }}</button>
+        <button class="btn" onclick="co_getSectionHtml('{{ sectionPath }}')">{{ "Search"|t('contentoverview') }}</button>
+    </div>
+
+{% endif %}
+
+{% if filtersPosition == 'bottom' %}
+    <div class="co-filters-container co-filters-bottom">
+        {{ filtersHtml }}
+    </div>
+{% endif %}
 
 {% js %}
 co_registerSearchInput('{{ sectionPath }}')
