@@ -1,3 +1,5 @@
+{# @var sectionConfig \wsydney76\contentoverview\models\Section #}
+
 <a href="{{ entry.cpEditUrl }}" target="{{ settings.linkTarget }}"
    class="co-entry {{ entry.isDraft ? 'draft' : 'published' }} {{ entry.isUnpublishedDraft ? 'provisional' }}">
 
@@ -64,6 +66,10 @@
                             {% endfor %}
                         {% endif %}
                     </div>
+                {% endif %}
+
+                {% if sectionConfig.infoTemplate %}
+                    {{ view.renderTemplate(sectionConfig.infoTemplate, {entry}, 'site')|raw }}
                 {% endif %}
             </div>
         </div>

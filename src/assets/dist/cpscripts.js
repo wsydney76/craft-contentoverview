@@ -35,7 +35,11 @@ function co_getSearchValue(sectionPath) {
 
 function co_resetSearch(sectionPath) {
     co_getSearchInput(sectionPath).value = ''
-    co_getSectionHtml(sectionPath, 1)
+    select = co_getSearchAttributesSelect(sectionPath)
+    if (select !== null) {
+        select.value = ''
+    }
+    co_getSectionHtml(sectionPath)
 }
 
 function co_getSearchInput(sectionPath) {

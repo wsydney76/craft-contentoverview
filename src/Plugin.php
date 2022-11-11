@@ -58,7 +58,11 @@ class Plugin extends \craft\base\Plugin
                     ];
 
                     if ($settings->getPages()->count() > 1) {
-                        $navItem['subnav'] = $settings->getPages();
+                        // Translate labels
+                        $navItem['subnav'] = $settings->getPages()->transform(fn ($page) => [
+                            'label' => Craft::t('site', $page['label']),
+                            'url' => $page['url']
+                        ]);
                     }
 
                     // \Craft::dd($navItem);

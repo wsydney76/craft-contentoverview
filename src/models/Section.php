@@ -22,6 +22,7 @@ class Section extends Model
     public ?string $icon = null;
     public ?string $imageField = null;
     public array|string $info = '';
+    public ?string $infoTemplate = '';
     public string $layout = '';
     public ?int $limit = null;
     public ?string $linkToPage = '';
@@ -136,6 +137,18 @@ class Section extends Model
         return $this;
     }
 
+
+    /**
+     * Site template that renders info
+     *
+     * @param string $infoTemplate template inside templates folder
+     * @return $this
+     */
+    public function infoTemplate(string $infoTemplate): self
+    {
+        $this->infoTemplate = $infoTemplate;
+        return $this;
+    }
 
     /**
      * Layout in which the entries will be displayd
