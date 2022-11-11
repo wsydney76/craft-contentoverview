@@ -3,7 +3,7 @@
 
 {% for filter in filters %}
 
-    {% set field = craft.app.fields.fieldByHandle(filter.field) %}
+    {% set field = filter.fieldInstance %}
     {% set label = (filter.label is defined ? filter.label : field.name)|t('site') %}
 
     <div>
@@ -11,19 +11,8 @@
 
         {% case "entriesField" %}
 
-            {% if field.sources != '*' %}
-                {% set sections = [] %}
-                {% for source in field.sources %}
-                    {% set section = craft.app.sections.sectionByUid(source|split(':')[1]) %}
-                    {% set sections = sections|push(section.handle) %}
-                {% endfor %}
-            {% else %}
-                {% set sections = null %}
-            {% endif %}
-
-
             {% set entries = craft.entries({
-                section: sections
+                section: filter.sections
             })
                 .orderBy(filter.orderBy ?? null)
             .collect %}

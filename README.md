@@ -328,12 +328,25 @@ Currently supported:
 
 ![Screenshot](/images/search3.jpg)
 
-Multiple filters can take up a lot of space if used together with searh, so you can push them
+Multiple filters can take up a lot of space if used together with search, so you can push them
 below or on top of the search:
 
 ```php
 ->filtersPosition('bottom') // top|bottom
 ```
+
+Highly experimental:
+
+Matrix subfields can also be used as filters:
+
+```php
+ ['field' => 'streaming.streamingProvider', 'orderBy' => 'title']
+ ['field' => 'media.digitalMedium.storageLocation', 'orderBy' => 'title'],                        
+```
+
+Specify fields in the form `matrixFieldHandle.blockTypeHandle.subFieldHandle`.
+
+If there is only one block type, you can use `matrixFieldHandle.subFieldHandle`
 
 ## Events
 

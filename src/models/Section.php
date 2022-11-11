@@ -3,17 +3,22 @@
 namespace wsydney76\contentoverview\models;
 
 use Craft;
+use craft\base\Field;
 use craft\base\Model;
 use craft\db\Paginator;
 use craft\elements\Entry;
 use craft\fields\BaseOptionsField;
+use craft\fields\Entries;
+use craft\fields\Matrix;
 use craft\fields\Users;
 use craft\helpers\ElementHelper;
+use craft\models\MatrixBlockType;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
 use wsydney76\contentoverview\Plugin;
 use yii\base\InvalidConfigException;
 use function collect;
+use function explode;
 use function in_array;
 
 class Section extends Model
@@ -382,22 +387,77 @@ class Section extends Model
             ->can('saveentries:' . Craft::$app->sections->getSectionByHandle($this->section)->uid);
     }
 
+    /**
+     * Get filters, set field type as expected by template, set fieldInstance
+     *
+     * @return Collection
+     */
     public function getFilters(): Collection
     {
         $filters = collect($this->filters)->transform(function($filter) {
-            $field = Craft::$app->fields->getFieldByHandle($filter['field']);
-            if (!$field) {
-                throw new InvalidConfigException("Invalid field handle");
-            }
-            $type = 'entriesField';
-            if ($field instanceof Users) {
-                $type = 'usersField';
-            }
-            if ($field instanceof BaseOptionsField) {
-                $type = 'optionsField';
-            }
+            if (!isset($filter['type'])) {
 
-            $filter['type'] = $type;
+                $segments = explode('.', $filter['field']);
+                $fieldHandle = $segments[0];
+
+                $field = Craft::$app->fields->getFieldByHandle($fieldHandle);
+                if (!$field) {
+                    throw new InvalidConfigException("Invalid field handle");
+                }
+
+                if ($field instanceof Matrix) {
+                    if (count($segments) < 2) {
+                        throw new InvalidConfigException("Invalid matrix handle (field.blockType.subField)");
+                    }
+
+                    /** @var MatrixBlockType $blockType */
+                    if (count($segments) == 2) {
+                        $blockType = $field->getBlockTypes()[0];
+                        $subFieldHandle = $segments[1];
+                    } else {
+                        $blockType = collect($field->getBlockTypes())->firstWhere('handle', $segments[1]);
+                        if (!$blockType) {
+                            throw new InvalidConfigException("Invalid blocktype handle $segments[1]");
+                        }
+                        $subFieldHandle = $segments[2];
+                    }
+
+
+                    /** @var Field $field */
+                    $field = collect($blockType->getCustomFields())->firstWhere('handle', $subFieldHandle);
+                    if (!$field) {
+                        throw new InvalidConfigException("Invalid subField handle $subFieldHandle");
+                    }
+
+                    // return field handle in the form relatedTo expects
+                    $filter['field'] = "{$segments[0]}.{$subFieldHandle}";
+                }
+
+                if ($field instanceof Entries) {
+                    $type = 'entriesField';
+
+                    if ($field->sources !== '*') {
+                        $sections = [];
+                        foreach ($field->sources as $source) {
+                            $section = Craft::$app->sections->getSectionByUid(explode(':', $source)[1]);
+                            $sections[] = $section->handle;
+                        }
+                    } else {
+                        $sections = null;
+                    }
+                    $filter['sections'] = $sections;
+                }
+
+                if ($field instanceof Users) {
+                    $type = 'usersField';
+                }
+                if ($field instanceof BaseOptionsField) {
+                    $type = 'optionsField';
+                }
+
+                $filter['fieldInstance'] = $field;
+                $filter['type'] = $type;
+            }
             return $filter;
         });
 
@@ -409,8 +469,10 @@ class Section extends Model
      *
      * @return array with keys entries: array of entries (respecting a limit, if set), count: number of entries (without limit)
      */
-    public function getEntries(int $pageNo = 1, string $q = '', array $filters = []): Paginator
-    {
+    public
+    function getEntries(
+        int $pageNo = 1, string $q = '', array $filters = []
+    ): Paginator {
         /** @var Settings $settings */
         $settings = Plugin::getInstance()->getSettings();
 
