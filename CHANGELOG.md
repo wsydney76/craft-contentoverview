@@ -2,7 +2,7 @@
 
 ## 2.2.0 2022-11-11
 
-* Added filtering by entries fields, users fields, options fields.
+* Added filtering by entries fields, users fields, options fields, including matrix sub fields (experimental).
 * Added predefined search attributes, like `title:`
 * Added `infoTemplate` section setting
 
