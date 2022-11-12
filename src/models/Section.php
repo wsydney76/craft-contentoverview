@@ -215,7 +215,7 @@ class Section extends Model
      * @param array|string $info Twig object template(s)
      * @return $this
      */
-    public function info(string $info): self
+    public function info(array|string $info): self
     {
         $this->info = $info;
         return $this;
