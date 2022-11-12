@@ -31,7 +31,7 @@ class SectionController extends Controller
         /** @var Section $section */
         $section = $config['tabs'][$segments[1]]['columns'][$segments[2]]['sections'][$segments[3]];
 
-        if (!$section->userCanView()) {
+        if (!$section->getPermittedSections('viewentries')) {
             throw new ForbiddenHttpException();
         }
 

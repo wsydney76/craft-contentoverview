@@ -7,69 +7,60 @@
     {% if sectionConfig.layout != 'line' %}
         <div class="co-image">
             {% set image = null %}
-            {% if sectionConfig.imageField %}
-                {% set image = entry.getFieldValue(sectionConfig.imageField).one %}
+            {% set imageField = sectionConfig.getImageField(entry) %}
+            {% if imageField %}
+                {% set image = entry.getFieldValue(imageField).one %}
             {% endif %}
             {% if image %}
                 {{ image.img(settings.transforms[sectionConfig.layout]) }}
             {% else %}
-                {{ svg(sectionConfig.icon ?? '@appicons/newspaper.svg')|attr({width:'20px', height: '20px'}) }}
+                {% set icon = sectionConfig.getIcon(entry) %}
+                {% set icon = icon !=  '' ? view.renderObjectTemplate(icon, entry) :  '@appicons/newspaper.svg' %}
+                {{ svg(icon)|attr({width:'20px', height: '20px'}) }}
             {% endif %}
         </div>
     {% endif %}
 
 
     {% set layout = sectionConfig.layout  ? sectionConfig.layout : settings.defaultLayout %}
-    {% set style = section.type == 'structure' and layout in ['list','line']  ? "padding-left: #{(entry.level-1)*32}px" : '' %}
+    {% set style = entry.level and layout in ['list','line']  ? "padding-left: #{(entry.level-1)*32}px" : '' %}
 
-    <div class="co-content"  style="{{ style }};">
+    <div class="co-content" style="{{ style }};">
         <div class="co-status">
 
-                {% if entry.isDraft %}
-                    <div data-icon="draft" aria-hidden="true"></div>
-                {% else %}
-                    <div class="status {{ entry.status }}"></div>
-                {% endif %}
+            {% if entry.isDraft %}
+                <div data-icon="draft" aria-hidden="true"></div>
+            {% else %}
+                <div class="status {{ entry.status }}"></div>
+            {% endif %}
 
-            {% if sectionConfig.popupInfo %}
+            {% set popupInfo = sectionConfig.getPopupInfo(entry) %}
+            {% if popupInfo %}
                 <div class="info" tabindex="0" aria-role="button"
-                      aria-label="{{ "Information"|t('contentoverview') }}">
-                            {% if sectionConfig.popupInfo is string %}
-                                {{ view.renderObjectTemplate(sectionConfig.popupInfo, entry)|raw }}
-                            {% else %}
-                                {% for info in sectionConfig.popupInfo %}
-                                    <div>
-                                        {{ view.renderObjectTemplate(info, entry)|raw }}
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
+                     aria-label="{{ "Information"|t('contentoverview') }}">
+                        {{ view.renderObjectTemplate(popupInfo, entry)|raw }}
+                </div>
             {% endif %}
         </div>
 
 
-        <div class="co-text" >
+        <div class="co-text">
             <div class="co-title">
                 {{ entry.title }}
             </div>
 
             <div class="co-info">
-                {% if sectionConfig.info %}
+                {% set info = sectionConfig.getInfo(entry) %}
+
+                {% if info %}
                     <div>
-                        {% if sectionConfig.info is string %}
-                            {{ view.renderObjectTemplate(sectionConfig.info, entry)|raw }}
-                        {% else %}
-                            {% for info in sectionConfig.info %}
-                                <div>
-                                    {{ view.renderObjectTemplate(info, entry)|raw }}
-                                </div>
-                            {% endfor %}
-                        {% endif %}
+                        {{ view.renderObjectTemplate(info, entry)|raw }}
                     </div>
                 {% endif %}
 
-                {% if sectionConfig.infoTemplate %}
-                    {{ view.renderTemplate(sectionConfig.infoTemplate, {entry}, 'site')|raw }}
+                {% set template = sectionConfig.getInfoTemplate(entry) %}
+                {% if template %}
+                    {{ view.renderTemplate(template, {entry}, 'site')|raw }}
                 {% endif %}
             </div>
         </div>

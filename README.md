@@ -127,14 +127,15 @@ Structure of this file:
     - columns[] (array, columns inside the tab container, uses a 12 columns grid)
         - width (int, number of columns occupied, 1-12)
         - sections[] (array, sections display inside the column)
-            - section (string, section handle)
+            - section (array|string, section handle)
             - heading (?string, heading of the section, defaults to section name)
             - limit (?int, number of entries to show)
-            - info (?string|array, object template(s) to render in addition to the title)
-            - popupInfo (?string|array, object template(s) to render in an information popup)
-            - infoTemplate (?string, path to a twig template inside the projects templates folder. Will be called with
+            - info (?string|array, object template to render in addition to the title)
+            - popupInfo (?string, object template to render in an information popup)
+            - infoTemplate (?array|string, path to a twig template inside the projects templates folder. Will be called with
               an entries variable)
-            - imageField (?string, name of the image field to use)
+            - imageField (?array|string, name of the image field to use)
+            - icon (?array|string, path to an svg icon, that is display if no image is found)
             - layout (?string, (list (default)|cardlets|cards|line)
             - scope (?string, whether drafts should be shown, drafts|provisional|all, default: only published entries
               will be included)
@@ -210,13 +211,11 @@ return [
         $co->createSection(NewsSection::class)
             ->heading('Drafts')
             ->scope('drafts')
-            ->popupInfo([
-                Craft::t('site', 'Draft created by') . ' {creator.name}',
-                Craft::t('site', 'Draft created at') . ' {draftCreatedAt|date("short")}',
-                '{draftNotes ? "Draft Notes:"}',
-                '{draftNotes}'
-            ]),
-    ])
+            ->popupInfo( Craft::t('site', 'Draft created by') . ' {creator.name}' . '<br>' .
+                    Craft::t('site', 'Draft created at') . ' {draftCreatedAt|date("short")}' . '<br>' .
+                    '{draftNotes ? "Draft Notes:"}' . '<br>' .
+                    '{draftNotes}'),
+                    ])
 
 // modules/main/NewsSection.php
 
@@ -230,7 +229,7 @@ class NewsSection extends Section
 {
     public array|string $section = 'news';
     public ?int $limit = 12;
-    public ?string $imageField = 'featuredImage';
+    public array|string $imageField = 'featuredImage';
     public string $layout = 'cardlets';
     public bool $buttons = false;
     public array|string $info = '{tagline}, {postDate|date("short")}';
@@ -244,6 +243,36 @@ class NewsSection extends Section
 Phpstorms autocompletion can give hints about the available settings and their parameters.
 
 ![screenshot](/images/autocomplete.jpg)
+
+## Multi Section Setup
+
+The section config usually uses a single section, but can also be set to multiple sections:
+
+```php
+->section(['film','person'])
+```
+
+Different sections and different entry types can use different field layouts, so you can take care of that by
+providing an array to the `imageField`, `info`, `popupInfo`, `icon` and `infoTemplate` config settings like so:
+
+```php
+->info([
+    'film' => '{series.one.title} {season}/{episode}',
+    'person' => '{shortBio|truncate(20)}'
+])
+
+->imageField([
+    '*' => 'featuredImage',
+    'person.personExtended' => 'bigPortrait',
+    'person' => 'thumbnail'
+])
+```
+
+The image field is determined in the following sequence of keys:
+
+* sectionHandle.typeHandle
+* sectionHandle
+* \* (default)
 
 ## Layouts
 

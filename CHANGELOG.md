@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+* Allowed multisection setups. See Readme
+* icon setup attribute is now be an object twig template.
+
+### Breaking change
+
+* info and popupInfo section config settings now only allow a single string, in order to avoid confusion when using multi section config.  
+  Either use html tags or, for more complex logic, use an `infoTemplate` setting.
+
 ## 2.2.0 2022-11-11
 
 * Added filtering by entries fields, users fields, options fields, including matrix sub fields (experimental).

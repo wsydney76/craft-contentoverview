@@ -17,9 +17,12 @@ use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
 use wsydney76\contentoverview\Plugin;
 use yii\base\InvalidConfigException;
+use function array_map;
 use function collect;
 use function explode;
+use function implode;
 use function in_array;
+use function is_string;
 
 class Section extends Model
 {
@@ -31,10 +34,10 @@ class Section extends Model
     public ?array $filters = null;
     public string $filtersPosition = 'inline';
     public ?string $heading = '';
-    public ?string $icon = null;
-    public ?string $imageField = null;
+    public array|string $icon = [];
+    public array|string $imageField = [];
     public array|string $info = '';
-    public ?string $infoTemplate = '';
+    public array|string $infoTemplate = '';
     public string $layout = '';
     public ?int $limit = null;
     public ?string $linkToPage = '';
@@ -43,12 +46,13 @@ class Section extends Model
     public array|string $popupInfo = '';
     public bool $search = false;
     public array $searchAttributes = [];
-    public string $section = '';
+    public array|string $section = '';
     public ?string $scope = null;
     public ?bool $sortByScore = false;
     public ?string $status = null;
 
     protected $_layouts = ['list', 'cardlets', 'cards', 'line'];
+
 
     /**
      * Whether to show (unique) entries from all sites
@@ -138,10 +142,44 @@ class Section extends Model
      * @param string $icon
      * @return $this
      */
-    public function icon(string $icon): self
+    public function icon(array|string $icon): self
     {
         $this->icon = $icon;
         return $this;
+    }
+
+    /**
+     * Get icon for entry
+     *
+     * @param $entry
+     * @return array|string
+     */
+    public function getIcon($entry): array|string
+    {
+        return $this->_getConfigForEntry('icon', $entry);
+    }
+
+    /**
+     * Site template that renders info
+     *
+     * @param string $infoTemplate template inside templates folder
+     * @return $this
+     */
+    public function infoTemplate(array|string $infoTemplate): self
+    {
+        $this->infoTemplate = $infoTemplate;
+        return $this;
+    }
+
+    /**
+     * Get infoTemplate for entry
+     *
+     * @param $entry
+     * @return array|string
+     */
+    public function getInfoTemplate($entry): array|string
+    {
+        return $this->_getConfigForEntry('infoTemplate', $entry);
     }
 
 
@@ -152,14 +190,21 @@ class Section extends Model
      * @return $this
      * @throws InvalidConfigException
      */
-    public function imageField(string $imageField): self
+    public function imageField(array|string $imageField): self
     {
-        $field = Craft::$app->fields->getFieldByHandle($imageField);
-        if (!$field) {
-            throw new InvalidConfigException("$imageField is not a valid field handle.");
-        }
         $this->imageField = $imageField;
         return $this;
+    }
+
+    /**
+     * Get imageField for entry
+     *
+     * @param Entry $entry
+     * @return mixed|string
+     */
+    public function getImageField(Entry $entry)
+    {
+        return $this->_getConfigForEntry('imageField', $entry);
     }
 
 
@@ -170,23 +215,21 @@ class Section extends Model
      * @param array|string $info Twig object template(s)
      * @return $this
      */
-    public function info(array|string $info): self
+    public function info(string $info): self
     {
         $this->info = $info;
         return $this;
     }
 
-
     /**
-     * Site template that renders info
+     * Get info for entry
      *
-     * @param string $infoTemplate template inside templates folder
-     * @return $this
+     * @param Entry $entry
+     * @return array|string
      */
-    public function infoTemplate(string $infoTemplate): self
+    public function getInfo(Entry $entry): string
     {
-        $this->infoTemplate = $infoTemplate;
-        return $this;
+        return $this->_getConfigForEntry('info', $entry);
     }
 
     /**
@@ -275,12 +318,23 @@ class Section extends Model
     }
 
     /**
+     * Get popupInfo for entry
+     *
+     * @param Entry $entry
+     * @return mixed|string
+     */
+    public function getPopupInfo(Entry $entry): string
+    {
+        return $this->_getConfigForEntry('popupInfo', $entry);
+    }
+
+    /**
      * Section handle or array of section handles
      *
      * @param string $section section handle
      * @return $this
      */
-    public function section(string $section): self
+    public function section(array|string $section): self
     {
         $this->section = $section;
         return $this;
@@ -362,29 +416,38 @@ class Section extends Model
      */
     public function getHeading(): string
     {
-        return $this->heading != '' ? $this->heading : Craft::$app->sections->getSectionByHandle($this->section)->name;
+        if ($this->heading) {
+            return $this->heading;
+        }
+
+        $sections = $this->_normalizeToArray($this->section);
+        $headings = array_map(fn($section) => Craft::$app->sections->getSectionByHandle($section)->name
+            , $sections);
+
+        return implode(', ', $headings);
+
     }
 
+
     /**
-     * Is current user allowed to view the section?
+     * Is current user allowed to do this for at least one section?
      *
      * @return bool
      */
-    public function userCanView(): bool
+    public function getPermittedSections(string $permission): array
     {
-        return Craft::$app->user->identity
-            ->can('viewentries:' . Craft::$app->sections->getSectionByHandle($this->section)->uid);
-    }
 
-    /**
-     * Is current user allowd to save entries in the section?
-     *
-     * @return bool
-     */
-    public function userCanSave(): bool
-    {
-        return Craft::$app->user->identity
-            ->can('saveentries:' . Craft::$app->sections->getSectionByHandle($this->section)->uid);
+        $currentUser = Craft::$app->user->identity;
+        $sections = [];
+
+        foreach ($this->_normalizeToArray($this->section) as $section) {
+            if (Craft::$app->user->identity
+                ->can($permission . ':' . Craft::$app->sections->getSectionByHandle($section)->uid)) {
+                $sections[] = $section;
+            }
+        }
+
+        return $sections;
     }
 
     /**
@@ -469,8 +532,7 @@ class Section extends Model
      *
      * @return array with keys entries: array of entries (respecting a limit, if set), count: number of entries (without limit)
      */
-    public
-    function getEntries(
+    public function getEntries(
         int $pageNo = 1, string $q = '', array $filters = []
     ): Paginator {
         /** @var Settings $settings */
@@ -501,13 +563,25 @@ class Section extends Model
         }
 
         if ($this->imageField) {
-            $query->with([
-                [
-                    $this->imageField, [
-                    'withTransforms' => [$settings->transforms[$this->layout]]
-                ]
-                ]
-            ]);
+
+            if (is_string($this->imageField)) {
+                $imageFields = [$this->imageField];
+            } else {
+                $imageFields = [];
+                foreach ($this->imageField as $fieldHandle) {
+                    if (!isset($imageFields[$fieldHandle])) {
+                        $imageFields[] = $fieldHandle;
+                    }
+                }
+            }
+
+            foreach ($imageFields as $imageField) {
+                $query->andWith([
+                    $imageField, [
+                        'withTransforms' => [$settings->transforms[$this->layout]]
+                    ]
+                ]);
+            }
         }
 
         switch ($this->scope) {
@@ -580,5 +654,33 @@ class Section extends Model
             'currentPage' => $pageNo,
             'pageSize' => $this->limit ?? 99999
         ]);
+    }
+
+    protected function _normalizeToArray($value)
+    {
+        return is_string($value) ? [$value] : $value;
+    }
+
+    protected function _getConfigForEntry(string $name, Entry $entry): string
+    {
+        if (is_string($this->$name)) {
+            return $this->$name;
+        }
+
+        $key = $entry->section->handle . '.' . $entry->type->handle;
+        if (isset($this->$name[$key])) {
+            return $this->$name[$key];
+        }
+
+        $key = $entry->section->handle;
+        if (isset($this->$name[$key])) {
+            return $this->$name[$key];
+        }
+
+        if (isset($this->$name['*'])) {
+            return $this->$name['*'];
+        }
+
+        return '';
     }
 }

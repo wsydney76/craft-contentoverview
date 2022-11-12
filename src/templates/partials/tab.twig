@@ -12,7 +12,6 @@
             {% set sectionIndex = loop.index0 %}
             {% set sectionPath = "#{page}-#{tabIndex}-#{columnIndex}-#{sectionIndex}" %}
 
-            {% set section = craft.app.sections.sectionByHandle(sectionConfig.section) %}
             {% set layout = sectionConfig.layout  ? sectionConfig.layout : settings.defaultLayout %}
 
             {% set transform = settings.transforms[layout] %}
@@ -32,14 +31,13 @@
                         {% endif %}
                     </h2>
 
-                    {% if showButtons and sectionConfig.userCanSave %}
-                        <a class="btn submit" href="{{ cpUrl("entries/#{section.handle}/new") }}">
-                            {{ "New entry"|t('contentoverview') }}
-                        </a>
+                    {% if showButtons %}
+                        {% include 'contentoverview/partials/newentriesButtons.twig' %}
                     {% endif %}
                 </div>
 
-                {% if sectionConfig.userCanView %}
+                {% set permittedSections = sectionConfig.getPermittedSections('viewentries') %}
+                {% if permittedSections %}
                     {% set results = sectionConfig.entries %}
 
                     {% include 'contentoverview/partials/search.twig' %}
@@ -68,12 +66,9 @@
 
                     {% if showButtons %}
                         <div class="co-btns">
-                            <a class="btn" href="{{ cpUrl("entries/#{section.handle}") }}">
-                                {{ "All entries"|t('contentoverview') }}
-                            </a>
+                            {% include 'contentoverview/partials/listentriesButtons.twig' %}
                         </div>
                     {% endif %}
-
                 {% else %}
                     {{ 'No permission to view entries'|t('contentoverview') }}
                 {% endif %}

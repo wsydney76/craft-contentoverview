@@ -1,0 +1,30 @@
+<div>
+    <div>
+        {% if permittedSections|length == 1 %}
+            {% set section = permittedSections[0] %}
+            <a class="btn" href="{{ cpUrl("entries/#{section}") }}">
+                {{ "All entries"|t('contentoverview') }}
+                : {{ craft.app.sections.sectionByHandle(section).name }}
+            </a>
+        {% else %}
+            <div class="btngroup">
+                <button class="btn">{{ "All entries"|t('overview') }}</button>
+                {% set menuId = "more-actions-menu-#{random()}" %}
+                <button type="button" class="btn menubtn"
+                        aria-label="{{ 'More actions'|t('app') }}"
+                        aria-controls="{{ menuId }}"></button>
+                <div class="menu menu--disclosure">
+                    <ul>
+                        {% for section in permittedSections %}
+                            <li>
+                                <a href="{{ cpUrl("entries/#{section}") }}">
+                                    {{ craft.app.sections.sectionByHandle(section).name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
