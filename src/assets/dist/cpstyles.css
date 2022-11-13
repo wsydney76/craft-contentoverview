@@ -158,7 +158,18 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+}
 
+.co-title {
+    display: flex;
+    align-items: flex-start;
+}
+
+.co-title .co-slideout-icon {
+    flex-shrink: 0;
+    margin-left: 8px;
+    margin-top: 4px;
+    color: var(--gray-600);
 }
 
 .co-paginate {
@@ -232,7 +243,6 @@
 .co-filters-top, .co-filters-bottom {
     margin-bottom: 16px;
 }
-
 
 
 .co-info .info {

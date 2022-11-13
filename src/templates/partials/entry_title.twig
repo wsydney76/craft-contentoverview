@@ -1,0 +1,7 @@
+<a href="{{ entry.cpEditUrl }}" target="{{ settings.linkTarget }}">{{ entry.title }}</a>
+<button title="{{ "Edit in slideout"|t('contentoverview') }}"
+        class="co-slideout-icon"
+        aria-label="{{ "Edit in slideout"|t('contentoverview') }}"
+        onclick="{{ createEditorJs }}">
+    {{ svg('@wsydney76/contentoverview/icons/slideout.svg')|attr({width: '18px', height: '18px;'}) }}
+</button>

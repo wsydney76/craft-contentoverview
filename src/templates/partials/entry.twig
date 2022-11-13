@@ -1,5 +1,14 @@
 {# @var sectionConfig \wsydney76\contentoverview\models\Section #}
 
+{% set createEditorJs %}
+    co_createElementEditor(
+    {{ entry.canonicalId }},
+    {{ entry.siteId }},
+    {{ (not entry.isProvisionalDraft and entry.draftId) ? entry.draftId : "null" }},
+    '{{ sectionPath }}',
+    {{ pageNo }})
+{% endset %}
+
 <div class="co-entry {{ entry.isDraft ? 'draft' : 'published' }} {{ entry.isUnpublishedDraft ? 'provisional' }}">
 
 
@@ -10,15 +19,10 @@
 
 
     {% set layout = sectionConfig.layout  ? sectionConfig.layout : settings.defaultLayout %}
-    {% set style = entry.level and layout in ['list','line']  ? "padding-left: #{(entry.level-1)*32}px" : '' %}
+    {% set levelStyle = entry.level and layout in ['list','line']  ? "padding-left: #{(entry.level-1)*32}px" : '' %}
 
-    <div class="co-content" style="{{ style }};">
-        <div class="co-status" ondblclick="co_createElementEditor(
-            {{ entry.canonicalId }},
-            {{ entry.siteId }},
-            {{ (not entry.isProvisionalDraft and entry.draftId) ? entry.draftId : "null" }},
-            '{{ sectionPath }}',
-            {{ pageNo }})">
+    <div class="co-content co-level-{{ entry.level }}" style="{{ levelStyle }};">
+        <div class="co-status" ondblclick="{{ createEditorJs }}">
 
             {% include [
                 '_contentoverview/partials/entry_status.twig',
@@ -33,7 +37,11 @@
         </div>
         <div class="co-text">
             <div class="co-title">
-                <a href="{{ entry.cpEditUrl }}" target="{{ settings.linkTarget }}">{{ entry.title }}</a>
+
+                {% include [
+                    '_contentoverview/partials/entry_title.twig',
+                    'contentoverview/partials/entry_title.twig'
+                ] %}
             </div>
 
             <div class="co-info">
