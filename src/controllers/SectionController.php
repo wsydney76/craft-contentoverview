@@ -41,7 +41,9 @@ class SectionController extends Controller
             'entriesHtml' => $this->view->renderTemplate('contentoverview/partials/section.twig', [
                 'sectionConfig' => $section,
                 'settings' => Plugin::getInstance()->getSettings(),
-                'entries' => $results->getPageResults()
+                'sectionPath' => $sectionPath,
+                'entries' => $results->getPageResults(),
+                'pageNo' => $pageNo
             ]),
             'paginateHtml' => $this->view->renderTemplate('contentoverview/partials/paginate.twig', [
                 'sectionPath' => $sectionPath,

@@ -1,0 +1,14 @@
+{% set info = sectionConfig.getInfo(entry) %}
+
+{% if info %}
+    <div>
+        {{ view.renderObjectTemplate(info, entry)|raw }}
+    </div>
+{% endif %}
+
+{% set template = sectionConfig.getInfoTemplate(entry) %}
+{% if template %}
+    <div>
+        {{ view.renderTemplate(template, {entry}, 'site')|raw }}
+    </div>
+{% endif %}

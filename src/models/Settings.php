@@ -18,6 +18,9 @@ class Settings extends Model
     public string $linkTarget = '_blank';
     public string $defaultLayout = 'list';
     public string $defaultPage = 'default';
+    public string $defaultIcon = '@appicons/newspaper.svg';
+    public array $iconSize = ['width' => '20px', 'height' => '20px'];
+    public string $customTemplatePath = '_contentoverview';
     public array $transforms = [
         'list' => ['width' => 50, 'height' => 50, 'format' => 'webp'],
         'cardlets' => ['width' => 150, 'height' => 150, 'format' => 'webp'],

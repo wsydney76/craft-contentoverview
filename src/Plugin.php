@@ -6,13 +6,16 @@ use Craft;
 use craft\base\Model;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterCpNavItemsEvent;
+use craft\events\RegisterTemplateRootsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
+use craft\helpers\App;
 use craft\services\Dashboard;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\Cp;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
+use craft\web\View;
 use wsydney76\contentoverview\assets\ContentOverviewAssetBundle;
 use wsydney76\contentoverview\models\Settings;
 use wsydney76\contentoverview\services\ContentOverviewService;
@@ -21,6 +24,7 @@ use wsydney76\contentoverview\widgets\ContentOverviewLinksWidget;
 use wsydney76\contentoverview\widgets\ContentOverviewTabWidget;
 use yii\base\Event;
 use function array_splice;
+use function getenv;
 
 class Plugin extends \craft\base\Plugin
 {
@@ -39,6 +43,15 @@ class Plugin extends \craft\base\Plugin
         $this->setComponents([
             'co' => ContentOverviewService::class
         ]);
+
+
+        Event::on(
+            View::class,
+            View::EVENT_REGISTER_CP_TEMPLATE_ROOTS,
+            function(RegisterTemplateRootsEvent $event) {
+                $event->roots['_contentoverview'] =  App::parseEnv("@templates/{$this->getSettings()->customTemplatePath}");
+            }
+        );
 
 
         /** @var Settings $settings */

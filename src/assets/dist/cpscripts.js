@@ -45,7 +45,9 @@ function co_resetSearch(sectionPath) {
         select.value = ''
     }
 
-    co_getFilterElements().forEach(element => {element.value = ''})
+    co_getFilterElements().forEach(element => {
+        element.value = ''
+    })
 
     co_getSectionHtml(sectionPath)
 }
@@ -63,12 +65,15 @@ function co_getFilterElements(sectionPath) {
 }
 
 function co_registerSearchInput(sectionPath) {
-    co_getSearchInput(sectionPath).addEventListener('keyup', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            co_getSectionHtml(sectionPath);
-        }
-    })
+    searchInput = co_getSearchInput(sectionPath)
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                co_getSectionHtml(sectionPath);
+            }
+        })
+    }
 }
 
 function co_getFilters(sectionPath) {
@@ -84,8 +89,19 @@ function co_getFilters(sectionPath) {
         filters.push(filter)
     })
 
-    console.log(filters)
-
     return filters;
 
+}
+
+function co_createElementEditor(elementId, siteId, draftId, sectionPath, pageNo) {
+    const slideout = Craft.createElementEditor('\\craft\\elements\\Entry', {
+        elementId: elementId,
+        draftId: draftId,
+        siteId: siteId
+    });
+
+    // Refresh section
+    slideout.on('submit', () => {
+        co_getSectionHtml(sectionPath, pageNo)
+    })
 }

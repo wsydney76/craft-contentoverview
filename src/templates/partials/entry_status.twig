@@ -1,0 +1,5 @@
+{% if entry.isDraft %}
+    <div data-icon="draft" aria-hidden="true"></div>
+{% else %}
+    <div class="status {{ entry.status }}"></div>
+{% endif %}

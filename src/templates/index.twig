@@ -32,15 +32,14 @@
 {% endblock %}
 
 {% block content %}
-    {% for tab in tabSettings %}
-        {% set tabIndex = loop.index0 %}
-        <div id="{{ "#{tab.id}" }}" class="co {{ loop.index > 1 ? 'hidden' }}">
-            {% include 'contentoverview/partials/tab.twig' with {
-                page,
-                tab,
-                settings,
-                tabIndex
-            } only %}
-        </div>
-    {% endfor %}
+
+    {% include [
+        '_contentoverview/partials/page.twig',
+        'contentoverview/partials/page.twig'
+    ] with {
+        page,
+        settings,
+        tabSettings
+    } %}
+
 {% endblock %}

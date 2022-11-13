@@ -48,6 +48,8 @@ Create a file `contentoverview.php` in your config folder.
 - widgetText (?string, text for dashboard link widget)
 - linkTarget (?string, set to '_blank' to open edit screens in a new tab (default), else blank '')
 - defaultLayout (?string, list (default)|cardlets|cards|line)
+- customTemplatePath (?string, folder for custom templates, default = contentoverview)
+- defaultIcon (?string, file path to a svg icon, default = @appicons/newspaper.svg)
 - transforms (?array, image transforms for layouts)
 - pages (!array, defines subpages)
 
@@ -376,6 +378,22 @@ Matrix subfields can also be used as filters:
 Specify fields in the form `matrixFieldHandle.blockTypeHandle.subFieldHandle`.
 
 If there is only one block type, you can use `matrixFieldHandle.subFieldHandle`
+
+## Templates
+
+All twig templates are called like so:
+
+```php
+{% include [
+    '_contentoverview/partials/entry.twig',
+    'contentoverview/partials/entry.twig'
+] %}
+```
+where the template root  `_contentoverview` by default points to your project's `templates/_contentoverview` folder.
+
+This allows you to overwrite any twig template in case you have special needs.
+
+Templates are included without an `only` parameter, because we know what our templates need, but maybe you need more in your templates.
 
 ## Events
 

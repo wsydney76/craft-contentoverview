@@ -4,6 +4,8 @@
 
 * Allowed multisection setups. See Readme
 * icon setup attribute is now be an object twig template.
+* Any twig template can be overwritten with a custom template.
+* Double-click on status opens slideout editor.
 
 ### Breaking change
 

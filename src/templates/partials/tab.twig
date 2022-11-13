@@ -32,7 +32,10 @@
                     </h2>
 
                     {% if showButtons %}
-                        {% include 'contentoverview/partials/newentriesButtons.twig' %}
+                        {% include [
+                            '_contentoverview/partials/newentriesButtons.twig',
+                            'contentoverview/partials/newentriesButtons.twig'
+                        ] %}
                     {% endif %}
                 </div>
 
@@ -40,25 +43,34 @@
                 {% if permittedSections %}
                     {% set results = sectionConfig.entries %}
 
-                    {% include 'contentoverview/partials/search.twig' %}
+                    {% include [
+                        '_contentoverview/partials/search.twig',
+                        'contentoverview/partials/search.twig'
+                    ] %}
 
                     <div id="{{ sectionPath }}">
                         <div class="co-entries co-{{ layout }}-{{ column.width }}">
 
-                            {% include 'contentoverview/partials/section.twig' with {
+                            {% include [
+                                '_contentoverview/partials/section.twig',
+                                'contentoverview/partials/section.twig'
+                            ] with {
                                 sectionConfig,
                                 settings,
                                 entries: results.pageResults
-                            } only %}
+                            } %}
 
                         </div>
 
                         {% if results.totalPages > 1 %}
                             <div>
-                                {% include 'contentoverview/partials/paginate.twig' with {
+                                {% include [
+                                    '_contentoverview/partials/paginate.twig',
+                                    'contentoverview/partials/paginate.twig'
+                                ] with {
                                     sectionPath,
                                     results
-                                } only %}
+                                } %}
                             </div>
                         {% endif %}
 
@@ -66,7 +78,10 @@
 
                     {% if showButtons %}
                         <div class="co-btns">
-                            {% include 'contentoverview/partials/listentriesButtons.twig' %}
+                            {% include [
+                                '_contentoverview/partials/listentriesButtons.twig',
+                                'contentoverview/partials/listentriesButtons.twig'
+                            ] %}
                         </div>
                     {% endif %}
                 {% else %}
