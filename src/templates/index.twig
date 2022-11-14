@@ -1,31 +1,17 @@
 {# @var settings \wsydney76\contentoverview\models\Settings #}
+{# @var page \wsydney76\contentoverview\models\Page #}
 
 {% extends "_layouts/cp.twig" %}
-{% set settings = craft.contentoverview.settings %}
 
-{% set title = settings.pluginTitle|t('contentoverview') %}
+{% set selectedSubnavItem  = page.pageKey %}
 
-{% if page is not defined %}
-    {% set page = settings.defaultPage %}
-{% endif %}
+{% set title = title ~ ': ' ~ page.label %}
 
-{% set availablePages = settings.getPages() %}
-{% if availablePages[page] is not defined  %}
-    {% exit 403 %}
-{% endif %}
-
-{% set selectedSubnavItem  = page %}
-
-{% set title = title ~ ': ' ~ settings.getPageLabel(page) %}
-
-{% set tabSettings = settings.getTabs(page) %}
+{% set pageTabs = page.tabs %}
 
 {# tabs is a cp variable, see https://craftcms.com/docs/4.x/extend/cp-templates.html#adding-tabs #}
-{% set tabs = [] %}
+{% set tabs = page.cpTabs %}
 
-{% for tab in tabSettings %}
-    {% set tabs = tabs|push({label: tab.label, url:"##{tab.id}"}) %}
-{% endfor %}
 
 {% block contextMenu %}
     {% include "contentoverview/partials/sitemenu.twig" %}
@@ -39,7 +25,7 @@
     ] with {
         page,
         settings,
-        tabSettings
+        pageTabs
     } %}
 
 {% endblock %}

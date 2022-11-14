@@ -1,0 +1,9 @@
+{% set pageNo = pageNo ?? 1 %}
+{% for entry in entries %}
+    {% include [
+        '_contentoverview/partials/entry.twig',
+        'contentoverview/partials/entry.twig'
+    ] %}
+{% else %}
+    {{ 'Nothing found'|t('contentoverview') }}
+{% endfor %}

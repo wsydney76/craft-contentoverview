@@ -65,21 +65,6 @@ class Settings extends Model
         });
     }
 
-    /**
-     * Returns an array of Tab models for a given page
-     *
-     * @param string $page
-     * @return Collection
-     */
-    public function getTabs(string $page = 'default'): Collection
-    {
-        $config = Craft::$app->config->getConfigFromFile("contentoverview/$page");
-        if (!$config) {
-            return collect([]);
-        }
-        return collect($config['tabs']);
-    }
-
 
     /**
      * Returns a tab model/tabIndex for given page/tabId
@@ -107,13 +92,4 @@ class Settings extends Model
 
     }
 
-
-    /**
-     * @param string $page
-     * @return string
-     */
-    public function getPageLabel(string $page): string
-    {
-        return $this->pages[$page]['label'] ?? '';
-    }
 }

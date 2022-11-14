@@ -26,6 +26,9 @@ use yii\base\Event;
 use function array_splice;
 use function getenv;
 
+/**
+ * @property ContentOverviewService $contentoverview
+ */
 class Plugin extends \craft\base\Plugin
 {
 
@@ -41,7 +44,7 @@ class Plugin extends \craft\base\Plugin
         }
 
         $this->setComponents([
-            'co' => ContentOverviewService::class
+            'contentoverview' => ContentOverviewService::class
         ]);
 
 
@@ -90,7 +93,8 @@ class Plugin extends \craft\base\Plugin
                 UrlManager::class,
                 UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
                 $event->rules = array_merge($event->rules, [
-                    'contentoverview/<page:{slug}>' => ['template' => 'contentoverview/index']
+                    'contentoverview' => 'contentoverview/page',
+                    'contentoverview/<pageKey:{slug}>' => 'contentoverview/page'
                 ]);
             }
             );

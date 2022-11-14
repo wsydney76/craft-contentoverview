@@ -30,11 +30,13 @@ class ContentOverviewTabWidget extends Widget
 
     public function getTitle(): ?string
     {
+        $page = Plugin::getInstance()->contentoverview->createPage('widgets', ['label' => 'Widgets']);
+
         if (!$this->tabId) {
             return self::displayName();
         }
 
-        $tabConfig = Plugin::getInstance()->getSettings()->getTabConfig('widgets', $this->tabId);
+        $tabConfig = $page->getTabConfig($this->tabId);
         if (!$tabConfig['tab']) {
             return self::displayName();
         }
@@ -44,13 +46,15 @@ class ContentOverviewTabWidget extends Widget
 
     public function getSettingsHtml(): ?string
     {
+        $page = Plugin::getInstance()->contentoverview->createPage('widgets', ['label' => 'Widgets']);
+
         return Cp::selectFieldHtml([
                 'label' => Craft::t('contentoverview', 'Tab'),
                 'id' => 'tabId',
                 'name' => 'tabId',
                 'value' => $this->tabId,
                 'errors' => $this->getErrors('tabId'),
-                'options' => Plugin::getInstance()->getSettings()->getTabs('widgets')->map(fn($tab) => [
+                'options' => $page->getTabs()->map(fn($tab) => [
                     'label' => $tab->label,
                     'value' => $tab->getId()
                 ])
@@ -75,13 +79,16 @@ class ContentOverviewTabWidget extends Widget
     {
         $settings = Plugin::getInstance()->getSettings();
 
-        $tabConfig = $settings->getTabConfig('widgets', $this->tabId);
+        $page = Plugin::getInstance()->contentoverview->createPage('widgets', ['label' => 'Widgets']);
+
+        $tabConfig = $page->getTabConfig($this->tabId);
 
         return Craft::$app->view->renderTemplate('contentoverview/widgets/tabwidget.twig', [
             'tab' => $tabConfig['tab'],
             'tabIndex' => $tabConfig['tabIndex'],
             'settings' => $settings,
-            'cols' => $this->cols
+            'cols' => $this->cols,
+            'page' => $page
         ]);
     }
 

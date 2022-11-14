@@ -1,95 +1,23 @@
-{# @var settings \wsydney76\contentoverview\models\Settings #}
-{# @var sectionConfig \wsydney76\contentoverview\models\Section #}
-{# @var results \craft\db\Paginator #}
-
 {% for column in tab.columns %}
 
     {% set columnIndex = loop.index0 %}
 
     <div class="co-column-{{ column.width }}">
+
         {% for sectionConfig in column.sections %}
 
-            {% set sectionIndex = loop.index0 %}
-            {% set sectionPath = "#{page}-#{tabIndex}-#{columnIndex}-#{sectionIndex}" %}
+            {# sectionPath allows ajax requests to identify a section #}
+            {% set sectionPath = "#{page.pageKey}-#{tabIndex}-#{columnIndex}-#{loop.index0}" %}
 
-            {% set layout = sectionConfig.layout  ? sectionConfig.layout : settings.defaultLayout %}
-
-            {% set transform = settings.transforms[layout] %}
-
-            {% set showButtons = sectionConfig.buttons %}
-
-            <div class="co-section co-{{ layout }}">
-
-                <div class="co-btns">
-                    {% set heading = sectionConfig.getHeading()|t('site') %}
-                    <h2>
-                        {% if sectionConfig.linkToPage %}
-                            <a class="go"
-                               href="{{ cpUrl("contentoverview/#{sectionConfig.linkToPage}") }}">{{ heading }}</a>
-                        {% else %}
-                            {{ heading }}
-                        {% endif %}
-                    </h2>
-
-                    {% if showButtons %}
-                        {% include [
-                            '_contentoverview/partials/newentriesButtons.twig',
-                            'contentoverview/partials/newentriesButtons.twig'
-                        ] %}
-                    {% endif %}
-                </div>
-
-                {% set permittedSections = sectionConfig.getPermittedSections('viewentries') %}
-                {% if permittedSections %}
-                    {% set results = sectionConfig.entries %}
-
-                    {% include [
-                        '_contentoverview/partials/search.twig',
-                        'contentoverview/partials/search.twig'
-                    ] %}
-
-                    <div id="{{ sectionPath }}">
-                        <div class="co-entries co-{{ layout }}-{{ column.width }}">
-
-                            {% include [
-                                '_contentoverview/partials/section.twig',
-                                'contentoverview/partials/section.twig'
-                            ] with {
-                                sectionConfig,
-                                settings,
-                                entries: results.pageResults
-                            } %}
-
-                        </div>
-
-                        {% if results.totalPages > 1 %}
-                            <div>
-                                {% include [
-                                    '_contentoverview/partials/paginate.twig',
-                                    'contentoverview/partials/paginate.twig'
-                                ] with {
-                                    sectionPath,
-                                    results
-                                } %}
-                            </div>
-                        {% endif %}
-
-                    </div>
-
-                    {% if showButtons %}
-                        <div class="co-btns">
-                            {% include [
-                                '_contentoverview/partials/listentriesButtons.twig',
-                                'contentoverview/partials/listentriesButtons.twig'
-                            ] %}
-                        </div>
-                    {% endif %}
-                {% else %}
-                    {{ 'No permission to view entries'|t('contentoverview') }}
-                {% endif %}
-
-            </div>
-
+            {% include [
+                '_contentoverview/partials/section.twig',
+                'contentoverview/partials/section.twig'
+            ] with {
+                sectionConfig,
+                settings,
+                sectionPath,
+            } %}
         {% endfor %}
     </div>
+
 {% endfor %}

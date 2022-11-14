@@ -5,11 +5,23 @@ namespace wsydney76\contentoverview\services;
 use Craft;
 use craft\base\Component;
 use wsydney76\contentoverview\models\Column;
+use wsydney76\contentoverview\models\Page;
 use wsydney76\contentoverview\models\Section;
 use wsydney76\contentoverview\models\Tab;
 
 class ContentOverviewService extends Component
 {
+
+
+    public function createPage(string $pageKey, array $pageConfig): Page
+    {
+        return new Page([
+            'pageKey' => $pageKey,
+            'label' => Craft::t('site', $pageConfig['label']),
+            'url' => $pageConfig['url'] ?? '',
+            'group' => $pageConfig['group'] ?? ''
+        ]);
+    }
 
     /**
      * Create a Tab model

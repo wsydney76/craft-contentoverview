@@ -1,9 +1,84 @@
-{% set pageNo = pageNo ?? 1 %}
-{% for entry in entries %}
-    {% include [
-        '_contentoverview/partials/entry.twig',
-        'contentoverview/partials/entry.twig'
-    ] %}
-{% else %}
-    {{ 'Nothing found'|t('contentoverview') }}
-{% endfor %}
+{# @var settings \wsydney76\contentoverview\models\Settings #}
+{# @var sectionConfig \wsydney76\contentoverview\models\Section #}
+{# @var results \craft\db\Paginator #}
+
+
+{% set layout = sectionConfig.layout  ? sectionConfig.layout : settings.defaultLayout %}
+
+{% set transform = settings.transforms[layout] %}
+
+{% set showButtons = sectionConfig.buttons %}
+
+<div class="co-section co-{{ layout }}">
+
+    <div class="co-btns">
+        {% set heading = sectionConfig.getHeading()|t('site') %}
+        <h2>
+            {% if sectionConfig.linkToPage %}
+                <a class="go"
+                   href="{{ cpUrl("contentoverview/#{sectionConfig.linkToPage}") }}">{{ heading }}</a>
+            {% else %}
+                {{ heading }}
+            {% endif %}
+        </h2>
+
+        {% if showButtons %}
+            {% include [
+                '_contentoverview/partials/newentriesButtons.twig',
+                'contentoverview/partials/newentriesButtons.twig'
+            ] %}
+        {% endif %}
+    </div>
+
+    {% set permittedSections = sectionConfig.getPermittedSections('viewentries') %}
+    {% if permittedSections %}
+        {% set results = sectionConfig.entries %}
+
+        {% include [
+            '_contentoverview/partials/search.twig',
+            'contentoverview/partials/search.twig'
+        ] %}
+
+        <div id="{{ sectionPath }}">
+            <div class="co-entries co-{{ layout }}-{{ column.width }}">
+
+                {% include [
+                    '_contentoverview/partials/section_entries.twig',
+                    'contentoverview/partials/section_entries.twig'
+                ] with {
+                    sectionConfig,
+                    settings,
+                    entries: results.pageResults
+                } %}
+
+            </div>
+
+            {% if results.totalPages > 1 %}
+                <div>
+                    {% include [
+                        '_contentoverview/partials/paginate.twig',
+                        'contentoverview/partials/paginate.twig'
+                    ] with {
+                        sectionPath,
+                        results
+                    } %}
+                </div>
+            {% endif %}
+
+        </div>
+
+        {% if showButtons %}
+            <div class="co-btns">
+                {% include [
+                    '_contentoverview/partials/listentriesButtons.twig',
+                    'contentoverview/partials/listentriesButtons.twig'
+                ] %}
+            </div>
+        {% endif %}
+    {% else %}
+        {{ 'No permission to view entries'|t('contentoverview') }}
+    {% endif %}
+
+</div>
+
+

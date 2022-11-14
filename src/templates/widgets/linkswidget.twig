@@ -5,14 +5,11 @@
     {{ settings.widgetText|t('site') }}
 </p>
 
-{% set pages = settings.getPages() %}
-
-
 {% for key, page in pages %}
     {% if pages.count > 1 %}
         <h3>{{ page.label }}</h3>
     {% endif %}
-    {% for tab in settings.getTabs(key) %}
+    {% for tab in page.getTabs() %}
         <a class="btn" href="{{ cpUrl(page.url) }}#{{ tab.id }}">{{ tab.label }}</a>
     {% endfor %}
 {% endfor %}
