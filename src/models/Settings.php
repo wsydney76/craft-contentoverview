@@ -10,12 +10,13 @@ use Illuminate\Support\Collection;
 class Settings extends Model
 {
     // see read me for doc
-    public string $pluginTitle   = 'Content Overview';
+    public string $pluginTitle = 'Content Overview';
     public array $pages = [];
     public bool $enableNav = true;
     public bool $enableWidgets = true;
     public string $widgetText = 'Get a quick overview of your content';
     public string $linkTarget = '_blank';
+    public bool $enableSlideoutEditor = true;
     public string $defaultLayout = 'list';
     public string $defaultPage = 'default';
     public string $defaultIcon = '@appicons/newspaper.svg';
@@ -63,33 +64,6 @@ class Settings extends Model
             $currentUser = Craft::$app->user->identity;
             return $currentUser->admin || $currentUser->isInGroup($page['group']);
         });
-    }
-
-
-    /**
-     * Returns a tab model/tabIndex for given page/tabId
-     *
-     * @param string $page
-     * @param string $tabId
-     * @return Tab|null
-     */
-    public function getTabConfig(string $page, string $tabId): array
-    {
-        $i = 0;
-        $selectedTab = null;
-        foreach ($this->getTabs($page) as $tab) {
-            if ($tab->getId() === $tabId) {
-                $selectedTab = $tab;
-                break;
-            }
-            $i++;
-        }
-
-        return [
-            'tab' => $selectedTab,
-            'tabIndex' => $i
-        ];
-
     }
 
 }

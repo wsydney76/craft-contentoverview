@@ -1,3 +1,8 @@
+{# @params entry, sectionConfig #}
+
+{# @var entry \craft\elements\Entry #}
+{# @var sectionConfig \wsydney76\contentoverview\models\Section #}
+
 {% set popupInfo = sectionConfig.getPopupInfo(entry) %}
 
 {% if popupInfo %}

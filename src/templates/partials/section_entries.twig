@@ -1,4 +1,9 @@
-{% set pageNo = pageNo ?? 1 %}
+{# @params settings, sectionConfig, sectionPath, ?sectionPageNo #}
+
+{# @var settings \wsydney76\contentoverview\models\Settings #}
+{# @var sectionConfig \wsydney76\contentoverview\models\Section #}
+
+{% set sectionPageNo = sectionPageNo ?? 1 %}
 {% for entry in entries %}
     {% include [
         '_contentoverview/partials/entry.twig',

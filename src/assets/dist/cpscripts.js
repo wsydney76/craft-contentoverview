@@ -1,9 +1,15 @@
-function co_getSectionHtml(sectionPath, pageNo = 1) {
+/**
+ * Refresh section html for requested page and search/filter settings
+ *
+ * @param sectionPath
+ * @param sectionPageNo
+ */
+function co_getSectionHtml(sectionPath, sectionPageNo = 1) {
     // TODO: Add error handling
 
     const data = {
         sectionPath: sectionPath,
-        pageNo: pageNo,
+        sectionPageNo: sectionPageNo,
         q: co_getSearchValue(sectionPath),
         filters: co_getFilters(sectionPath)
     }
@@ -19,6 +25,12 @@ function co_getSectionHtml(sectionPath, pageNo = 1) {
 }
 
 
+/**
+ * Get search term
+ *
+ * @param sectionPath
+ * @returns {string|*}
+ */
 function co_getSearchValue(sectionPath) {
     input = co_getSearchInput(sectionPath)
     if (input === null) {
@@ -38,6 +50,10 @@ function co_getSearchValue(sectionPath) {
     return value
 }
 
+/**
+ * Reset search inputs and refresh html
+ * @param sectionPath
+ */
 function co_resetSearch(sectionPath) {
     co_getSearchInput(sectionPath).value = ''
     select = co_getSearchAttributesSelect(sectionPath)
@@ -52,18 +68,10 @@ function co_resetSearch(sectionPath) {
     co_getSectionHtml(sectionPath)
 }
 
-function co_getSearchInput(sectionPath) {
-    return document.getElementById(sectionPath + '-search')
-}
-
-function co_getSearchAttributesSelect(sectionPath) {
-    return document.getElementById(sectionPath + '-search-attribute')
-}
-
-function co_getFilterElements(sectionPath) {
-    return document.getElementsByName(sectionPath + '-filter')
-}
-
+/**
+ * Add eventlistener that refreshes section html if enter is pressed
+ * @param sectionPath
+ */
 function co_registerSearchInput(sectionPath) {
     searchInput = co_getSearchInput(sectionPath)
     if (searchInput) {
@@ -76,9 +84,13 @@ function co_registerSearchInput(sectionPath) {
     }
 }
 
+/**
+ * Get filters settings
+ * @param sectionPath
+ * @returns {[]}
+ */
 function co_getFilters(sectionPath) {
     filters = [];
-
 
     co_getFilterElements(sectionPath).forEach(element => {
         filter = {
@@ -93,7 +105,16 @@ function co_getFilters(sectionPath) {
 
 }
 
-function co_createElementEditor(elementId, siteId, draftId, sectionPath, pageNo) {
+/**
+ * Open slideout editor and refresh section html after submit
+ *
+ * @param elementId
+ * @param siteId
+ * @param draftId
+ * @param sectionPath
+ * @param sectionPageNo
+ */
+function co_createElementEditor(elementId, siteId, draftId, sectionPath, sectionPageNo) {
     const slideout = Craft.createElementEditor('\\craft\\elements\\Entry', {
         elementId: elementId,
         draftId: draftId,
@@ -102,6 +123,22 @@ function co_createElementEditor(elementId, siteId, draftId, sectionPath, pageNo)
 
     // Refresh section
     slideout.on('submit', () => {
-        co_getSectionHtml(sectionPath, pageNo)
+        co_getSectionHtml(sectionPath, sectionPageNo)
     })
+}
+
+/*
+Get input element(s) by sectionPath
+ */
+
+function co_getSearchInput(sectionPath) {
+    return document.getElementById(sectionPath + '-search')
+}
+
+function co_getSearchAttributesSelect(sectionPath) {
+    return document.getElementById(sectionPath + '-search-attribute')
+}
+
+function co_getFilterElements(sectionPath) {
+    return document.getElementsByName(sectionPath + '-filter')
 }

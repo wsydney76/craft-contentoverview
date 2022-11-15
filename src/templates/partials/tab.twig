@@ -1,3 +1,5 @@
+{# @params page, tab, settings, tabIndex #}
+
 {% for column in tab.columns %}
 
     {% set columnIndex = loop.index0 %}
@@ -12,11 +14,7 @@
             {% include [
                 '_contentoverview/partials/section.twig',
                 'contentoverview/partials/section.twig'
-            ] with {
-                sectionConfig,
-                settings,
-                sectionPath,
-            } %}
+            ] %}
         {% endfor %}
     </div>
 

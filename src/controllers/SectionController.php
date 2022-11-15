@@ -16,7 +16,7 @@ class SectionController extends Controller
     {
         // in the form of page-tabIndex-columnIndex-sectionIndex e.g. page1-1-1-0
         $sectionPath = Craft::$app->request->getRequiredBodyParam('sectionPath');
-        $pageNo = Craft::$app->request->getRequiredBodyParam('pageNo');
+        $sectionPageNo = Craft::$app->request->getRequiredBodyParam('sectionPageNo');
         $q = Craft::$app->request->getBodyParam('q');
         $filters = Craft::$app->request->getBodyParam('filters');
 
@@ -35,7 +35,7 @@ class SectionController extends Controller
             throw new ForbiddenHttpException();
         }
 
-        $results = $section->getEntries($pageNo, $q, $filters);
+        $results = $section->getEntries($sectionPageNo, $q, $filters);
 
         return $this->asJson([
             'entriesHtml' => $this->view->renderTemplate('contentoverview/partials/section_entries.twig', [
@@ -43,7 +43,7 @@ class SectionController extends Controller
                 'settings' => Plugin::getInstance()->getSettings(),
                 'sectionPath' => $sectionPath,
                 'entries' => $results->getPageResults(),
-                'pageNo' => $pageNo
+                'sectionPageNo' => $sectionPageNo
             ]),
             'paginateHtml' => $this->view->renderTemplate('contentoverview/partials/paginate.twig', [
                 'sectionPath' => $sectionPath,

@@ -160,6 +160,10 @@
 
 }
 
+.co-image.co-slideout {
+    cursor: pointer;
+}
+
 .co-title {
     display: flex;
     align-items: flex-start;

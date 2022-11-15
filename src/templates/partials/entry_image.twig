@@ -1,5 +1,13 @@
+{# @params entry, settings, sectionConfig, createEditorJs #}
+
+{# @var entry \craft\elements\Entry #}
+{# @var image \craft\elements\Asset #}
+{# @var settings \wsydney76\contentoverview\models\Settings #}
+{# @var sectionConfig \wsydney76\contentoverview\models\Section #}
+
+
 {% if sectionConfig.layout != 'line' %}
-    <div class="co-image">
+    <div class="co-image {{ settings.enableSlideoutEditor ? 'co-slideout' }}" onclick="{{ createEditorJs }}">
         {% set image = null %}
         {% set imageField = sectionConfig.getImageField(entry) %}
         {% if imageField %}

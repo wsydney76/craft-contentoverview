@@ -1,3 +1,5 @@
+{# @params page, settings #}
+
 {# @var settings \wsydney76\contentoverview\models\Settings #}
 {# @var page \wsydney76\contentoverview\models\Page #}
 
@@ -5,7 +7,7 @@
 
 {% set selectedSubnavItem  = page.pageKey %}
 
-{% set title = title ~ ': ' ~ page.label %}
+{% set title = settings.pluginTitle|t('site') ~ ': ' ~ page.label|t('site') %}
 
 {% set pageTabs = page.tabs %}
 
@@ -22,10 +24,6 @@
     {% include [
         '_contentoverview/partials/page.twig',
         'contentoverview/partials/page.twig'
-    ] with {
-        page,
-        settings,
-        pageTabs
-    } %}
+    ] %}
 
 {% endblock %}

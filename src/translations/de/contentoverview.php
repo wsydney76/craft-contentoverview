@@ -4,10 +4,14 @@
 return [
     'Access Content Overview Plugin' => 'Zugriff auf das Inhaltsübersichts-Plugin',
     'All (full width)' => 'Alle (volle Breite)',
+    'All entries in' => 'Alle Einträge in',
     'All entries' => 'Alle Einträge',
     'Content Overview' => 'Inhaltsübersicht',
+    'Edit in slide out' => 'Edit in slide out',
+    'Edit in slideout' => 'Edit in slideout',
     'entries total' => 'Einträge insgesamt',
     'Information' => 'Information',
+    'New entry in' => 'Neuer Eintrag in',
     'New entry' => 'Neuer Eintrag',
     'Next page' => 'Nächste Seite',
     'No permission to view entries' => 'Keine Berechtigung zum Anzeigen von Einträgen',
@@ -17,10 +21,10 @@ return [
     'Page' => 'Seite',
     'Previous page' => 'Vorherige Seite',
     'Reset' => 'Zurücksetzen',
+    'Search in' => 'Suchen in',
     'Search' => 'Suchen',
     'Tab' => 'Tab',
     'total entries' => 'Einträge insgesamt',
     'Two (half width)' => 'Zwei (halbe Breite)',
     'Widget must be at least two columns wide if "Two" is selected, or at least four columns if "All" is selected' => 'Das Widget muss mindestens zwei Spalten breit sein, wenn "Zwei" ausgewählt ist, oder mindestens vier Spalten, wenn "Alle" ausgewählt ist.',
-
 ];

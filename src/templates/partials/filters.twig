@@ -1,10 +1,9 @@
 {% import '_includes/forms' as forms %}
 
-
 {% for filter in filters %}
 
     {% set field = filter.fieldInstance %}
-    {% set label = (filter.label is defined ? filter.label : field.name)|t('site') %}
+    {% set label = (filter.label is defined ? filter.label : (field.name)|t('site') ~ '...') %}
 
     <div>
         {% switch filter.type %}

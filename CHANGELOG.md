@@ -3,14 +3,17 @@
 ## Unreleased
 
 * Allowed multisection setups. See Readme
-* icon setup attribute is now be an object twig template.
+* icon setup attribute can now be an object twig template.
 * Any twig template can be overwritten with a custom template.
-* Double-click on status opens slideout editor.
+* Enabled slideout editor.
+* Added a `enableSlideoutEditor` plugin setting to disable that (its experimental and may not work in all cases...).
+
 
 ### Breaking change
 
 * info and popupInfo section config settings now only allow a single string, in order to avoid confusion when using multi section config.  
   Either use html tags or, for more complex logic, use an `infoTemplate` setting.
+* section config setting is now `array|string`
 
 ## 2.2.0 2022-11-11
 

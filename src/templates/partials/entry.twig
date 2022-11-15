@@ -1,22 +1,27 @@
+{# @params entry, settings, sectionConfig, sectionPath, sectionPageNo #}
+
+{# @var entry \craft\elements\Entry #}
+{# @var settings \wsydney76\contentoverview\models\Settings #}
 {# @var sectionConfig \wsydney76\contentoverview\models\Section #}
 
-{% set createEditorJs %}
-    co_createElementEditor(
-    {{ entry.canonicalId }},
-    {{ entry.siteId }},
-    {{ (not entry.isProvisionalDraft and entry.draftId) ? entry.draftId : "null" }},
-    '{{ sectionPath }}',
-    {{ pageNo }})
-{% endset %}
+{% set createEditorJs = '' %}
+{% if settings.enableSlideoutEditor %}
+    {% set createEditorJs %}
+        co_createElementEditor(
+        {{ entry.canonicalId }},
+        {{ entry.siteId }},
+        {{ (not entry.isProvisionalDraft and entry.draftId) ? entry.draftId : "null" }},
+        '{{ sectionPath }}',
+        {{ sectionPageNo }})
+    {% endset %}
+{% endif %}
 
 <div class="co-entry {{ entry.isDraft ? 'draft' : 'published' }} {{ entry.isUnpublishedDraft ? 'provisional' }}">
-
 
     {% include [
         '_contentoverview/partials/entry_image.twig',
         'contentoverview/partials/entry_image.twig'
     ] %}
-
 
     {% set layout = sectionConfig.layout  ? sectionConfig.layout : settings.defaultLayout %}
     {% set levelStyle = entry.level and layout in ['list','line']  ? "padding-left: #{(entry.level-1)*32}px" : '' %}

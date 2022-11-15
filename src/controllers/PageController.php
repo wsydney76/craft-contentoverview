@@ -29,7 +29,6 @@ class PageController extends Controller
         $page = Plugin::getInstance()->contentoverview->createPage($pageKey, $pageConfig);
 
         return $this->view->renderPageTemplate('contentoverview/index.twig', [
-            'title' => Craft::t('site', $settings->pluginTitle),
             'page' => $page,
             'settings' => $settings
         ]);

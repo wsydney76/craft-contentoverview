@@ -533,7 +533,7 @@ class Section extends Model
      * @return array with keys entries: array of entries (respecting a limit, if set), count: number of entries (without limit)
      */
     public function getEntries(
-        int $pageNo = 1, string $q = '', array $filters = []
+        int $sectionPageNo = 1, string $q = '', array $filters = []
     ): Paginator {
         /** @var Settings $settings */
         $settings = Plugin::getInstance()->getSettings();
@@ -651,7 +651,7 @@ class Section extends Model
         }
 
         return new Paginator($query, [
-            'currentPage' => $pageNo,
+            'currentPage' => $sectionPageNo,
             'pageSize' => $this->limit ?? 99999
         ]);
     }

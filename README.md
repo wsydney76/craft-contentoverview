@@ -26,6 +26,9 @@ Run `composer require wsydney76/craft-contentoverview`
 
 Run `craft plugin/install contentoverview`
 
+This is currently work in progress, set your `composer.json` requirement to `"wsydney76/craft-contentoverview": "dev-main"`
+and run `composer update` to get the latest stuff.
+
 ## Screenshots
 
 Show different sections in different layouts (cards, cardlets, list, line). Add section specific infos and image.
@@ -47,6 +50,7 @@ Create a file `contentoverview.php` in your config folder.
 - defaultPage (?string, page key for the first/only page.)
 - widgetText (?string, text for dashboard link widget)
 - linkTarget (?string, set to '_blank' to open edit screens in a new tab (default), else blank '')
+- enableSlideoutEditor (?bool, whether a slideout editor can be opened for an entry by a double click on the status indicator, or by clicking an icon. Experimental)
 - defaultLayout (?string, list (default)|cardlets|cards|line)
 - customTemplatePath (?string, folder for custom templates, default = contentoverview)
 - defaultIcon (?string, file path to a svg icon, default = @appicons/newspaper.svg)
@@ -394,6 +398,24 @@ where the template root  `_contentoverview` by default points to your project's 
 This allows you to overwrite any twig template in case you have special needs.
 
 Templates are included without an `only` parameter, because we know what our templates need, but maybe you need more in your templates.
+Required params passed to a template are listed in an `@params` comment.
+
+Generally available variables:
+
+* settings - The plugin settings
+* page - The page object
+
+Variables available within a section:
+
+* sectionConfig - The section object containing all section settings
+* sectionPath - A unique identifier of a section, enables ajax request to identify the section
+* sectionPageNo - The current page shown in the section
+* tab - the current tab object
+* column - the current column object
+
+Entry template and includes
+
+* entry - You guessed it.
 
 ## Events
 
