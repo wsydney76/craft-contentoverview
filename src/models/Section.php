@@ -14,6 +14,7 @@ use craft\fields\Users;
 use craft\helpers\ElementHelper;
 use craft\models\MatrixBlockType;
 use Illuminate\Support\Collection;
+use wsydney76\contentoverview\events\DefineCustomFilterOptionsEvent;
 use wsydney76\contentoverview\events\FilterContentOverviewQueryEvent;
 use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
 use wsydney76\contentoverview\Plugin;
@@ -29,6 +30,7 @@ class Section extends Model
 {
     public const EVENT_MODIFY_CONTENTOVERVIEW_QUERY = 'modifyContentoverviewQuery';
     public const EVENT_FILTER_CONTENTOVERVIEW_QUERY = 'filterContentoverviewQuery';
+    public const EVENT_DEFINE_CUSTOM_FILTER_OPTIONS = 'defineCustomFilterOptions';
 
     public bool $allSites = false;
     public bool $buttons = true;
@@ -528,7 +530,13 @@ class Section extends Model
                 }
                 case 'custom':
                 {
-                    // nop
+                    if ($this->hasEventHandlers(self::EVENT_DEFINE_CUSTOM_FILTER_OPTIONS)) {
+                        $event = new DefineCustomFilterOptionsEvent([
+                            'filter' => $filter
+                        ]);
+                        $this->trigger(self::EVENT_DEFINE_CUSTOM_FILTER_OPTIONS, $event);
+                        $filter = $event->filter;
+                    }
                 }
             }
             return $filter;

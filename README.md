@@ -361,6 +361,8 @@ Currently supported:
 * Users fields
 * Option fields (Dropdown)
 
+![Screenshot](/images/search3.jpg)
+
 Additionally custom filters can be defined:
 
 ```php
@@ -378,6 +380,28 @@ Additionally custom filters can be defined:
 ```
 
 ![Screenshot](/images/customfilter.jpg)
+
+Options can be set dynamically via an event:
+
+```php
+use wsydney76\contentoverview\events\DefineCustomFilterOptionsEvent;
+use wsydney76\contentoverview\models\Section;
+
+...
+
+Event::on(
+    Section::class,
+    Section::EVENT_DEFINE_CUSTOM_FILTER_OPTIONS,
+    function(DefineCustomFilterOptionsEvent $event) {
+        if ($event->filter['field'] === 'criticalreviews') {
+            $event->filter['options'][] = [
+              'label' => 'A new option',
+              'value' => 'aNewOption'
+            ];
+        }
+    }
+);
+```
 
 A custom module can handle this filter in an event handler, e.g.
 
@@ -418,8 +442,6 @@ Event::on(
     }
 );
 ```
-
-![Screenshot](/images/search3.jpg)
 
 Multiple filters can take up a lot of space if used together with search, so you can push them
 below or on top of the search:
