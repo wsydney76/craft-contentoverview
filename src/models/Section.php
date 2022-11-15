@@ -14,6 +14,7 @@ use craft\fields\Users;
 use craft\helpers\ElementHelper;
 use craft\models\MatrixBlockType;
 use Illuminate\Support\Collection;
+use wsydney76\contentoverview\events\FilterContentOverviewQueryEvent;
 use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
 use wsydney76\contentoverview\Plugin;
 use yii\base\InvalidConfigException;
@@ -27,6 +28,7 @@ use function is_string;
 class Section extends Model
 {
     public const EVENT_MODIFY_CONTENTOVERVIEW_QUERY = 'modifyContentoverviewQuery';
+    public const EVENT_FILTER_CONTENTOVERVIEW_QUERY = 'filterContentoverviewQuery';
 
     public bool $allSites = false;
     public bool $buttons = true;
@@ -425,7 +427,6 @@ class Section extends Model
             , $sections);
 
         return implode(', ', $headings);
-
     }
 
 
@@ -458,68 +459,77 @@ class Section extends Model
     public function getFilters(): Collection
     {
         $filters = collect($this->filters)->transform(function($filter) {
-            if (!isset($filter['type'])) {
+            $filterType = $filter['type'] ?? 'customField';
+            switch ($filterType) {
+                case 'customField':
+                {
 
-                $segments = explode('.', $filter['field']);
-                $fieldHandle = $segments[0];
+                    $segments = explode('.', $filter['field']);
+                    $fieldHandle = $segments[0];
 
-                $field = Craft::$app->fields->getFieldByHandle($fieldHandle);
-                if (!$field) {
-                    throw new InvalidConfigException("Invalid field handle");
-                }
-
-                if ($field instanceof Matrix) {
-                    if (count($segments) < 2) {
-                        throw new InvalidConfigException("Invalid matrix handle (field.blockType.subField)");
-                    }
-
-                    /** @var MatrixBlockType $blockType */
-                    if (count($segments) == 2) {
-                        $blockType = $field->getBlockTypes()[0];
-                        $subFieldHandle = $segments[1];
-                    } else {
-                        $blockType = collect($field->getBlockTypes())->firstWhere('handle', $segments[1]);
-                        if (!$blockType) {
-                            throw new InvalidConfigException("Invalid blocktype handle $segments[1]");
-                        }
-                        $subFieldHandle = $segments[2];
-                    }
-
-
-                    /** @var Field $field */
-                    $field = collect($blockType->getCustomFields())->firstWhere('handle', $subFieldHandle);
+                    $field = Craft::$app->fields->getFieldByHandle($fieldHandle);
                     if (!$field) {
-                        throw new InvalidConfigException("Invalid subField handle $subFieldHandle");
+                        throw new InvalidConfigException("Invalid field handle");
                     }
 
-                    // return field handle in the form relatedTo expects
-                    $filter['field'] = "{$segments[0]}.{$subFieldHandle}";
-                }
-
-                if ($field instanceof Entries) {
-                    $type = 'entriesField';
-
-                    if ($field->sources !== '*') {
-                        $sections = [];
-                        foreach ($field->sources as $source) {
-                            $section = Craft::$app->sections->getSectionByUid(explode(':', $source)[1]);
-                            $sections[] = $section->handle;
+                    if ($field instanceof Matrix) {
+                        if (count($segments) < 2) {
+                            throw new InvalidConfigException("Invalid matrix handle (field.blockType.subField)");
                         }
-                    } else {
-                        $sections = null;
+
+                        /** @var MatrixBlockType $blockType */
+                        if (count($segments) == 2) {
+                            $blockType = $field->getBlockTypes()[0];
+                            $subFieldHandle = $segments[1];
+                        } else {
+                            $blockType = collect($field->getBlockTypes())->firstWhere('handle', $segments[1]);
+                            if (!$blockType) {
+                                throw new InvalidConfigException("Invalid blocktype handle $segments[1]");
+                            }
+                            $subFieldHandle = $segments[2];
+                        }
+
+
+                        /** @var Field $field */
+                        $field = collect($blockType->getCustomFields())->firstWhere('handle', $subFieldHandle);
+                        if (!$field) {
+                            throw new InvalidConfigException("Invalid subField handle $subFieldHandle");
+                        }
+
+                        // return field handle in the form relatedTo expects
+                        $filter['field'] = "{$segments[0]}.{$subFieldHandle}";
                     }
-                    $filter['sections'] = $sections;
-                }
 
-                if ($field instanceof Users) {
-                    $type = 'usersField';
-                }
-                if ($field instanceof BaseOptionsField) {
-                    $type = 'optionsField';
-                }
+                    if ($field instanceof Entries) {
+                        $type = 'entriesField';
 
-                $filter['fieldInstance'] = $field;
-                $filter['type'] = $type;
+                        if ($field->sources !== '*') {
+                            $sections = [];
+                            foreach ($field->sources as $source) {
+                                $section = Craft::$app->sections->getSectionByUid(explode(':', $source)[1]);
+                                $sections[] = $section->handle;
+                            }
+                        } else {
+                            $sections = null;
+                        }
+                        $filter['sections'] = $sections;
+                    }
+
+                    if ($field instanceof Users) {
+                        $type = 'usersField';
+                    }
+                    if ($field instanceof BaseOptionsField) {
+                        $type = 'optionsField';
+                    }
+
+                    $filter['fieldInstance'] = $field;
+                    $filter['type'] = $type;
+                    break;
+                }
+                case 'custom':
+                {
+                    // nop
+                }
             }
             return $filter;
         });
@@ -630,8 +640,7 @@ class Section extends Model
                             ]);
                             break;
                         }
-                        case
-                        'optionsField':
+                        case 'optionsField':
                         {
                             $field = Craft::$app->fields->getFieldByHandle($filter['field']);
                             $columnName = ElementHelper::fieldColumnFromField($field);
@@ -639,6 +648,16 @@ class Section extends Model
                             $query->andWhere([$columnName => $filter['value']]);
                             break;
                         }
+
+                        case 'custom': {
+                            if ($this->hasEventHandlers(self::EVENT_FILTER_CONTENTOVERVIEW_QUERY)) {
+                                $this->trigger(self::EVENT_FILTER_CONTENTOVERVIEW_QUERY, new FilterContentOverviewQueryEvent([
+                                    'query' => $query,
+                                    'filter' => $filter
+                                ]));
+                            }
+                        }
+
                     }
                 }
             }

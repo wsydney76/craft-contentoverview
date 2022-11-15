@@ -7,6 +7,7 @@
 * Any twig template can be overwritten with a custom template.
 * Enabled slideout editor.
 * Added a `enableSlideoutEditor` plugin setting to disable that (its experimental and may not work in all cases...).
+* Custom filters can be defined.
 
 
 ### Breaking change

@@ -1,9 +1,14 @@
+{# @params sectionConfig #}
+{# @var sectionConfig \wsydney76\contentoverview\models\Section #}
+
 {% import '_includes/forms' as forms %}
 
 {% for filter in filters %}
 
-    {% set field = filter.fieldInstance %}
-    {% set label = (filter.label is defined ? filter.label : (field.name)|t('site') ~ '...') %}
+   {% if filter['fieldInstance'] is defined %}
+       {% set fieldInstance = filter.fieldInstance %}
+       {% set label = (filter.label is defined ? filter.label : fieldInstance.name)|t('site') ~ '...' %}
+   {% endif %}
 
     <div>
         {% switch filter.type %}
@@ -20,7 +25,6 @@
 
         {% case "usersField" %}
 
-
             {% set users = craft.users()
                 .orderBy(filter.orderBy ?? null)
             .collect %}
@@ -30,7 +34,12 @@
 
         {% case "optionsField" %}
 
-            {% set options = field.options|filter(option => option.value != '') %}
+            {% set options = fieldInstance.options|filter(option => option.value != '') %}
+
+        {% case "custom" %}
+            
+            {% set options = filter.options %}
+            {% set label = filter.label %}
 
         {% endswitch %}
 

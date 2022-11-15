@@ -361,6 +361,64 @@ Currently supported:
 * Users fields
 * Option fields (Dropdown)
 
+Additionally custom filters can be defined:
+
+```php
+->filters([
+    [
+        'type' => 'custom',
+        'label' => 'Critical reviews...',
+        'field' => 'criticalreviews', // a pseudo field name, handled in event
+        'options' => [
+            ['label' => 'Overdue', 'value' => 'overdue'],
+            ['label' => 'Next week', 'value' => 'nextweek'],
+        ]
+    ],
+])
+```
+
+![Screenshot](/images/customfilter.jpg)
+
+A custom module can handle this filter in an event handler, e.g.
+
+```php
+
+use wsydney76\contentoverview\events\FilterContentOverviewQueryEvent;
+use wsydney76\contentoverview\models\Section;
+
+...
+
+Event::on(
+    Section::class,
+    Section::EVENT_FILTER_CONTENTOVERVIEW_QUERY,
+    function(FilterContentOverviewQueryEvent $event) {
+        $filter = $event->filter;
+        if ($filter['field'] === 'criticalreviews') {
+            switch ($filter['value']) {
+                case 'overdue':
+                {
+                    $event->query
+                        ->workflowStatus('inReview')
+                        ->dueDate('<' . DateTimeHelper::today()->format('Y-m-d'));
+                    break;
+                }
+                case 'nextweek':
+                {
+                    $event->query
+                        ->workflowStatus('inReview')
+                        ->dueDate([
+                            'and',
+                            '>' . DateTimeHelper::today()->format('Y-m-d'),
+                            '<' . DateTimeHelper::nextWeek()->format('Y-m-d'),
+                        ]);
+                    break;
+                }
+            }
+        }
+    }
+);
+```
+
 ![Screenshot](/images/search3.jpg)
 
 Multiple filters can take up a lot of space if used together with search, so you can push them
