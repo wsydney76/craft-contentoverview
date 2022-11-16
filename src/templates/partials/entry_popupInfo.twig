@@ -6,8 +6,11 @@
 {% set popupInfo = sectionConfig.getPopupInfo(entry) %}
 
 {% if popupInfo %}
-    <div class="info" tabindex="0" aria-role="button"
-         aria-label="{{ "Information"|t('contentoverview') }}">
-        {{ view.renderObjectTemplate(popupInfo, entry)|raw }}
-    </div>
+    {% set info = view.renderObjectTemplate(popupInfo, entry) %}
+    {% if info %}
+        <div class="info" tabindex="0" aria-role="button"
+             aria-label="{{ "Information"|t('contentoverview') }}">
+            {{ info|raw }}
+        </div>
+    {% endif %}
 {% endif %}

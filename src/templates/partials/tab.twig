@@ -11,10 +11,18 @@
             {# sectionPath allows ajax requests to identify a section #}
             {% set sectionPath = "#{page.pageKey}-#{tabIndex}-#{columnIndex}-#{loop.index0}" %}
 
-            {% include [
-                '_contentoverview/partials/section.twig',
-                'contentoverview/partials/section.twig'
-            ] %}
+            {% if sectionConfig.isCustomSection %}
+                {% include [
+                    '_contentoverview/partials/custom_section.twig',
+                    'contentoverview/partials/custom_section.twig'
+                ] %}
+            {% else %}
+                {% include [
+                    '_contentoverview/partials/section.twig',
+                    'contentoverview/partials/section.twig'
+                ] %}
+            {% endif %}
+
         {% endfor %}
     </div>
 

@@ -5,6 +5,7 @@ namespace wsydney76\contentoverview\services;
 use Craft;
 use craft\base\Component;
 use wsydney76\contentoverview\models\Column;
+use wsydney76\contentoverview\models\CustomSection;
 use wsydney76\contentoverview\models\Page;
 use wsydney76\contentoverview\models\Section;
 use wsydney76\contentoverview\models\Tab;
@@ -64,6 +65,18 @@ class ContentOverviewService extends Component
     public function createSection(string $className = Section::class): Section
     {
         return Craft::createObject($className);
+    }
+
+    /**
+     * Create a Custom Section model
+     *
+     * @param string $className Class name of a class inherited from Section
+     * @return Section
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function createCustomSection(): CustomSection
+    {
+        return Craft::createObject(CustomSection::class);
     }
 
 }

@@ -12,7 +12,7 @@ new ideas...
 * Added a `enableSlideoutEditor` plugin setting to disable that (its experimental and may not work in all cases...).
 * Custom filters can be defined.
 * Custom templates can be rendered in CP page blocks (sidebar, details etc.)
-
+* Custom templates can be rendered instead of default sections.
 
 ### Breaking change
 

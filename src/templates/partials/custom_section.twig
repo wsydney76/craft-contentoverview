@@ -1,0 +1,15 @@
+<div class="co-section">
+    <div class="co-btns">
+        {% set heading = sectionConfig.heading|t('site') %}
+        <h2>
+            {% if sectionConfig.linkToPage %}
+                <a class="go"
+                   href="{{ cpUrl("contentoverview/#{sectionConfig.linkToPage}") }}">{{ heading }}</a>
+            {% else %}
+                {{ heading }}
+            {% endif %}
+        </h2>
+    </div>
+
+    {% include settings.customTemplatePath ~ '/' ~ sectionConfig.customTemplate %}
+</div>

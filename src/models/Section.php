@@ -55,6 +55,9 @@ class Section extends Model
     public ?bool $sortByScore = false;
     public ?string $status = null;
 
+    // make it easer to detect custom sections, instead of using class names
+    public bool $isCustomSection = false;
+
     protected $_layouts = ['list', 'cardlets', 'cards', 'line'];
 
 
@@ -596,7 +599,7 @@ class Section extends Model
             foreach ($imageFields as $imageField) {
                 $query->andWith([
                     $imageField, [
-                        'withTransforms' => [$settings->transforms[$this->layout]]
+                        'withTransforms' => [$settings->transforms[$this->layout ?: $settings->defaultLayout]]
                     ]
                 ]);
             }

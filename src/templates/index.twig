@@ -30,24 +30,24 @@
 
 {% block sidebar %}
     {% if page.blocks['sidebar'] is defined %}
-        {% include settings.customTemplatePath ~ '/' ~ page.blocks['sidebar'] %}
+        {% include settings.customTemplatePath ~ '/' ~ page.blocks['sidebar'] ignore missing %}
     {% endif %}
 {% endblock %}
 
 {% block details %}
     {% if page.blocks['details'] is defined %}
-        {% include settings.customTemplatePath ~ '/' ~ page.blocks['details'] %}
+        {% include settings.customTemplatePath ~ '/' ~ page.blocks['details'] ignore missing %}
     {% endif %}
 {% endblock %}
 
 {% block toolbar %}
     {% if page.blocks['toolbar'] is defined %}
-        {% include settings.customTemplatePath ~ '/' ~ page.blocks['toolbar'] %}
+        {% include settings.customTemplatePath ~ '/' ~ page.blocks['toolbar'] ignore missing %}
     {% endif %}
 {% endblock %}
 
 {% block footer %}
     {% if page.blocks['footer'] is defined %}
-        {% include settings.customTemplatePath ~ '/' ~ page.blocks['footer'] %}
+        {% include settings.customTemplatePath ~ '/' ~ page.blocks['footer'] ignore missing %}
     {% endif %}
 {% endblock %}

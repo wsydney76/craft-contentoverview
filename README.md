@@ -499,6 +499,23 @@ Entry template and includes
 
 * entry - You guessed it.
 
+### Custom Sections
+
+You can create a custom section, where a custom template will be rendered.
+
+```php
+$co->createCustomSection()
+    ->heading('Create Screening')
+    ->customTemplate('custom/create_screening.twig')
+```
+
+Your template must live in the `settings.customTemplatePath` folder, by default `templates/_contentoverview`.
+
+Nothing special on the part of the plugin, but it opens amazing possibilities
+to provide custom solutions for editors, whose work can thus be considerably facilitated.
+
+See example below:
+
 ### Blocks
 
 [Control panel templates](https://craftcms.com/docs/4.x/extend/cp-templates.html#available-blocks) make 
@@ -552,6 +569,16 @@ Example:
 </div>
 ```
 
+### Customization Example
+
+Managing screenings for a film festival:
+
+![Screenshot](/images/customize-example.jpg)
+
+* Guide with project specific help
+* Easy filtering with fewer clicks
+* Add new screenings without loading new pages. Especially useful when there is a lot of repetition. Just change date/time, click 'Create', done.
+
 ## Events
 
 Custom modules can extend the configuration by adding keys to the `sections` config array and modify the query via an
@@ -604,3 +631,4 @@ One column is too narrow to be useful.
 * Check permission handling
 * Some translations are missing...
 * Some inline comments are missing...
+* Accessibility...
