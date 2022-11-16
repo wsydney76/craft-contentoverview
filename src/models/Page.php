@@ -13,6 +13,7 @@ class Page extends Model
     public string $label;
     public string $url;
     public string $group = '';
+    public array $blocks = [];
 
     private array $_tabs = [];
 

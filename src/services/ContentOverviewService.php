@@ -19,7 +19,8 @@ class ContentOverviewService extends Component
             'pageKey' => $pageKey,
             'label' => Craft::t('site', $pageConfig['label']),
             'url' => $pageConfig['url'] ?? '',
-            'group' => $pageConfig['group'] ?? ''
+            'group' => $pageConfig['group'] ?? '',
+            'blocks' => $pageConfig['blocks'] ?? []
         ]);
     }
 

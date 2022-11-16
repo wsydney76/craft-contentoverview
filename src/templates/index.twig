@@ -27,3 +27,27 @@
     ] %}
 
 {% endblock %}
+
+{% block sidebar %}
+    {% if page.blocks['sidebar'] is defined %}
+        {% include settings.customTemplatePath ~ '/' ~ page.blocks['sidebar'] %}
+    {% endif %}
+{% endblock %}
+
+{% block details %}
+    {% if page.blocks['details'] is defined %}
+        {% include settings.customTemplatePath ~ '/' ~ page.blocks['details'] %}
+    {% endif %}
+{% endblock %}
+
+{% block toolbar %}
+    {% if page.blocks['toolbar'] is defined %}
+        {% include settings.customTemplatePath ~ '/' ~ page.blocks['toolbar'] %}
+    {% endif %}
+{% endblock %}
+
+{% block footer %}
+    {% if page.blocks['footer'] is defined %}
+        {% include settings.customTemplatePath ~ '/' ~ page.blocks['footer'] %}
+    {% endif %}
+{% endblock %}
