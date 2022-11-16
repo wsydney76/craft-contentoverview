@@ -2,12 +2,16 @@
 
 ## Unreleased
 
+Use this plugin in a real-life project, and don't be surprised to see a lot of
+new ideas...
+
 * Allowed multisection setups. See Readme
 * icon setup attribute can now be an object twig template.
 * Any twig template can be overwritten with a custom template.
 * Enabled slideout editor.
 * Added a `enableSlideoutEditor` plugin setting to disable that (its experimental and may not work in all cases...).
 * Custom filters can be defined.
+* Custom templates can be rendered in CP page blocks (sidebar, details etc.)
 
 
 ### Breaking change
