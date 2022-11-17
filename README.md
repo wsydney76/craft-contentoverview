@@ -4,7 +4,8 @@ This plugin shows configurable overviews of a site's content.
 
 ## Disclaimer
 
-* This plugin is developed as a side/training project for internal use only.
+* This plugin was initially developed as a side/training project for internal use only.
+* Added a bunch of customization options when evaluating it in a real-life project.
 * It works for us, but may not work everywhere.
 * There may be (well, is) an unlimited amount of
     * bugs
@@ -465,7 +466,9 @@ Specify fields in the form `matrixFieldHandle.blockTypeHandle.subFieldHandle`.
 
 If there is only one block type, you can use `matrixFieldHandle.subFieldHandle`
 
-## Templates
+## Customize 
+
+### Overwrite templates
 
 All twig templates are called like so:
 
@@ -516,7 +519,7 @@ to provide custom solutions for editors, whose work can thus be considerably fac
 
 See example below:
 
-### Blocks
+### Twig Page Blocks
 
 [Control panel templates](https://craftcms.com/docs/4.x/extend/cp-templates.html#available-blocks) make 
 a number of twig `{% block %}` areas available, where custom templates can be rendered.
@@ -569,6 +572,85 @@ Example:
 </div>
 ```
 
+### Actions
+
+Custom actions can be defined in the section config.
+
+Actions can be:
+
+* slideout: predefined, opens the entry in a slideout editor.
+* delete: predefined, deletes the entry (with user confirmation).
+* A custom javascript function.
+* A CP link to a page provided e.g. by a custom module.
+* A custom controller action (executed with user confirmation).
+
+```php
+->actions([
+    // Predefined actions
+    'slideout'
+    'delete',
+    
+    // Call a custom javascript function
+    // Signature:
+    // function myApp_publish_release(label, elementId, draftId, title, sectionPath, sectionPageNo)
+    // Use sectionPath, sectionPageNo if you want to refresh the section html via co_getSectionHtml
+    [
+        'label' => 'Publish all entries that belong to this package',
+        'icon' => '@templates/_icons/publish.svg',
+        'jsFunction' => 'myApp_publish_release'
+    ],
+    
+   
+    // Open a new CP page
+    // elementId and draftId params will be added to the url.
+    [
+        'label' => 'Publish all entries that belong to this package',
+        'icon' => '@templates/_icons/publish.svg',
+        'cpUrl' => 'main/publish-release'
+    ],
+    
+    // Call a custom controller action
+    // elementId and draftId params will be posted to the action.
+    // requires that the controller action return ->asSuccess(message) or ->asFailure(message)
+    // Takes care of displaying cp notice/error and refreshing the section html
+    [
+        'label' => 'Publish all entries that belong to this package',
+        'icon' => '@templates/_icons/publish.svg',
+        'cpAction' => 'main/content/publish-release'
+    ],
+
+
+// modules/main/controllers/ContentController.php
+
+<?php
+
+namespace modules\main\controllers;
+
+use Craft;
+use craft\web\Controller;
+
+class ContentController extends Controller
+{
+    public function actionPublishRelease()
+    {
+    
+        $this->requirePermission('yourpermission');
+
+        $elementId = Craft::$app->request->getRequiredBodyParam('elementId');
+        $draftId = Craft::$app->request->getBodyParam('draftId');
+
+        if ($draftId) {
+            return $this->asFailure("We cannot do anything with a draft.");
+        }
+
+        // The magic happens here.
+
+        return $this->asSuccess("We did something with id: $elementId");
+    }
+}
+
+```
+
 ### Customization Example
 
 Managing screenings for a film festival:
@@ -579,6 +661,7 @@ Managing screenings for a film festival:
 * Easy filtering with fewer clicks
 * Show an image from a related entry (film).
 * Add new screenings without loading new pages. Especially useful when there is a lot of repetition. Just change date/time, click 'Create', done.
+* Add actions: delete and a custom 'Publish' action.
 
 ## Events
 
@@ -632,4 +715,4 @@ One column is too narrow to be useful.
 * Check permission handling
 * Some translations are missing...
 * Some inline comments are missing...
-* Accessibility...
+* Check accessibility...

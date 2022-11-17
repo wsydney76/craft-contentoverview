@@ -4,11 +4,4 @@
 {# @var settings \wsydney76\contentoverview\models\Settings #}
 
 <a href="{{ entry.cpEditUrl }}" target="{{ settings.linkTarget }}">{{ entry.title }}</a>
-{% if settings.enableSlideoutEditor and sectionConfig.layout != 'line' %}
-    <button title="{{ "Edit in slideout"|t('contentoverview') }}"
-            class="co-slideout-icon"
-            aria-label="{{ "Edit in slideout"|t('contentoverview') }}"
-            onclick="{{ createEditorJs }}">
-        {{ svg('@wsydney76/contentoverview/icons/slideout.svg')|attr({width: '18px', height: '18px'}) }}
-    </button>
-{% endif %}
+

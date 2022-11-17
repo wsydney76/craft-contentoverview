@@ -13,6 +13,7 @@ new ideas...
 * Custom filters can be defined.
 * Custom templates can be rendered in CP page blocks (sidebar, details etc.)
 * Custom templates can be rendered instead of default sections.
+* Custom actions can be added to an entry.
 
 ### Breaking change
 

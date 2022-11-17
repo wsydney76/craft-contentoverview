@@ -21,7 +21,7 @@ function co_getSectionHtml(sectionPath, sectionPageNo = 1) {
                 // Has pagination html?
                 containerElement.children[1].innerHTML = response.data.paginateHtml
             }
-        });
+        })
 }
 
 
@@ -34,7 +34,7 @@ function co_getSectionHtml(sectionPath, sectionPageNo = 1) {
 function co_getSearchValue(sectionPath) {
     input = co_getSearchInput(sectionPath)
     if (input === null) {
-        return '';
+        return ''
     }
 
     value = input.value
@@ -77,8 +77,8 @@ function co_registerSearchInput(sectionPath) {
     if (searchInput) {
         searchInput.addEventListener('keyup', function(event) {
             if (event.key === 'Enter') {
-                event.preventDefault();
-                co_getSectionHtml(sectionPath);
+                event.preventDefault()
+                co_getSectionHtml(sectionPath)
             }
         })
     }
@@ -90,7 +90,7 @@ function co_registerSearchInput(sectionPath) {
  * @returns {[]}
  */
 function co_getFilters(sectionPath) {
-    filters = [];
+    filters = []
 
     co_getFilterElements(sectionPath).forEach(element => {
         filter = {
@@ -101,7 +101,7 @@ function co_getFilters(sectionPath) {
         filters.push(filter)
     })
 
-    return filters;
+    return filters
 
 }
 
@@ -119,12 +119,46 @@ function co_createElementEditor(elementId, siteId, draftId, sectionPath, section
         elementId: elementId,
         draftId: draftId,
         siteId: siteId
-    });
+    })
 
     // Refresh section
     slideout.on('submit', () => {
         co_getSectionHtml(sectionPath, sectionPageNo)
     })
+}
+
+function co_deleteEntry(elementId, draftId, title, sectionPath, sectionPageNo = 1) {
+    if (!confirm('Delete ' + title + '?')) {
+        return
+    }
+
+    action = draftId ? 'elements/delete-draft' : 'elements/delete'
+
+    Craft.sendActionRequest("POST",action, {data:{elementId: elementId, draftId: draftId}})
+        .then((response) => {
+            Craft.cp.displayNotice(response.data.message)
+            co_getSectionHtml(sectionPath, sectionPageNo)
+        })
+        .catch((error) => {
+            Craft.cp.displayError(error.response.data.message)
+        })
+
+}
+
+function co_postAction(action, label, elementId, draftId, title, sectionPath, sectionPageNo = 1) {
+    if (!confirm('Execute "' + label + '" for entry "' + title + '"?')) {
+        return
+    }
+
+    Craft.sendActionRequest("POST", action, {data:{elementId: elementId, draftId: draftId}})
+        .then((response) => {
+            Craft.cp.displayNotice(response.data.message)
+            co_getSectionHtml(sectionPath, sectionPageNo)
+        })
+        .catch((error) => {
+            Craft.cp.displayError(error.response.data.message)
+        })
+
 }
 
 /*

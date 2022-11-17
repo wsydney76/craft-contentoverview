@@ -1,0 +1,73 @@
+{% if sectionConfig.actions %}
+
+    <div class="co-actions">
+        {% set draftId = (not entry.isProvisionalDraft and entry.draftId) ? entry.draftId : "null" %}
+
+        {% for action in sectionConfig.actions %}
+            {% switch action %}
+
+            {% case "slideout" %}
+
+                {% if settings.enableSlideoutEditor and sectionConfig.layout != 'line' %}
+                    <button title="{{ "Edit in slideout"|t('contentoverview') }}"
+                            class="co-action-icon"
+                            aria-label="{{ "Edit in slideout"|t('contentoverview') }}"
+                            onclick="{{ createEditorJs }}">
+                        {{ svg('@wsydney76/contentoverview/icons/slideout.svg')|attr({width: '18px', height: '18px'}) }}
+                    </button>
+
+                {% endif %}
+
+            {% case "delete" %}
+
+                <button title="{{ "Delete"|t('contentoverview') }}"
+                        class="co-action-icon"
+                        aria-label="{{ "Delete"|t('contentoverview') }}"
+                        onclick="co_deleteEntry({{ entry.id }}, {{ draftId }}, '{{ entry.title }}', '{{ sectionPath }}' , {{ sectionPageNo }})">
+                    {{ svg('@wsydney76/contentoverview/icons/trash.svg')|attr({width: '18px', height: '18px', stroke: 'currentColor'}) }}
+                </button>
+
+            {% default %}
+                {% if action.jsFunction is defined %}
+                    {{ _self.displayButton(action,
+                        "#{action.jsFunction}('#{action.label}', #{entry.id}, #{draftId}, '#{entry.title}', '#{sectionPath}' , #{sectionPageNo})"
+                    ) }}
+                {% endif %}
+
+                {% if action.cpAction is defined %}
+                    <button title="{{ action.label|t('contentoverview') }}"
+                            class="co-action-icon"
+                            aria-label="{{ action.label|t('contentoverview') }}"
+                            onclick="co_postAction('{{ action.cpAction }}','{{ action.label }}', {{ entry.id }}, {{ draftId }}, '{{ entry.title }}', '{{ sectionPath }}' , {{ sectionPageNo }})">
+                        {{ svg(action.icon)|attr({width: '18px', height: '18px', stroke: 'currentColor'}) }}
+                    </button>
+                {% endif %}
+
+                {% if action.cpUrl is defined %}
+                    <a class="co-action-icon"
+                       aria-label="{{ action.label|t('contentoverview') }}"
+                       href="{{ cpUrl(action.cpUrl, {elementId: entry.id, draftId: (draftId == 'null' ? null: draftId)}) }}"
+                       target="_blank">
+                        {{ _self.displayIcon(action.icon) }}
+                    </a>
+                {% endif %}
+
+            {% endswitch %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% macro displayButton(action, onclick) %}
+    <button title="{{ action.label|t('contentoverview') }}"
+            class="co-action-icon"
+            aria-label="{{ action.label|t('contentoverview') }}"
+            onclick="{{ onclick }}">
+        {{ _self.displayIcon(action.icon) }}
+    </button>
+{% endmacro %}
+
+
+{% macro displayIcon(icon) %}
+    {{ svg(icon)|attr({width: '18px', height: '18px', stroke: 'currentColor'}) }}
+{% endmacro %}
+

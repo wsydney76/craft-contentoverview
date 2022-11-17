@@ -54,12 +54,26 @@ class Section extends Model
     public ?string $scope = null;
     public ?bool $sortByScore = false;
     public ?string $status = null;
+    public array $actions = [];
 
     // make it easer to detect custom sections, instead of using class names
     public bool $isCustomSection = false;
 
     protected $_layouts = ['list', 'cardlets', 'cards', 'line'];
 
+
+    /**
+     * Array of actions
+     * Predefined slideout|delete
+     *
+     * @param array $actions
+     * @return $this
+     */
+    public function actions(array $actions): self
+    {
+        $this->actions = $actions;
+        return $this;
+    }
 
     /**
      * Whether to show (unique) entries from all sites
