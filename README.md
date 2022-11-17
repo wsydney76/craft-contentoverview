@@ -612,7 +612,7 @@ Actions can be:
     // Call a custom controller action
     // elementId and draftId params will be posted to the action.
     // requires that the controller action return ->asSuccess(message) or ->asFailure(message)
-    // Takes care of displaying cp notice/error and refreshing the section html
+    // Takes care of displaying cp notice/error, redirect/refreshing the section html
     [
         'label' => 'Publish all entries that belong to this package',
         'icon' => '@templates/_icons/publish.svg',
@@ -627,7 +627,7 @@ Actions can be:
 namespace modules\main\controllers;
 
 use Craft;
-use craft\web\Controller;
+use craft\helpers\UrlHelper;use craft\web\Controller;
 
 class ContentController extends Controller
 {
@@ -646,6 +646,13 @@ class ContentController extends Controller
         // The magic happens here.
 
         return $this->asSuccess("We did something with id: $elementId");
+        
+        // May also contain a redirect
+        return $this->asSuccess(
+            "We did something with id: $elementId",
+            [],
+            UrlHelper::cpUrl('work/summarize', {id: $elementId})
+        );
     }
 }
 
