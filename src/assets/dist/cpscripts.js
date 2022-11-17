@@ -152,7 +152,7 @@ function co_postAction(action, label, elementId, draftId, title, sectionPath, se
 
     Craft.sendActionRequest("POST", action, {data:{elementId: elementId, draftId: draftId}})
         .then((response) => {
-            Craft.cp.displayNotice(response.data.message)
+            Craft.cp.displayNotice(response.data.message, response.data.notificationSettings)
             if (response.data.redirect) {
                 location.href = response.data.redirect
             } else {
