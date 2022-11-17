@@ -14,7 +14,7 @@
             {% set image = entry.getFieldValue(imageField).one %}
         {% endif %}
         {% if image %}
-            {{ image.img(settings.transforms[sectionConfig.layout]) }}
+            {{ image.img(settings.transforms[sectionConfig.layout ?: settings.defaultLayout]) }}
         {% else %}
             {% set icon = sectionConfig.getIcon(entry) %}
             {% set icon = icon ? view.renderObjectTemplate(icon, entry) : settings.defaultIcon %}

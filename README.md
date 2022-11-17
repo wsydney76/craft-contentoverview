@@ -647,11 +647,12 @@ class ContentController extends Controller
 
         return $this->asSuccess("We did something with id: $elementId");
         
-        // May also contain a redirect
+        // May also contain a redirect and notification details
         return $this->asSuccess(
             "We did something with id: $elementId",
             [],
-            UrlHelper::cpUrl('work/summarize', {id: $elementId})
+            UrlHelper::cpUrl('work/summarize', {id: $elementId}),
+            ['details' => 'Additional information']
         );
     }
 }
