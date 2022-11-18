@@ -1,0 +1,20 @@
+<div class="co-section {{ layout is defined ? "co-#{layout}" }}">
+    <div class="co-btns">
+        <h2>
+            {% if linkToPage %}
+                <a class="go"
+                   href="{{ cpUrl("contentoverview/#{linkToPage}") }}">{{ heading }}</a>
+            {% else %}
+                {{ heading }}
+            {% endif %}
+        </h2>
+
+        {% block headingButtons %}{% endblock %}
+    </div>
+
+    <div>
+        {% block content %}
+
+        {% endblock %}
+    </div>
+</div>

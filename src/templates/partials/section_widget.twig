@@ -1,0 +1,12 @@
+{% set widget = sectionConfig.widget %}
+
+{% embed 'contentoverview/embeds/section.twig' with {
+    heading: sectionConfig.heading|t('site') ?: widget.title,
+    linkToPage: sectionConfig.linkToPage
+} %}
+
+    {% block content %}
+        {{ sectionConfig.widget.getBodyHtml()|raw }}
+    {% endblock %}
+
+{% endembed %}

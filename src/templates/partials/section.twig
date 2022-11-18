@@ -4,78 +4,73 @@
 {# @var sectionConfig \wsydney76\contentoverview\models\Section #}
 {# @var results \craft\db\Paginator #}
 
-
 {% set layout = sectionConfig.layout  ? sectionConfig.layout : settings.defaultLayout %}
-
 {% set transform = settings.transforms[layout] %}
-
 {% set showButtons = sectionConfig.buttons %}
 
-<div class="co-section co-{{ layout }}">
+{% embed 'contentoverview/embeds/section.twig' with {
+    heading: sectionConfig.getHeading()|t('site'),
+    linkToPage: sectionConfig.linkToPage,
+    layout
+} %}
 
-    <div class="co-btns">
-        {% set heading = sectionConfig.getHeading()|t('site') %}
-        <h2>
-            {% if sectionConfig.linkToPage %}
-                <a class="go"
-                   href="{{ cpUrl("contentoverview/#{sectionConfig.linkToPage}") }}">{{ heading }}</a>
-            {% else %}
-                {{ heading }}
-            {% endif %}
-        </h2>
-
+    {% block headingButtons %}
         {% if showButtons %}
             {% include [
                 '_contentoverview/partials/newentriesButtons.twig',
                 'contentoverview/partials/newentriesButtons.twig'
             ] %}
         {% endif %}
-    </div>
+    {% endblock %}
 
-    {% set permittedSections = sectionConfig.getPermittedSections('viewentries') %}
-    {% if permittedSections %}
-        {% set results = sectionConfig.entries %}
+    {% block content %}
 
-        {% include [
-            '_contentoverview/partials/search.twig',
-            'contentoverview/partials/search.twig'
-        ] %}
+        {% set permittedSections = sectionConfig.getPermittedSections('viewentries') %}
+        {% if permittedSections %}
+            {% set results = sectionConfig.entries %}
 
-        <div id="{{ sectionPath }}">
-            <div class="co-entries co-{{ layout }}-{{ column.width }}">
+            {% include [
+                '_contentoverview/partials/search.twig',
+                'contentoverview/partials/search.twig'
+            ] %}
 
-                {% include [
-                    '_contentoverview/partials/section_entries.twig',
-                    'contentoverview/partials/section_entries.twig'
-                ] with {
-                    entries: results.pageResults
-                } %}
+            <div id="{{ sectionPath }}">
+                <div class="co-entries co-{{ layout }}-{{ column.width }}">
+
+                    {% include [
+                        '_contentoverview/partials/section_entries.twig',
+                        'contentoverview/partials/section_entries.twig'
+                    ] with {
+                        entries: results.pageResults
+                    } %}
+
+                </div>
+
+                {% if results.totalPages > 1 %}
+                    <div>
+                        {% include [
+                            '_contentoverview/partials/paginate.twig',
+                            'contentoverview/partials/paginate.twig'
+                        ] %}
+                    </div>
+                {% endif %}
 
             </div>
 
-            {% if results.totalPages > 1 %}
-                <div>
+            {% if showButtons %}
+                <div class="co-btns">
                     {% include [
-                        '_contentoverview/partials/paginate.twig',
-                        'contentoverview/partials/paginate.twig'
+                        '_contentoverview/partials/listentriesButtons.twig',
+                        'contentoverview/partials/listentriesButtons.twig'
                     ] %}
                 </div>
             {% endif %}
-
-        </div>
-
-        {% if showButtons %}
-            <div class="co-btns">
-                {% include [
-                    '_contentoverview/partials/listentriesButtons.twig',
-                    'contentoverview/partials/listentriesButtons.twig'
-                ] %}
-            </div>
+        {% else %}
+            {{ 'No permission to view entries'|t('contentoverview') }}
         {% endif %}
-    {% else %}
-        {{ 'No permission to view entries'|t('contentoverview') }}
-    {% endif %}
 
-</div>
+    {% endblock %}
+
+{% endembed %}
 
 

@@ -9,6 +9,7 @@ use wsydney76\contentoverview\models\CustomSection;
 use wsydney76\contentoverview\models\Page;
 use wsydney76\contentoverview\models\Section;
 use wsydney76\contentoverview\models\Tab;
+use wsydney76\contentoverview\models\WidgetSection;
 
 class ContentOverviewService extends Component
 {
@@ -77,6 +78,17 @@ class ContentOverviewService extends Component
     public function createCustomSection(): CustomSection
     {
         return Craft::createObject(CustomSection::class);
+    }
+
+    /**
+     * Create a Widget Section model
+     *
+     * @return Section
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function createWidgetSection(): WidgetSection
+    {
+        return Craft::createObject(WidgetSection::class);
     }
 
 }

@@ -77,7 +77,7 @@
 .co-search-container {
     margin-bottom: 16px;
     display: flex;
-    align-items: center;
+    align-items: self-start;
 }
 
 .co-search-container button {

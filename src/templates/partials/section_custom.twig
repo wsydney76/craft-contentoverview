@@ -1,0 +1,10 @@
+{% embed 'contentoverview/embeds/section.twig' with {
+    heading: sectionConfig.heading|t('site'),
+    linkToPage: sectionConfig.linkToPage
+} %}
+
+    {% block content %}
+        {% include settings.customTemplatePath ~ '/' ~ sectionConfig.customTemplate %}
+    {% endblock %}
+
+{% endembed %}

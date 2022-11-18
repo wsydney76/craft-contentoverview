@@ -129,6 +129,17 @@ Setup config files in `config/contentoverview/<pagename>.php`.
 
 If you are using a single page, name this page according to the `defaultPage` setting.
 
+For the sake of simplicity, a page is always structured as follows:
+
+A page 
+* has one or more tabs 
+* * which have one or more columns 
+* * * which have one or more sections
+
+So if you want to have a page with just one thing on it, 
+configure a page with one tab (the tab label will not be displayed)
+with one column (width: 12) with one section.
+
 Structure of this file:
 
 - tabs[] (array, tabs of the page)
@@ -510,6 +521,11 @@ You can create a custom section, where a custom template will be rendered.
 $co->createCustomSection()
     ->heading('Create Screening')
     ->customTemplate('custom/create_screening.twig')
+    // Any custom settings, will be available in the template as 'sectionConfig.settings'
+    ->settings([
+        'key' => 'value',
+        ... more settings
+    ])
 ```
 
 Your template must live in the `settings.customTemplatePath` folder, by default `templates/_contentoverview`.
@@ -517,7 +533,26 @@ Your template must live in the `settings.customTemplatePath` folder, by default 
 Nothing special on the part of the plugin, but it opens amazing possibilities
 to provide custom solutions for editors, whose work can thus be considerably facilitated.
 
-See example below:
+See example below.
+
+### Widget Sections (experimental)
+
+Dashboard widgets can be displayed:
+
+```php
+use craft\widgets\MyDrafts;
+...
+$co->createWidgetSection()
+    // optional, defaults to widget title
+    ->heading('Drafts created by me')
+    ->widget(new MyDrafts([
+        'limit' => 20
+    ])),
+```
+
+This just calls the constructor and the `getBodyHtml` method of the widget. The widget is not
+loaded in the context it expects, so it may or may not work properly. (Javascript errors, missing css etc).
+
 
 ### Twig Page Blocks
 
@@ -716,6 +751,10 @@ otherwise to Two (half width) in order to use it with two or three columns.
 One column is too narrow to be useful.
 
 ![screenshot](/images/widgetsettings.jpg)
+
+## Known issues
+
+* 'info' popups do not work if the section html is loaded via ajax. Obviously event handlers have to be attached, but how??
 
 ## TODOS:
 

@@ -26,7 +26,7 @@ use function implode;
 use function in_array;
 use function is_string;
 
-class Section extends Model
+class Section extends BaseSection
 {
     public const EVENT_MODIFY_CONTENTOVERVIEW_QUERY = 'modifyContentoverviewQuery';
     public const EVENT_FILTER_CONTENTOVERVIEW_QUERY = 'filterContentoverviewQuery';
@@ -37,14 +37,12 @@ class Section extends Model
     public array $custom = [];
     public ?array $filters = null;
     public string $filtersPosition = 'inline';
-    public ?string $heading = '';
     public array|string $icon = [];
     public array|string $imageField = [];
     public array|string $info = '';
     public array|string $infoTemplate = '';
     public string $layout = '';
     public ?int $limit = null;
-    public ?string $linkToPage = '';
     public ?string $orderBy = null;
     public bool $ownDraftsOnly = false;
     public array|string $popupInfo = '';
@@ -140,21 +138,6 @@ class Section extends Model
         return $this;
     }
 
-    /**
-     * Heading of the section
-     *
-     * Will be translated in 'site' category
-     *
-     * Default: Section name
-     *
-     * @param string $heading
-     * @return $this
-     */
-    public function heading(string $heading): self
-    {
-        $this->heading = $heading;
-        return $this;
-    }
 
 
     /**
@@ -286,19 +269,6 @@ class Section extends Model
         return $this;
     }
 
-
-    /**
-     * Page key the section heading will be linked to. Can include a tab id as anchor
-     * e.g. page2#tab1
-     *
-     * @param string $linkToPage
-     * @return $this
-     */
-    public function linkToPage(string $linkToPage): self
-    {
-        $this->linkToPage = $linkToPage;
-        return $this;
-    }
 
     /**
      * Order criteria, will be passed as is to the entry query orderBy param.
@@ -441,11 +411,15 @@ class Section extends Model
             return $this->heading;
         }
 
-        $sections = $this->_normalizeToArray($this->section);
-        $headings = array_map(fn($section) => Craft::$app->sections->getSectionByHandle($section)->name
-            , $sections);
+        if ($this instanceof Section) {
+            $sections = $this->_normalizeToArray($this->section);
+            $headings = array_map(fn($section) => Craft::$app->sections->getSectionByHandle($section)->name
+                , $sections);
 
-        return implode(', ', $headings);
+            return implode(', ', $headings);
+        }
+
+        return '';
     }
 
 
