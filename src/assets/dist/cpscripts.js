@@ -11,7 +11,8 @@ function co_getSectionHtml(sectionPath, sectionPageNo = 1) {
         sectionPath: sectionPath,
         sectionPageNo: sectionPageNo,
         q: co_getSearchValue(sectionPath),
-        filters: co_getFilters(sectionPath)
+        filters: co_getFilters(sectionPath),
+        orderBy: co_getOrderBy(sectionPath)
     }
     Craft.sendActionRequest('POST', 'contentoverview/section/get-section-html', {data})
         .then((response) => {
@@ -32,7 +33,7 @@ function co_getSectionHtml(sectionPath, sectionPageNo = 1) {
  * @returns {string|*}
  */
 function co_getSearchValue(sectionPath) {
-    input = co_getSearchInput(sectionPath)
+    var input = co_getSearchInput(sectionPath)
     if (input === null) {
         return ''
     }
@@ -73,7 +74,7 @@ function co_resetSearch(sectionPath) {
  * @param sectionPath
  */
 function co_registerSearchInput(sectionPath) {
-    searchInput = co_getSearchInput(sectionPath)
+    var searchInput = co_getSearchInput(sectionPath)
     if (searchInput) {
         searchInput.addEventListener('keyup', function(event) {
             if (event.key === 'Enter') {
@@ -82,6 +83,19 @@ function co_registerSearchInput(sectionPath) {
             }
         })
     }
+}
+
+
+function co_getOrderBy(sectionPath) {
+
+    var input = co_getOrderByInput(sectionPath)
+    if (input === null) {
+        return ''
+    }
+
+    return input.value
+
+
 }
 
 /**
@@ -134,7 +148,7 @@ function co_deleteEntry(elementId, draftId, title, sectionPath, sectionPageNo = 
 
     action = draftId ? 'elements/delete-draft' : 'elements/delete'
 
-    Craft.sendActionRequest("POST",action, {data:{elementId: elementId, draftId: draftId}})
+    Craft.sendActionRequest("POST", action, {data: {elementId: elementId, draftId: draftId}})
         .then((response) => {
             Craft.cp.displayNotice(response.data.message)
             co_getSectionHtml(sectionPath, sectionPageNo)
@@ -150,7 +164,7 @@ function co_postAction(action, label, elementId, draftId, title, sectionPath, se
         return
     }
 
-    Craft.sendActionRequest("POST", action, {data:{elementId: elementId, draftId: draftId}})
+    Craft.sendActionRequest("POST", action, {data: {elementId: elementId, draftId: draftId}})
         .then((response) => {
             Craft.cp.displayNotice(response.data.message, response.data.notificationSettings)
             if (response.data.redirect) {
@@ -175,6 +189,10 @@ function co_getSearchInput(sectionPath) {
 
 function co_getSearchAttributesSelect(sectionPath) {
     return document.getElementById(sectionPath + '-search-attribute')
+}
+
+function co_getOrderByInput(sectionPath) {
+    return document.getElementById(sectionPath + '-orderby')
 }
 
 function co_getFilterElements(sectionPath) {

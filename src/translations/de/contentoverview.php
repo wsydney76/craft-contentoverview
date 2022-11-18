@@ -27,4 +27,6 @@ return [
     'total entries' => 'Einträge insgesamt',
     'Two (half width)' => 'Zwei (halbe Breite)',
     'Widget must be at least two columns wide if "Two" is selected, or at least four columns if "All" is selected' => 'Das Widget muss mindestens zwei Spalten breit sein, wenn "Zwei" ausgewählt ist, oder mindestens vier Spalten, wenn "Alle" ausgewählt ist.',
+    'Order by' => 'Sortieren nach',
+    'Filter by' => 'Filtern nach',
 ];

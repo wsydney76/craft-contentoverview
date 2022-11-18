@@ -6,7 +6,6 @@
 
 {% set layout = sectionConfig.layout  ? sectionConfig.layout : settings.defaultLayout %}
 {% set transform = settings.transforms[layout] %}
-{% set showButtons = sectionConfig.buttons %}
 
 {% embed 'contentoverview/embeds/section.twig' with {
     heading: sectionConfig.getHeading()|t('site'),
@@ -15,7 +14,7 @@
 } %}
 
     {% block headingButtons %}
-        {% if showButtons %}
+        {% if sectionConfig.showNewButton %}
             {% include [
                 '_contentoverview/partials/newentriesButtons.twig',
                 'contentoverview/partials/newentriesButtons.twig'
@@ -30,8 +29,8 @@
             {% set results = sectionConfig.entries %}
 
             {% include [
-                '_contentoverview/partials/search.twig',
-                'contentoverview/partials/search.twig'
+                '_contentoverview/partials/toolbar.twig',
+                'contentoverview/partials/toolbar.twig'
             ] %}
 
             <div id="{{ sectionPath }}">
@@ -57,7 +56,7 @@
 
             </div>
 
-            {% if showButtons %}
+            {% if sectionConfig.showIndexButton %}
                 <div class="co-btns">
                     {% include [
                         '_contentoverview/partials/listentriesButtons.twig',

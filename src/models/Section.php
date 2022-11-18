@@ -4,7 +4,6 @@ namespace wsydney76\contentoverview\models;
 
 use Craft;
 use craft\base\Field;
-use craft\base\Model;
 use craft\db\Paginator;
 use craft\elements\Entry;
 use craft\fields\BaseOptionsField;
@@ -24,6 +23,7 @@ use function collect;
 use function explode;
 use function implode;
 use function in_array;
+use function is_array;
 use function is_string;
 
 class Section extends BaseSection
@@ -32,9 +32,10 @@ class Section extends BaseSection
     public const EVENT_FILTER_CONTENTOVERVIEW_QUERY = 'filterContentoverviewQuery';
     public const EVENT_DEFINE_CUSTOM_FILTER_OPTIONS = 'defineCustomFilterOptions';
 
+    public array $actions = [];
     public bool $allSites = false;
-    public bool $buttons = true;
     public array $custom = [];
+    public array|string $entryType = '';
     public ?array $filters = null;
     public string $filtersPosition = 'inline';
     public array|string $icon = [];
@@ -43,16 +44,19 @@ class Section extends BaseSection
     public array|string $infoTemplate = '';
     public string $layout = '';
     public ?int $limit = null;
-    public ?string $orderBy = null;
+    public array|string $orderBy = '';
     public bool $ownDraftsOnly = false;
     public array|string $popupInfo = '';
     public bool $search = false;
     public array $searchAttributes = [];
     public array|string $section = '';
     public ?string $scope = null;
+    public bool $showNewButton = true;
+    public bool $showIndexButton = true;
     public ?bool $sortByScore = false;
     public ?string $status = null;
-    public array $actions = [];
+
+
 
     // make it easer to detect custom sections, instead of using class names
     public bool $isCustomSection = false;
@@ -95,7 +99,9 @@ class Section extends BaseSection
      */
     public function buttons(bool $buttons): self
     {
-        $this->buttons = $buttons;
+        $this->showNewButton = $buttons;
+        $this->showIndexButton = $buttons;
+
         return $this;
     }
 
@@ -108,6 +114,12 @@ class Section extends BaseSection
     public function custom(array $custom): self
     {
         $this->custom = $custom;
+        return $this;
+    }
+
+    public function entryType(array|string $entryType): self
+    {
+        $this->entryType = $entryType;
         return $this;
     }
 
@@ -137,7 +149,6 @@ class Section extends BaseSection
         $this->filtersPosition = $filtersPosition;
         return $this;
     }
-
 
 
     /**
@@ -273,10 +284,10 @@ class Section extends BaseSection
     /**
      * Order criteria, will be passed as is to the entry query orderBy param.
      *
-     * @param string $orderBy
+     * @param array|string $orderBy
      * @return $this
      */
-    public function orderBy(string $orderBy): self
+    public function orderBy(array|string $orderBy): self
     {
         $this->orderBy = $orderBy;
         return $this;
@@ -383,6 +394,31 @@ class Section extends BaseSection
     public function sortByScore(bool $sortByScore): self
     {
         $this->sortByScore = $sortByScore;
+        return $this;
+    }
+
+
+    /**
+     * Whether to show a 'New entry' button
+     *
+     * @param bool showNewButton
+     * @return $this
+     */
+    public function showNewButton(bool $showNewButton): self
+    {
+        $this->showNewButton = $showNewButton;
+        return $this;
+    }
+
+    /**
+     * Whether to show a 'All entries' button
+     *
+     * @param bool $showIndexButton
+     * @return $this
+     */
+    public function showIndexButton(bool $showIndexButton): self
+    {
+        $this->showIndexButton = $showIndexButton;
         return $this;
     }
 
@@ -537,12 +573,26 @@ class Section extends BaseSection
     }
 
     /**
+     * Get options for custom sort, if defined
+     *
+     * @return array
+     */
+    public function getOrderByOptions(): Collection
+    {
+        if (!is_array($this->orderBy)) {
+            return collect([]);
+        }
+
+        return collect($this->orderBy);
+    }
+
+    /**
      * Returns entries and entry count for this section
      *
      * @return array with keys entries: array of entries (respecting a limit, if set), count: number of entries (without limit)
      */
     public function getEntries(
-        int $sectionPageNo = 1, string $q = '', array $filters = []
+        int $sectionPageNo = 1, string $q = '', array $filters = [], string $orderBy = ''
     ): Paginator {
         /** @var Settings $settings */
         $settings = Plugin::getInstance()->getSettings();
@@ -551,10 +601,19 @@ class Section extends BaseSection
 
         $query = Entry::find()
             ->section($this->section)
+            ->type($this->entryType)
             ->status(null);
 
-        if ($this->orderBy) {
-            $query->orderBy($this->orderBy);
+        if (!$orderBy) {
+            if (is_string($this->orderBy)) {
+                $orderBy = (string)$this->orderBy;
+            } else {
+                $orderBy = $this->orderBy[0]['value'];
+            }
+        }
+
+        if ($orderBy) {
+            $query->orderBy($orderBy);
         }
 
         if ($this->status) {
@@ -648,7 +707,8 @@ class Section extends BaseSection
                             break;
                         }
 
-                        case 'custom': {
+                        case 'custom':
+                        {
                             if ($this->hasEventHandlers(self::EVENT_FILTER_CONTENTOVERVIEW_QUERY)) {
                                 $this->trigger(self::EVENT_FILTER_CONTENTOVERVIEW_QUERY, new FilterContentOverviewQueryEvent([
                                     'query' => $query,
@@ -656,7 +716,6 @@ class Section extends BaseSection
                                 ]));
                             }
                         }
-
                     }
                 }
             }

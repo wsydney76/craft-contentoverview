@@ -11,15 +11,18 @@ new ideas...
 * Enabled slideout editor.
 * Added a `enableSlideoutEditor` plugin setting to disable that (its experimental and may not work in all cases...).
 * Custom filters can be defined.
+* Custom sort orders can be defined.
 * Custom templates can be rendered in CP page blocks (sidebar, details etc.)
 * Custom templates can be rendered instead of default sections.
+* Dashboard widgets can be rendered instead of default sections.
 * Custom actions can be added to an entry.
+* Added 'showNewButton', 'showIndexButton' section config settings.
+* Added 'elementType' section config setting.
 
-### Breaking change
 
-* info and popupInfo section config settings now only allow a single string, in order to avoid confusion when using multi section config.  
-  Either use html tags or, for more complex logic, use an `infoTemplate` setting.
-* section config setting is now `array|string`
+### Breaking changes
+
+A lot.
 
 ## 2.2.0 2022-11-11
 

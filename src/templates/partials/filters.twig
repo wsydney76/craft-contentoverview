@@ -1,4 +1,4 @@
-{# @params sectionConfig #}
+{# @params sectionConfig, filters, orderByOptions #}
 {# @var sectionConfig \wsydney76\contentoverview\models\Section #}
 
 {% import '_includes/forms' as forms %}
@@ -46,7 +46,7 @@
         {{ forms.select({
             name: "#{sectionPath}-filter",
             options: options
-            |unshift({label: label|t('site'), value: ''}),
+            |unshift({label: 'Filter by'|t('contentoverview') ~ ': ' ~ label|t('site'), value: ''}),
             inputAttributes: {
                 data: {
                     'field': filter.field,

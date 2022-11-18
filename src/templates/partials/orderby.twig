@@ -1,0 +1,11 @@
+{% import '_includes/forms' as forms %}
+
+{% if orderByOptions %}
+    {{ forms.select({
+        id: "#{sectionPath}-orderby",
+        options: orderByOptions|map(option => {label: "#{'Order by'|t('contentoverview')}: #{option.label|t('site')}", value: option.value}),
+        inputAttributes: {
+            onchange: "co_getSectionHtml('#{ sectionPath }')"
+        }
+    }) }}
+{% endif %}

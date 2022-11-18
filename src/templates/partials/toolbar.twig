@@ -1,0 +1,49 @@
+{# @params sectionConfig, sectionPath #}
+{# @var sectionConfig \wsydney76\contentoverview\models\Section #}
+
+
+{% set filtersPosition = sectionConfig.search ? sectionConfig.filtersPosition : 'top'%}
+
+{% set filtersHtml %}
+
+    {% set orderByOptions = sectionConfig.getOrderByOptions() %}
+    {% if orderByOptions.count %}
+        {% include [
+            '_contentoverview/partials/orderby.twig',
+            'contentoverview/partials/orderby.twig'
+        ] %}
+    {% endif %}
+
+    {% set filters = sectionConfig.getFilters() %}
+    {% if filters.count %}
+        {% include [
+            '_contentoverview/partials/filters.twig',
+            'contentoverview/partials/filters.twig'
+        ] %}
+    {% endif %}
+{% endset %}
+
+{% if filtersPosition == 'top' %}
+    <div class="co-filters-container co-filters-top">
+        {{ filtersHtml }}
+    </div>
+{% endif %}
+
+{% if sectionConfig.search %}
+
+    {% include [
+        '_contentoverview/partials/search.twig',
+        'contentoverview/partials/search.twig'
+    ] %}
+
+{% endif %}
+
+{% if filtersPosition == 'bottom' %}
+    <div class="co-filters-container co-filters-bottom">
+        {{ filtersHtml }}
+    </div>
+{% endif %}
+
+{% js %}
+co_registerSearchInput('{{ sectionPath }}')
+{% endjs %}

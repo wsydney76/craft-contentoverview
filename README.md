@@ -148,6 +148,7 @@ Structure of this file:
         - width (int, number of columns occupied, 1-12)
         - sections[] (array, sections display inside the column)
             - section (array|string, section handle)
+            - elementType (array|string, elementType handle)
             - heading (?string, heading of the section, defaults to section name)
             - limit (?int, number of entries to show)
             - info (?string|array, object template to render in addition to the title)
@@ -163,7 +164,8 @@ Structure of this file:
             - status (?string|array, see [docs](https://craftcms.com/docs/4.x/entries.html#status)
             - allSites (?bool, true = display (unique) entries from all sites)
             - orderBy (?string|array see [docs](https://craftcms.com/docs/4.x/entries.html#orderby)
-            - buttons (?bool whether buttion 'new entry', 'all entries' will be shown
+            - showNewButton (?bool whether button 'All entry' will be shown)
+            - showIndexButton (?bool whether button 'All entries' will be shown)
             - linkToPage (?string, the key of a page the heading is linked to. May contain an anchor, e.g. `page1#tab1`)
             - search (?bool, whether search will be enabled)
             - sortByScore (?bool, whether search results will be sorted by score. default=false)
@@ -356,6 +358,29 @@ This will add a dropdown:
 ![Screenshot](/images/search2.jpg)
 
 The prefix will be automatically added to the search query.
+
+## Sorting
+
+You can overwrite Crafts default order by specifying a custom sort order in your section config
+
+```php
+->orderBy('title')
+```
+
+If you want to offer your editors some predefined sort options, configure them in an array:
+
+```php
+->orderBy([
+    ['label' => 'Post Date', 'value' => 'postDate desc'],
+    ['label' => 'Creation Date', 'value' => 'dateCreated desc'],
+    ['label' => 'Title', 'value' => 'title'],
+    ['label' => 'Random', 'value' => 'RAND()'],
+]),
+```
+
+A dropdown will be rendered next to filters.
+
+The first option will be used when initially loading the page.
 
 ## Filters
 
@@ -704,7 +729,7 @@ Managing screenings for a film festival:
 * Easy filtering with fewer clicks
 * Show an image from a related entry (film).
 * Add new screenings without loading new pages. Especially useful when there is a lot of repetition. Just change date/time, click 'Create', done.
-* Add actions: delete and a custom 'Publish' action.
+* Add actions: delete and a custom 'Approve' action.
 
 ## Events
 
@@ -752,9 +777,12 @@ One column is too narrow to be useful.
 
 ![screenshot](/images/widgetsettings.jpg)
 
+## 
+
 ## Known issues
 
 * 'info' popups do not work if the section html is loaded via ajax. Obviously event handlers have to be attached, but how??
+* CSS is created for screen sizes > 1600 < 2000 px. Things may look weird elsewhere...
 
 ## TODOS:
 
