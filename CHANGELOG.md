@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.0.0 2022-11-18
 
 Use this plugin in a real-life project, and don't be surprised to see a lot of
 new ideas...
