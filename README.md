@@ -46,7 +46,7 @@ Support your workflow and quality management: Show drafts / status / own provisi
 Create a file `contentoverview.php` in your config folder.
 
 - pluginTitle (?string, label for primary navigation, page title)
-- enableNav (?bool, default true, enable link item in primary navigation)
+- showPages (?string, default nav, where to show multiple pages: nav|sidebar|no)
 - enableWidgets (?bool, default true, enable dashboard widgets that display a single tab)
 - defaultPage (?string, page key for the first/only page.)
 - widgetText (?string, text for dashboard link widget)
@@ -62,7 +62,7 @@ Create a file `contentoverview.php` in your config folder.
 <?php
 
 return [
-    'enableNav' => false
+    'enableWidgets' => false
 ];
 ```
 
@@ -77,8 +77,6 @@ This requires a setup up file named after the `defaultPage` settings.
 ### Multi Page Setup
 
 You can configure multiple pages by adding them to the `config/contenoverview.php` file.
-
-![screenshot](/images/nav2.jpg)
 
 ```php
 <?php
@@ -99,6 +97,36 @@ of [CP Sections Subnav](https://craftcms.com/docs/4.x/extend/cp-section.html#sub
 `'<pagename>' => ['label' => '<pageheading>', 'url' => 'contentoverview/<pagename>'],`
 
 An additional param `group` can be added if this page should only be available for admins/members of this group.
+
+By default, multiple pages are display as subNav:
+
+![screenshot](/images/nav2.jpg)
+
+Alternatively, the pages can be displayed in the sidebar.
+
+Set the `showPage` plugin setting to 'sidebar'.
+
+This is more consistent with the rest of the CP and is more convenient when many pages are displayed and grouping is useful , however it consumes more space.
+
+```php
+   'showPages' => 'sidebar',
+```
+
+Heading rows and icons can be added to the `pages` config in `config/contentoverview.php`:
+
+```php
+'heading2' => [
+    'heading' => 'Workflow'
+],
+'page2' => [
+    'label' => 'Needs attention!',
+    'url' => 'contentoverview/page2',
+    'group' => 'reviewers',
+    'icon' => '@appicons/clock.svg'
+],
+```
+
+![Screenshot](/images/sidebar.jpg)
 
 A param `blocks` can define custom templates that are rendered in a cp panel block, see 'Templates' below.
 

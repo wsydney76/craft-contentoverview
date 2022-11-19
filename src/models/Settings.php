@@ -12,7 +12,7 @@ class Settings extends Model
     // see read me for doc
     public string $pluginTitle = 'Content Overview';
     public array $pages = [];
-    public bool $enableNav = true;
+    public string $showPages = 'nav';
     public bool $enableWidgets = true;
     public string $widgetText = 'Get a quick overview of your content';
     public string $linkTarget = '_blank';
@@ -57,13 +57,29 @@ class Settings extends Model
             ];
         }
 
-        return collect($pages)->filter(function($page) {
+        $currentUser = Craft::$app->user->identity;
+        return collect($pages)->filter(function($page) use ($currentUser) {
+            // ignore group headings for sidebar
+            if (isset($page['heading'])) {
+                return false;
+            }
+
             if (!isset($page['group'])) {
                 return true;
             }
-            $currentUser = Craft::$app->user->identity;
+
             return $currentUser->admin || $currentUser->isInGroup($page['group']);
         });
+    }
+
+    /**
+     * Return pure pages settings, so that twig templages do not confuse .pages and .getPages()
+     *
+     * @return Collection
+     */
+    public function getSidebarConfig(): Collection
+    {
+        return collect($this->pages);
     }
 
 }

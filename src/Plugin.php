@@ -52,7 +52,7 @@ class Plugin extends \craft\base\Plugin
             View::class,
             View::EVENT_REGISTER_CP_TEMPLATE_ROOTS,
             function(RegisterTemplateRootsEvent $event) {
-                $event->roots['_contentoverview'] =  App::parseEnv("@templates/{$this->getSettings()->customTemplatePath}");
+                $event->roots['_contentoverview'] = App::parseEnv("@templates/{$this->getSettings()->customTemplatePath}");
             }
         );
 
@@ -61,7 +61,7 @@ class Plugin extends \craft\base\Plugin
         $settings = $this->getSettings();
 
 
-        if ($settings->enableNav) {
+        if ($settings->showPages === 'nav' || $settings->showPages === 'sidebar') {
             Event::on(
                 Cp::class,
                 Cp::EVENT_REGISTER_CP_NAV_ITEMS,
@@ -73,11 +73,11 @@ class Plugin extends \craft\base\Plugin
                         'fontIcon' => 'field'
                     ];
 
-                    if ($settings->getPages()->count() > 1) {
+                    if ($settings->getPages()->count() > 1 && $settings->showPages === 'nav' ) {
                         // Translate labels
-                        $navItem['subnav'] = $settings->getPages()->transform(fn ($page) => [
+                        $navItem['subnav'] = $settings->getPages()->transform(fn($page) => [
                             'label' => Craft::t('site', $page['label']),
-                            'url' => $page['url']
+                            'url' => $page['url'],
                         ]);
                     }
 
@@ -88,17 +88,16 @@ class Plugin extends \craft\base\Plugin
                     ]);
                 }
             );
-
-            Event::on(
-                UrlManager::class,
-                UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
-                $event->rules = array_merge($event->rules, [
-                    'contentoverview' => 'contentoverview/page',
-                    'contentoverview/<pageKey:{slug}>' => 'contentoverview/page'
-                ]);
-            }
-            );
         }
+
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
+            $event->rules = array_merge($event->rules, [
+                'contentoverview' => 'contentoverview/page',
+                'contentoverview/<pageKey:{slug}>' => 'contentoverview/page'
+            ]);
+        });
 
         Event::on(
             Dashboard::class,

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Multi page setup: Links can now appear in the main navigation (default) or in the sidebar.
+
 ## 3.0.0 2022-11-18
 
 Use this plugin in a real-life project, and don't be surprised to see a lot of

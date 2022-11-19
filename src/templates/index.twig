@@ -29,6 +29,10 @@
 {% endblock %}
 
 {% block sidebar %}
+    {% if settings.showPages == 'sidebar' %}
+        {% include 'contentoverview/partials/sidebar.twig' %}
+    {% endif %}
+
     {% if page.blocks['sidebar'] is defined %}
         {% include settings.customTemplatePath ~ '/' ~ page.blocks['sidebar'] ignore missing %}
     {% endif %}
