@@ -73,7 +73,7 @@ class Plugin extends \craft\base\Plugin
                         'fontIcon' => 'field'
                     ];
 
-                    if ($settings->getPages()->count() > 1 && $settings->showPages === 'nav' ) {
+                    if ($settings->getPages()->count() > 1 && $settings->showPages === 'nav') {
                         // Translate labels
                         $navItem['subnav'] = $settings->getPages()->transform(fn($page) => [
                             'label' => Craft::t('site', $page['label']),
@@ -155,12 +155,5 @@ class Plugin extends \craft\base\Plugin
         return new Settings();
     }
 
-    protected function settingsHtml(): ?string
-    {
-        return Craft::$app->view->renderTemplate(
-            'contentoverview/settings.twig',
-            ['settings' => $this->getSettings()]
-        );
-    }
 
 }
