@@ -6,12 +6,14 @@ use Craft;
 use craft\base\Model;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefinePagesEvent;
+use wsydney76\contentoverview\events\DefineUserSettingEvent;
 use wsydney76\contentoverview\Plugin;
 
 
 class Settings extends Model
 {
     public const EVENT_DEFINE_PAGES = 'eventDefinePages';
+    public const EVENT_DEFINE_USER_SETTING = 'eventDefineUserSetting';
 
     // see read me for doc
     public string $pluginTitle = 'Content Overview';
@@ -72,12 +74,12 @@ class Settings extends Model
 
         $pages = collect($pages)
             ->filter(function($page) use ($currentUser) {
-                return $currentUser->admin || $currentUser->isInGroup($page['group']);
+                return $currentUser->admin || !isset($page['group']) || $currentUser->isInGroup($page['group']);
             });
 
         if (!$isSidebar) {
-            $pages->filter(function($page)  {
-                return empty($page['heading']) || !empty($page['grout']);
+            $pages = $pages->filter(function($page) {
+                return !isset($page['heading']);
             });
         }
 
@@ -97,5 +99,21 @@ class Settings extends Model
         return $pages;
     }
 
+    public function getUserSetting($key)
+    {
+        $setting = $this->$key;
+
+        if ($this->hasEventHandlers(self::EVENT_DEFINE_USER_SETTING)) {
+            $event = new DefineUserSettingEvent([
+                'key' => $key,
+                'value' => $setting
+            ]);
+            $this->trigger(self::EVENT_DEFINE_USER_SETTING, $event);
+
+            $setting = $event->value;
+        }
+
+        return $setting;
+    }
 
 }

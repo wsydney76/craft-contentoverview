@@ -29,7 +29,7 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% if settings.showPages == 'sidebar' %}
+    {% if settings.getUserSetting('showPages') == 'sidebar' %}
         {% include 'contentoverview/partials/sidebar.twig' %}
     {% endif %}
 

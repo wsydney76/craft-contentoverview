@@ -15,6 +15,7 @@ This is to prevent minor, very specific requirements from leading to a change re
 * It is now possible to overwrite the Page/Tab/Column/Section classes.
 * Actions are now created as an Action model, that has an `isActiveForEntry` method taken into accout by the `getActions` method.
 * Added `DefinePagesEvent`, `DefineTabsEvent`, `DefineColumnsEvent`, `DefineSectionsEvent`, `DefineActionsEvent`.
+* Added `DefineUserSetting` event and `Settings::getUserSetting()` method, be able to overwrite any setting on a user basis.
 
 ## 3.0.0 2022-11-18
 

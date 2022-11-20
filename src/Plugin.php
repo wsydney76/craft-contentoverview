@@ -32,9 +32,6 @@ use function getenv;
 class Plugin extends \craft\base\Plugin
 {
 
-    // Disable for now because of possible conflicts
-    public bool $hasCpSettings = false;
-
     public function init()
     {
         parent::init();
@@ -59,13 +56,13 @@ class Plugin extends \craft\base\Plugin
 
         /** @var Settings $settings */
         $settings = $this->getSettings();
+        $showPages = $settings->getUserSetting('showPages');
 
-
-        if ($settings->showPages === 'nav' || $settings->showPages === 'sidebar') {
+        if ($showPages === 'nav' || $showPages === 'sidebar') {
             Event::on(
                 Cp::class,
                 Cp::EVENT_REGISTER_CP_NAV_ITEMS,
-                function(RegisterCpNavItemsEvent $event) use ($settings) {
+                function(RegisterCpNavItemsEvent $event) use ($settings, $showPages) {
 
                     $navItem = [
                         'label' => Craft::t('site', $settings->pluginTitle),
@@ -73,7 +70,7 @@ class Plugin extends \craft\base\Plugin
                         'fontIcon' => 'field'
                     ];
 
-                    if ($settings->getPages()->count() > 1 && $settings->showPages === 'nav') {
+                    if ($settings->getPages()->count() > 1 && $showPages === 'nav') {
                         // Translate labels
                         $navItem['subnav'] = $settings->getPages()->transform(fn($page) => [
                             'label' => Craft::t('site', $page['label']),
@@ -134,7 +131,7 @@ class Plugin extends \craft\base\Plugin
         });
 
         // Replace dashboard?
-        if ($settings->replaceDashboard) {
+        if ($settings->getUserSetting('replaceDashboard')) {
             if (Craft::$app->getRequest()->getSegment(1) === 'dashboard') {
                 Craft::$app->getResponse()->redirect('contentoverview');
             }
