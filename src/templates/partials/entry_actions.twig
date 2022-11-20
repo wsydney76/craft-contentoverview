@@ -1,9 +1,16 @@
-{% if sectionConfig.actions %}
+{# @params entry, settings, sectionConfig, sectionPath, ?sectionPageNo #}
+
+{# @var settings \wsydney76\contentoverview\models\Settings #}
+{# @var sectionConfig \wsydney76\contentoverview\models\Section #}
+
+{% set actions = sectionConfig.getActions(entry) %}
+
+{% if actions %}
 
     <div class="co-actions">
         {% set draftId = (not entry.isProvisionalDraft and entry.draftId) ? entry.draftId : "null" %}
 
-        {% for action in sectionConfig.actions %}
+        {% for action in actions %}
             {% switch action %}
 
             {% case "slideout" %}
@@ -28,13 +35,13 @@
                 </button>
 
             {% default %}
-                {% if action.jsFunction is defined %}
+                {% if action.jsFunction %}
                     {{ _self.displayButton(action,
                         "#{action.jsFunction}('#{action.label}', #{entry.id}, #{draftId}, '#{entry.title}', '#{sectionPath}' , #{sectionPageNo})"
                     ) }}
                 {% endif %}
 
-                {% if action.cpAction is defined %}
+                {% if action.cpAction %}
                     <button title="{{ action.label|t('contentoverview') }}"
                             class="co-action-icon"
                             aria-label="{{ action.label|t('contentoverview') }}"
@@ -43,7 +50,7 @@
                     </button>
                 {% endif %}
 
-                {% if action.cpUrl is defined %}
+                {% if action.cpUrl %}
                     <a class="co-action-icon"
                        aria-label="{{ action.label|t('contentoverview') }}"
                        href="{{ cpUrl(action.cpUrl, {elementId: entry.id, draftId: (draftId == 'null' ? null: draftId)}) }}"

@@ -4,13 +4,13 @@
 {# @var page \wsydney76\contentoverview\models\Page #}
 
 
-{% set navPages = settings.sidebarConfig %}
+{% set navPages = settings.getPages(true) %}
 {% if navPages.count %}
     <nav aria-label="{{ settings.pluginTitle }} {{ 'Pages'|t('contentoverview') }}">
         <ul>
             {% for currentPage in navPages %}
 
-                {% if currentPage.heading is defined %}
+                {% if currentPage.heading %}
                     <li class="heading">
                         <span>{{ currentPage.heading|t('site') }}</span>
                     </li>
@@ -20,7 +20,7 @@
                         <a class="{{ currentPage.url == page.url ? 'sel' }}"
                            href="{{ cpUrl(currentPage.url) }}">
 
-                            {% if currentPage.icon is defined %}
+                            {% if currentPage.icon %}
                                 <span class="icon icon-mask" aria-hidden="true">
                                 {{ svg(currentPage.icon)|attr({width: '100px', height: '100px'}) }}
                             </span>

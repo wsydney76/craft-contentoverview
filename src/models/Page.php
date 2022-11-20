@@ -5,15 +5,22 @@ namespace wsydney76\contentoverview\models;
 use Craft;
 use craft\base\Model;
 use Illuminate\Support\Collection;
+use wsydney76\contentoverview\events\DefinePagesEvent;
+use wsydney76\contentoverview\events\DefineTabsEvent;
 use function collect;
 
-class Page extends Model
+class Page extends BaseModel
 {
+
+    public const EVENT_DEFINE_TABS = 'eventDefineTabs';
+
     public string $pageKey;
     public string $label;
     public string $url;
     public string $group = '';
     public array $blocks = [];
+    public string $heading = '';
+    public string $icon = '';
 
     private array $_tabs = [];
 
@@ -24,6 +31,7 @@ class Page extends Model
      */
     public function getTabs(): Collection
     {
+        // Do not read a file multiple times. (TODO: really needed?)
         if (!$this->_tabs) {
             $config = Craft::$app->config->getConfigFromFile("contentoverview/$this->pageKey");
             if ($config) {
@@ -31,7 +39,20 @@ class Page extends Model
             }
         }
 
-        return collect($this->_tabs);
+        $tabs = collect($this->_tabs);
+
+        if ($this->hasEventHandlers(self::EVENT_DEFINE_TABS)) {
+            $event = new DefineTabsEvent([
+                'page' => $this,
+                'tabs' => $tabs
+            ]);
+
+            $this->trigger(self::EVENT_DEFINE_TABS, $event);
+
+            $tabs = $event->tabs;
+        }
+
+        return $tabs;
     }
 
     /**

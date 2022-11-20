@@ -3,10 +3,13 @@
 namespace wsydney76\contentoverview\models;
 
 use craft\base\Model;
+use wsydney76\contentoverview\events\DefineSectionsEvent;
 use yii\base\InvalidConfigException;
 
-class Column extends Model
+class Column extends BaseModel
 {
+    public const EVENT_DEFINE_SECTIONS = 'eventDefineSections';
+
     public int $width = 12;
     public array $sections;
 
@@ -26,7 +29,6 @@ class Column extends Model
         return $this;
     }
 
-
     /**
      * Sets the sections within the column
      *
@@ -37,5 +39,21 @@ class Column extends Model
     {
         $this->sections = $sections;
         return $this;
+    }
+
+    public function getSections() {
+        $sections = collect($this->sections);
+
+        if ($this->hasEventHandlers(self::EVENT_DEFINE_SECTIONS)) {
+            $event = new DefineSectionsEvent([
+                'column' => $this,
+                'sections' => $sections
+            ]);
+
+            $this->trigger(self::EVENT_DEFINE_SECTIONS, $event);
+            $sections = $event->sections;
+        }
+
+        return $sections;
     }
 }

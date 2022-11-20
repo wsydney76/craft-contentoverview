@@ -13,6 +13,7 @@ use craft\fields\Users;
 use craft\helpers\ElementHelper;
 use craft\models\MatrixBlockType;
 use Illuminate\Support\Collection;
+use wsydney76\contentoverview\events\DefineActionsEvent;
 use wsydney76\contentoverview\events\DefineCustomFilterOptionsEvent;
 use wsydney76\contentoverview\events\FilterContentOverviewQueryEvent;
 use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
@@ -31,6 +32,7 @@ class Section extends BaseSection
     public const EVENT_MODIFY_CONTENTOVERVIEW_QUERY = 'modifyContentoverviewQuery';
     public const EVENT_FILTER_CONTENTOVERVIEW_QUERY = 'filterContentoverviewQuery';
     public const EVENT_DEFINE_CUSTOM_FILTER_OPTIONS = 'defineCustomFilterOptions';
+    public const EVENT_DEFINE_ACTIONS = 'defineActionsEvent';
 
     public array $actions = [];
     public bool $allSites = false;
@@ -55,7 +57,6 @@ class Section extends BaseSection
     public bool $showIndexButton = true;
     public ?bool $sortByScore = false;
     public ?string $status = null;
-
 
 
     // make it easer to detect custom sections, instead of using class names
@@ -584,6 +585,34 @@ class Section extends BaseSection
         }
 
         return collect($this->orderBy);
+    }
+
+
+    public function getActions(Entry $entry): Collection
+    {
+
+        $actions = collect($this->actions)
+            ->filter(function(Action|string $action) use ($entry) {
+                if (is_string($action)) {
+                    return true;
+                }
+                return $action->isActiveForEntry($entry);
+            });
+
+
+        if ($this->hasEventHandlers(self::EVENT_DEFINE_ACTIONS)) {
+            $event = new DefineActionsEvent([
+                'entry' => $entry,
+                'sectionConfig' => $this,
+                'actions' => $actions
+            ]);
+
+            $this->trigger(self::EVENT_DEFINE_ACTIONS, $event);
+
+            $actions = $event->actions;
+        }
+
+        return $actions;
     }
 
     /**

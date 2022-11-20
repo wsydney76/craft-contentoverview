@@ -4,8 +4,9 @@ namespace wsydney76\contentoverview\models;
 
 use craft\base\Model;
 
-class BaseSection extends Model
+class BaseSection extends BaseModel
 {
+
     public ?string $heading = '';
     public ?string $linkToPage = '';
 

@@ -20,13 +20,11 @@ class PageController extends Controller
 
         $pageKey = $pageKey ?: $settings->defaultPage;
 
-        $pageConfig = $settings->getPages()->get($pageKey);
+        $page = $settings->getPages()->get($pageKey);
 
-        if (!$pageConfig) {
+        if (!$page) {
             throw new InvalidArgumentException("$pageKey is not a valid pageKey.");
         }
-
-        $page = Plugin::getInstance()->contentoverview->createPage($pageKey, $pageConfig);
 
         return $this->view->renderPageTemplate('contentoverview/index.twig', [
             'page' => $page,

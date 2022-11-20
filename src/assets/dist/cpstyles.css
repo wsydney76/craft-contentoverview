@@ -278,6 +278,10 @@
     width: 100%;
 }
 
+.co-cardlets .co-actions {
+    padding-right: 4px;
+}
+
 .co-cardlets .co-status {
     display: flex;
     flex-direction: column;

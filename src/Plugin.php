@@ -133,6 +133,20 @@ class Plugin extends \craft\base\Plugin
             ];
         });
 
+        // Replace dashboard?
+        if ($settings->replaceDashboard) {
+            if (Craft::$app->getRequest()->getSegment(1) === 'dashboard') {
+                Craft::$app->getResponse()->redirect('contentoverview');
+            }
+
+            Event::on(View::class, View::EVENT_BEFORE_RENDER_TEMPLATE,
+                function() {
+                    Craft::$app->getView()->registerCss('#nav-dashboard {display: none !important;}');
+                }
+            );
+        }
+
+        // Register CSS an JS
         Craft::$app->view->registerAssetBundle(ContentOverviewAssetBundle::class);
     }
 

@@ -4,25 +4,37 @@ namespace wsydney76\contentoverview\services;
 
 use Craft;
 use craft\base\Component;
+use wsydney76\contentoverview\models\Action;
 use wsydney76\contentoverview\models\Column;
 use wsydney76\contentoverview\models\CustomSection;
 use wsydney76\contentoverview\models\Page;
 use wsydney76\contentoverview\models\Section;
 use wsydney76\contentoverview\models\Tab;
 use wsydney76\contentoverview\models\WidgetSection;
+use wsydney76\contentoverview\Plugin;
 
 class ContentOverviewService extends Component
 {
 
 
+    /**
+     * @param string $pageKey
+     * @param array $pageConfig
+     * @return Page
+     * @throws \yii\base\InvalidConfigException
+     */
     public function createPage(string $pageKey, array $pageConfig): Page
     {
-        return new Page([
+        return Craft::createObject([
+            'class' => Plugin::getInstance()->getSettings()->pageClass,
             'pageKey' => $pageKey,
-            'label' => Craft::t('site', $pageConfig['label']),
+            'label' => Craft::t('site', $pageConfig['label'] ?? ''),
+            'heading' => $pageConfig['heading'] ?? '',
             'url' => $pageConfig['url'] ?? '',
             'group' => $pageConfig['group'] ?? '',
-            'blocks' => $pageConfig['blocks'] ?? []
+            'blocks' => $pageConfig['blocks'] ?? [],
+            'icon' => $pageConfig['icon'] ?? '',
+            'handle' => $pageConfig['handle'] ?? ''
         ]);
     }
 
@@ -35,7 +47,8 @@ class ContentOverviewService extends Component
      */
     public function createTab(string $label, array $columns): Tab
     {
-        return new Tab([
+        return Craft::createObject([
+            'class' => Plugin::getInstance()->getSettings()->tabClass,
             'label' => $label,
             'columns' => $columns,
         ]);
@@ -50,7 +63,8 @@ class ContentOverviewService extends Component
      */
     public function createColumn(int $width = 12, array $sections = []): Column
     {
-        return new Column([
+        return Craft::createObject([
+           'class' => Plugin::getInstance()->getSettings()->columnClass,
             'width' => $width,
             'sections' => $sections
         ]);
@@ -63,9 +77,9 @@ class ContentOverviewService extends Component
      * @return Section
      * @throws \yii\base\InvalidConfigException
      */
-    public function createSection(string $className = Section::class): Section
+    public function createSection(string $className = null): Section
     {
-        return Craft::createObject($className);
+        return Craft::createObject($className ?? Plugin::getInstance()->getSettings()->sectionClass);
     }
 
     /**
@@ -89,6 +103,11 @@ class ContentOverviewService extends Component
     public function createWidgetSection(): WidgetSection
     {
         return Craft::createObject(WidgetSection::class);
+    }
+
+    public function createAction(string $className = null): Action
+    {
+        return Craft::createObject($className ?? Plugin::getInstance()->getSettings()->actionClass);
     }
 
 }

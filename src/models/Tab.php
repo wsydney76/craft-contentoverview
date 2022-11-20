@@ -2,11 +2,14 @@
 
 namespace wsydney76\contentoverview\models;
 
-use craft\base\Model;
 use craft\helpers\StringHelper;
+use Illuminate\Support\Collection;
+use wsydney76\contentoverview\events\DefineColumnsEvent;
 
-class Tab extends Model
+class Tab extends BaseModel
 {
+    public const EVENT_DEFINE_COLUMNS = 'eventDefineColumns';
+
     public string $label = '';
     public array $columns = [];
 
@@ -42,6 +45,24 @@ class Tab extends Model
     public function getId()
     {
         return StringHelper::toKebabCase($this->label);
+    }
+
+    public function getColumns(): Collection
+    {
+        $columns = collect($this->columns);
+
+        if ($this->hasEventHandlers(self::EVENT_DEFINE_COLUMNS)) {
+            $event = new DefineColumnsEvent([
+                'tab' => $this,
+                'columns' => $columns
+            ]);
+
+            $this->trigger(self::EVENT_DEFINE_COLUMNS, $event);
+
+            $columns = $event->columns;
+        }
+
+        return $columns;
     }
 
 }

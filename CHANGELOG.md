@@ -2,7 +2,19 @@
 
 ## Unreleased
 
-* Multi page setup: Links can now appear in the main navigation (default) or in the sidebar.
+* Multipage setup: Links can now appear in the main navigation (default) or in the sidebar.
+* Added replaceDashboard setting.
+* The `getPages` method now returns a collection of `Page` models.
+
+### Enhanced customization
+
+New possibilities to make adjustments to a project have been introduced.
+
+This is to prevent minor, very specific requirements from leading to a change request for the plugin.
+
+* It is now possible to overwrite the Page/Tab/Column/Section classes.
+* Actions are now created as an Action model, that has an `isActiveForEntry` method taken into accout by the `getActions` method.
+* Added `DefinePagesEvent`, `DefineTabsEvent`, `DefineColumnsEvent`, `DefineSectionsEvent`, `DefineActionsEvent`.
 
 ## 3.0.0 2022-11-18
 

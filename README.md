@@ -46,6 +46,7 @@ Support your workflow and quality management: Show drafts / status / own provisi
 Create a file `contentoverview.php` in your config folder.
 
 - pluginTitle (?string, label for primary navigation, page title)
+- replaceDashboard (?bool Whether to remove dashboard link and redirect to contentoverview on login)
 - showPages (?string, default nav, where to show multiple pages: nav|sidebar|no)
 - enableWidgets (?bool, default true, enable dashboard widgets that display a single tab)
 - defaultPage (?string, page key for the first/only page.)
@@ -62,7 +63,8 @@ Create a file `contentoverview.php` in your config folder.
 <?php
 
 return [
-    'enableWidgets' => false
+    'replaceDashboard' => true,
+    'enableWidgets' => false,
 ];
 ```
 

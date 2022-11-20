@@ -5,12 +5,17 @@ namespace wsydney76\contentoverview\models;
 use Craft;
 use craft\base\Model;
 use Illuminate\Support\Collection;
+use wsydney76\contentoverview\events\DefinePagesEvent;
+use wsydney76\contentoverview\Plugin;
 
 
 class Settings extends Model
 {
+    public const EVENT_DEFINE_PAGES = 'eventDefinePages';
+
     // see read me for doc
     public string $pluginTitle = 'Content Overview';
+    public bool $replaceDashboard = false;
     public array $pages = [];
     public string $showPages = 'nav';
     public bool $enableWidgets = true;
@@ -28,9 +33,15 @@ class Settings extends Model
         'cards' => ['width' => 400, 'height' => 200, 'format' => 'webp'],
         'line' => null // no image in line layout
     ];
-    public string $sectionClass = Section::class;
+
 
     protected array $_tabs = [];
+
+    public string $pageClass = Page::class;
+    public string $tabClass = Tab::class;
+    public string $columnClass = Column::class;
+    public string $sectionClass = Section::class;
+    public string $actionClass = Action::class;
 
     public function rules(): array
     {
@@ -44,7 +55,7 @@ class Settings extends Model
      *
      * @return Collection
      */
-    public function getPages(): Collection
+    public function getPages($isSidebar = false): Collection
     {
         $pages = $this->pages;
         if (!$pages) {
@@ -58,28 +69,33 @@ class Settings extends Model
         }
 
         $currentUser = Craft::$app->user->identity;
-        return collect($pages)->filter(function($page) use ($currentUser) {
-            // ignore group headings for sidebar
-            if (isset($page['heading'])) {
-                return false;
-            }
 
-            if (!isset($page['group'])) {
-                return true;
-            }
+        $pages = collect($pages)
+            ->filter(function($page) use ($currentUser) {
+                return $currentUser->admin || $currentUser->isInGroup($page['group']);
+            });
 
-            return $currentUser->admin || $currentUser->isInGroup($page['group']);
-        });
+        if (!$isSidebar) {
+            $pages->filter(function($page)  {
+                return empty($page['heading']) || !empty($page['grout']);
+            });
+        }
+
+        $service = Plugin::getInstance()->contentoverview;
+        $pages = $pages->map(fn($page, $key) => $service->createPage($key, $page));
+
+        if ($this->hasEventHandlers(self::EVENT_DEFINE_PAGES)) {
+            $event = new DefinePagesEvent([
+                'pages' => $pages
+            ]);
+
+            $this->trigger(self::EVENT_DEFINE_PAGES, $event);
+
+            $pages = $event->pages;
+        }
+
+        return $pages;
     }
 
-    /**
-     * Return pure pages settings, so that twig templages do not confuse .pages and .getPages()
-     *
-     * @return Collection
-     */
-    public function getSidebarConfig(): Collection
-    {
-        return collect($this->pages);
-    }
 
 }
