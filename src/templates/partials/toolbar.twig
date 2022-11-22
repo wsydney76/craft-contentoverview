@@ -15,6 +15,7 @@
     {% endif %}
 
     {% set filters = sectionConfig.getFilters() %}
+
     {% if filters.count %}
         {% include [
             '_contentoverview/partials/filters.twig',

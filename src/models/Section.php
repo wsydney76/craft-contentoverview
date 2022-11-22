@@ -521,6 +521,8 @@ class Section extends BaseSection
      */
     public function getFilters(): Collection
     {
+        return collect($this->filters);
+
         $filters = collect($this->filters)->transform(function($filter) {
             $filterType = $filter['type'] ?? 'customField';
             switch ($filterType) {
@@ -757,13 +759,13 @@ class Section extends BaseSection
                         {
                             $query->andRelatedTo([
                                 'element' => $filter['value'],
-                                'field' => $filter['field']
+                                'field' => $filter['handle']
                             ]);
                             break;
                         }
                         case 'optionsField':
                         {
-                            $field = Craft::$app->fields->getFieldByHandle($filter['field']);
+                            $field = Craft::$app->fields->getFieldByHandle($filter['handle']);
                             $columnName = ElementHelper::fieldColumnFromField($field);
 
                             $query->andWhere([$columnName => $filter['value']]);
@@ -772,10 +774,12 @@ class Section extends BaseSection
 
                         case 'custom':
                         {
+
                             if ($this->hasEventHandlers(self::EVENT_FILTER_CONTENTOVERVIEW_QUERY)) {
                                 $this->trigger(self::EVENT_FILTER_CONTENTOVERVIEW_QUERY, new FilterContentOverviewQueryEvent([
                                     'query' => $query,
-                                    'filter' => $filter
+                                    'handle' => $filter['handle'],
+                                    'value' => $filter['value']
                                 ]));
                             }
                         }

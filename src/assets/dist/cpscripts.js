@@ -109,7 +109,7 @@ function co_getFilters(sectionPath) {
     co_getFilterElements(sectionPath).forEach(element => {
         filter = {
             type: element.dataset['type'],
-            field: element.dataset['field'],
+            handle: element.dataset['handle'],
             value: element.value
         }
         filters.push(filter)

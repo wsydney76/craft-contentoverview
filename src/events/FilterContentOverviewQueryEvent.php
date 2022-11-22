@@ -8,5 +8,6 @@ use yii\base\Event;
 class FilterContentOverviewQueryEvent extends Event
 {
     public ElementQueryInterface $query;
-    public array $filter;
+    public string $handle;
+    public mixed $value;
 }

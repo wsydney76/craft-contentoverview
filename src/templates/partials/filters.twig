@@ -11,30 +11,7 @@
    {% endif %}
 
     <div>
-        {% switch filter.type %}
-
-        {% case "entriesField" %}
-
-            {% set entries = craft.entries({
-                section: filter.sections
-            })
-                .orderBy(filter.orderBy ?? null)
-            .collect %}
-
-            {% set options = entries|map(entry => {label: entry.title, value: entry.id}) %}
-
-        {% case "usersField" %}
-
-            {% set users = craft.users()
-                .orderBy(filter.orderBy ?? null)
-            .collect %}
-
-            {% set options = users|map(user => {label: user.name, value: user.id}) %}
-
-
-        {% case "optionsField" %}
-
-            {% set options = fieldInstance.options|filter(option => option.value != '') %}
+        {% switch filter.fieldType %}
 
         {% case "custom" %}
             
@@ -45,12 +22,12 @@
 
         {{ forms.select({
             name: "#{sectionPath}-filter",
-            options: options
-            |unshift({label: 'Filter by'|t('contentoverview') ~ ': ' ~ label|t('site'), value: ''}),
+            options: filter.options
+                .prepend({label: 'Filter by'|t('contentoverview') ~ ': ' ~ filter.label|t('site'), value: ''}),
             inputAttributes: {
                 data: {
-                    'field': filter.field,
-                    'type': filter.type
+                    'handle': filter.type == 'custom' ? filter.handle : filter.relatedToParam,
+                    'type': filter.fieldType
                 },
                 onchange: "co_getSectionHtml('#{ sectionPath }')"
             }

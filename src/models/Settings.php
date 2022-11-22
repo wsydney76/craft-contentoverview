@@ -46,6 +46,7 @@ class Settings extends Model
     public string $columnClass = Column::class;
     public string $sectionClass = Section::class;
     public string $actionClass = Action::class;
+    public string $filterClass = Filter::class;
 
     public function rules(): array
     {

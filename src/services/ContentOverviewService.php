@@ -9,6 +9,7 @@ use wsydney76\contentoverview\events\DefinePagesEvent;
 use wsydney76\contentoverview\models\Action;
 use wsydney76\contentoverview\models\Column;
 use wsydney76\contentoverview\models\CustomSection;
+use wsydney76\contentoverview\models\Filter;
 use wsydney76\contentoverview\models\Page;
 use wsydney76\contentoverview\models\Section;
 use wsydney76\contentoverview\models\Tab;
@@ -112,6 +113,15 @@ class ContentOverviewService extends Component
     public function createAction(string $className = null): Action
     {
         return Craft::createObject($className ?? Plugin::getInstance()->getSettings()->actionClass);
+    }
+
+    public function createFilter(string $type = 'field', $handle): Filter
+    {
+        return Craft::createObject([
+            'class' => Plugin::getInstance()->getSettings()->filterClass,
+            'type' => $type,
+            'handle' => $handle
+        ]);
     }
 
     /**
