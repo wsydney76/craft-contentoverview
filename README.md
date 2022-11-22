@@ -427,10 +427,13 @@ Entries can be filtered by a custom field value.
 
 ```php
 ->filters([
-    ['field' => 'topics'],
-    ['field' => 'assignedTo', 'orderBy' => 'lastName, firstName', 'label' => 'Responsible'],
-    ['field' => 'workflowStatus'],
-])
+    $co->createFilter('field', 'topics'),
+
+    $co->createFilter('field', 'assignedTo')
+        ->orderBy('lastName, firstName')
+        ->label('Responsible'),
+    
+    $co->createFilter('field', 'workflowStatus'),
 ```
 
 Currently supported:
@@ -445,15 +448,13 @@ Additionally custom filters can be defined:
 
 ```php
 ->filters([
-    [
-        'type' => 'custom',
-        'label' => 'Critical reviews...',
-        'field' => 'criticalreviews', // a pseudo field name, handled in event
-        'options' => [
+    $co->createFilter('custom', 'criticalreviews') // pseudo field handle to identify this filter in event handlers
+        ->label('Critical Reviews')
+        ->options([
             ['label' => 'Overdue', 'value' => 'overdue'],
             ['label' => 'Next week', 'value' => 'nextweek'],
-        ]
-    ],
+        ])
+    ])
 ])
 ```
 
@@ -463,25 +464,22 @@ Options can be set dynamically via an event:
 
 ```php
 use wsydney76\contentoverview\events\DefineCustomFilterOptionsEvent;
-use wsydney76\contentoverview\models\Section;
-
-...
-
+use wsydney76\contentoverview\models\Filter;
 Event::on(
-    Section::class,
-    Section::EVENT_DEFINE_CUSTOM_FILTER_OPTIONS,
+    Filter::class,
+    Filter::EVENT_DEFINE_CUSTOM_FILTER_OPTIONS,
     function(DefineCustomFilterOptionsEvent $event) {
-        if ($event->filter['field'] === 'criticalreviews') {
-            $event->filter['options'][] = [
-              'label' => 'A new option',
-              'value' => 'aNewOption'
-            ];
+        if ($event->filter->handle === 'criticalreviews') {
+            $event->filter->options->prepend([
+                'label' => 'A new option',
+                'value' => 'aNewOption'
+            ]) ;
         }
     }
 );
 ```
 
-A custom module can handle this filter in an event handler, e.g.
+A custom module then can apply filter to the section query in an event handler, e.g.
 
 ```php
 
@@ -494,31 +492,24 @@ Event::on(
     Section::class,
     Section::EVENT_FILTER_CONTENTOVERVIEW_QUERY,
     function(FilterContentOverviewQueryEvent $event) {
-        $filter = $event->filter;
-        if ($filter['field'] === 'criticalreviews') {
-            switch ($filter['value']) {
+        if ($event->handle === 'criticalreviews') {
+            switch ($event->value) {
                 case 'overdue':
                 {
                     $event->query
                         ->workflowStatus('inReview')
-                        ->dueDate('<' . DateTimeHelper::today()->format('Y-m-d'));
+                        ->dueDate('< now');
                     break;
                 }
                 case 'nextweek':
                 {
-                    $event->query
-                        ->workflowStatus('inReview')
-                        ->dueDate([
-                            'and',
-                            '>' . DateTimeHelper::today()->format('Y-m-d'),
-                            '<' . DateTimeHelper::nextWeek()->format('Y-m-d'),
-                        ]);
-                    break;
+                   // 
                 }
             }
         }
+          
     }
-);
+    );
 ```
 
 Multiple filters can take up a lot of space if used together with search, so you can push them
@@ -533,8 +524,8 @@ Highly experimental:
 Matrix subfields can also be used as filters:
 
 ```php
- ['field' => 'streaming.streamingProvider', 'orderBy' => 'title']
- ['field' => 'media.digitalMedium.storageLocation', 'orderBy' => 'title'],                        
+ $co->createFilter('field', 'streaming.streamingProvider')->orderBy('title')
+ $co->createFilter('field', 'streaming.digitalMedium.streamingProvider')->orderBy('title')                        
 ```
 
 Specify fields in the form `matrixFieldHandle.blockTypeHandle.subFieldHandle`.
@@ -854,7 +845,7 @@ are described in the 'Filters' chapter.
 
 ### Modify Collections
 
-Every collection of models in the chain Pages -> Tabs -> Columns -> Sections -> Actions can be modified.
+Every collection of models in the chain Pages -> Tabs -> Columns -> Sections -> Actions/Filters can be modified.
 
 This is especially useful if you want to apply rules based on a users role and entry content.
 
@@ -865,6 +856,7 @@ This is especially useful if you want to apply rules based on a users role and e
 | Tab::EVENT_DEFINE_COLUMNS                  | DefineColumnsEvent  | $columns         |
 | Column::EVENT_DEFINE_SECTIONS              | DefineSectionsEvent | $sections        |
 | Section::EVENT_DEFINE_ACTIONS              | DefineActionsEvent  | $entry, $actions |
+| Section::EVENT_DEFINE_FILTERS              | DefineFiltersEvent  | $filters         |
 
 Add a `handle` to a model so that it can easily be identified in your event handler.
 

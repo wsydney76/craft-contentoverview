@@ -3,26 +3,19 @@
 namespace wsydney76\contentoverview\models;
 
 use Craft;
-use craft\base\Field;
 use craft\db\Paginator;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\Entry;
-use craft\fields\BaseOptionsField;
-use craft\fields\Entries;
-use craft\fields\Matrix;
-use craft\fields\Users;
 use craft\helpers\ElementHelper;
-use craft\models\MatrixBlockType;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineActionsEvent;
-use wsydney76\contentoverview\events\DefineCustomFilterOptionsEvent;
+use wsydney76\contentoverview\events\DefineFiltersEvent;
 use wsydney76\contentoverview\events\FilterContentOverviewQueryEvent;
 use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
 use wsydney76\contentoverview\Plugin;
 use yii\base\InvalidConfigException;
 use function array_map;
 use function collect;
-use function explode;
 use function implode;
 use function in_array;
 use function is_array;
@@ -32,8 +25,8 @@ class Section extends BaseSection
 {
     public const EVENT_MODIFY_CONTENTOVERVIEW_QUERY = 'modifyContentoverviewQuery';
     public const EVENT_FILTER_CONTENTOVERVIEW_QUERY = 'filterContentoverviewQuery';
-    public const EVENT_DEFINE_CUSTOM_FILTER_OPTIONS = 'defineCustomFilterOptions';
     public const EVENT_DEFINE_ACTIONS = 'defineActionsEvent';
+    public const EVENT_DEFINE_FILTERS = 'defineFiltersEvent';
 
     public array $actions = [];
     public bool $allSites = false;
@@ -521,89 +514,20 @@ class Section extends BaseSection
      */
     public function getFilters(): Collection
     {
-        return collect($this->filters);
+        $filters =  collect($this->filters);
 
-        $filters = collect($this->filters)->transform(function($filter) {
-            $filterType = $filter['type'] ?? 'customField';
-            switch ($filterType) {
-                case 'customField':
-                {
+        if ($this->hasEventHandlers(self::EVENT_DEFINE_FILTERS)) {
+            $event = new DefineFiltersEvent([
+                'user' => Craft::$app->user->identity,
+                'sectionConfig' => $this,
+                'filters' => $filters
+            ]);
 
-                    $segments = explode('.', $filter['field']);
-                    $fieldHandle = $segments[0];
+            $this->trigger(self::EVENT_DEFINE_FILTERS, $event);
 
-                    $field = Craft::$app->fields->getFieldByHandle($fieldHandle);
-                    if (!$field) {
-                        throw new InvalidConfigException("Invalid field handle");
-                    }
+            $filters = $event->filters;
+        }
 
-                    if ($field instanceof Matrix) {
-                        if (count($segments) < 2) {
-                            throw new InvalidConfigException("Invalid matrix handle (field.blockType.subField)");
-                        }
-
-                        /** @var MatrixBlockType $blockType */
-                        if (count($segments) == 2) {
-                            $blockType = $field->getBlockTypes()[0];
-                            $subFieldHandle = $segments[1];
-                        } else {
-                            $blockType = collect($field->getBlockTypes())->firstWhere('handle', $segments[1]);
-                            if (!$blockType) {
-                                throw new InvalidConfigException("Invalid blocktype handle $segments[1]");
-                            }
-                            $subFieldHandle = $segments[2];
-                        }
-
-
-                        /** @var Field $field */
-                        $field = collect($blockType->getCustomFields())->firstWhere('handle', $subFieldHandle);
-                        if (!$field) {
-                            throw new InvalidConfigException("Invalid subField handle $subFieldHandle");
-                        }
-
-                        // return field handle in the form relatedTo expects
-                        $filter['field'] = "{$segments[0]}.{$subFieldHandle}";
-                    }
-
-                    if ($field instanceof Entries) {
-                        $type = 'entriesField';
-
-                        if ($field->sources !== '*') {
-                            $sections = [];
-                            foreach ($field->sources as $source) {
-                                $section = Craft::$app->sections->getSectionByUid(explode(':', $source)[1]);
-                                $sections[] = $section->handle;
-                            }
-                        } else {
-                            $sections = null;
-                        }
-                        $filter['sections'] = $sections;
-                    }
-
-                    if ($field instanceof Users) {
-                        $type = 'usersField';
-                    }
-                    if ($field instanceof BaseOptionsField) {
-                        $type = 'optionsField';
-                    }
-
-                    $filter['fieldInstance'] = $field;
-                    $filter['type'] = $type;
-                    break;
-                }
-                case 'custom':
-                {
-                    if ($this->hasEventHandlers(self::EVENT_DEFINE_CUSTOM_FILTER_OPTIONS)) {
-                        $event = new DefineCustomFilterOptionsEvent([
-                            'filter' => $filter
-                        ]);
-                        $this->trigger(self::EVENT_DEFINE_CUSTOM_FILTER_OPTIONS, $event);
-                        $filter = $event->filter;
-                    }
-                }
-            }
-            return $filter;
-        });
 
         return $filters;
     }
