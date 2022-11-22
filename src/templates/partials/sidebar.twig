@@ -4,7 +4,7 @@
 {# @var page \wsydney76\contentoverview\models\Page #}
 
 
-{% set navPages = settings.getPages(true) %}
+{% set navPages = craft.contentoverview.service.getPages(true) %}
 {% if navPages.count %}
     <nav aria-label="{{ settings.pluginTitle }} {{ 'Pages'|t('contentoverview') }}">
         <ul>

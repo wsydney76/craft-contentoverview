@@ -43,6 +43,7 @@ class Page extends BaseModel
 
         if ($this->hasEventHandlers(self::EVENT_DEFINE_TABS)) {
             $event = new DefineTabsEvent([
+                'user' => Craft::$app->user->identity,
                 'page' => $this,
                 'tabs' => $tabs
             ]);

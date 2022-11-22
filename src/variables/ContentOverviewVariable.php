@@ -13,4 +13,9 @@ class ContentOverviewVariable extends Component
         return Plugin::getInstance()->getSettings();
     }
 
+    public function getService()
+    {
+        return Plugin::getInstance()->contentoverview;
+    }
+
 }

@@ -177,8 +177,9 @@ Structure of this file:
     - columns[] (array, columns inside the tab container, uses a 12 columns grid)
         - width (int, number of columns occupied, 1-12)
         - sections[] (array, sections display inside the column)
-            - section (array|string, section handle)
-            - elementType (array|string, elementType handle)
+            - section (?array|string, section handle)
+            - elementType (?array|string, elementType handle)
+            - query (ElementQuery, define your own query)
             - heading (?string, heading of the section, defaults to section name)
             - limit (?int, number of entries to show)
             - info (?string|array, object template to render in addition to the title)
@@ -268,6 +269,14 @@ return [
                     '{draftNotes ? "Draft Notes:"}' . '<br>' .
                     '{draftNotes}'),
                     ])
+
+        // Use 'query' to build individual queries that can't be composed with predefined parameters
+        // Requires headings, disables Add new/List all buttons (can be any section). 
+        $co->createSection()
+            ->heading('Custom Field')           
+            ->query(Craft::$app->user->identity->handpickedEntries)  // entries field           
+            ->info('{postDate|datetime("short")}, {workflowStatus}')
+        ])
 
 // modules/main/NewsSection.php
 
@@ -675,39 +684,37 @@ Actions can be:
 * A custom controller action (executed with user confirmation).
 
 ```php
+
 ->actions([
-    // Predefined actions
-    'slideout'
+    'slideout',
     'delete',
+    
+    // Open a new CP page
+    // elementId and draftId params will be added to the url.
+    $co->createAction()
+        ->label('See version history')
+        ->icon('@templates/_icons/history.svg')
+        ->cpUrl('main/content/publish-release')
     
     // Call a custom javascript function
     // Signature:
     // function myApp_publish_release(label, elementId, draftId, title, sectionPath, sectionPageNo)
     // Use sectionPath, sectionPageNo if you want to refresh the section html via co_getSectionHtml
-    [
-        'label' => 'Publish all entries that belong to this package',
-        'icon' => '@templates/_icons/publish.svg',
-        'jsFunction' => 'myApp_publish_release'
-    ],
-    
-   
-    // Open a new CP page
-    // elementId and draftId params will be added to the url.
-    [
-        'label' => 'Publish all entries that belong to this package',
-        'icon' => '@templates/_icons/publish.svg',
-        'cpUrl' => 'main/publish-release'
-    ],
+    $co->createAction()
+        ->label('See version history')
+        ->icon('@templates/_icons/history.svg')
+        ->jsFunction('myApp_publish_release')
     
     // Call a custom controller action
     // elementId and draftId params will be posted to the action.
     // requires that the controller action return ->asSuccess(message) or ->asFailure(message)
     // Takes care of displaying cp notice/error, redirect/refreshing the section html
-    [
-        'label' => 'Publish all entries that belong to this package',
-        'icon' => '@templates/_icons/publish.svg',
-        'cpAction' => 'main/content/publish-release'
-    ],
+    $co->createAction()
+        ->label('Publish all entries that belong to this package2')
+        ->icon('@templates/_icons/publish.svg')
+        ->cpAction('main/content/publish-release')
+        ->handle('publishAction')
+])
 
 
 // modules/main/controllers/ContentController.php
@@ -749,6 +756,57 @@ class ContentController extends Controller
 
 ```
 
+The `Action` class implements a `isActiveForEntry(Entry $entry)` method, which by
+default always return true.
+
+You can create a custom class that overwrites this method and handles user roles/entry data.
+
+```php
+$co->createAction(PublishAction::class)
+
+// PublishAction.php
+
+<?php
+
+namespace modules\contentoverview\models;
+
+use craft\elements\Entry;
+use wsydney76\contentoverview\models\Action;
+
+class PublishAction extends Action
+{
+    public function isActiveForEntry(Entry $entry): bool
+    {
+        return // some complex logic here;
+    }
+}
+
+```
+
+
+### Overwrite Classes
+
+Classes are instantiated via a poor man's version of dependency injection: 
+The class names are defined in `models\Settings.php`.
+
+```php
+    public string $serviceClass = ContentOverviewService::class;
+    public string $pageClass = Page::class;
+    public string $tabClass = Tab::class;
+    public string $columnClass = Column::class;
+    public string $sectionClass = Section::class;
+    public string $actionClass = Action::class;
+```
+
+So when you feel the indomitable need to use your own classes, you can do so
+by overwriting the setting in `config\contentoverview.php` with the name of
+a class that extends the plugin's class.
+
+```php
+public string $sectionClass = \modules\cp\models\MyClassThatDoesItBetter::class;
+```
+
+
 ### Customization Example
 
 Managing screenings for a film festival:
@@ -762,6 +820,8 @@ Managing screenings for a film festival:
 * Add actions: delete and a custom 'Approve' action.
 
 ## Events
+
+### Modify Query
 
 Custom modules can extend the configuration by adding keys to the `sections` config array and modify the query via an
 event:
@@ -787,7 +847,99 @@ Event::on(
 );
 ```
 
-See also 'Filters'.
+### Support Custom Filters
+
+The `Section::EVENT_FILTER_CONTENTOVERVIEW_QUERY` and `Section::EVENT_DEFINE_CUSTOM_FILTER_OPTIONS` events
+are described in the 'Filters' chapter.
+
+### Modify Collections
+
+Every collection of models in the chain Pages -> Tabs -> Columns -> Sections -> Actions can be modified.
+
+This is especially useful if you want to apply rules based on a users role and entry content.
+
+| Event                                      | Event Class         | Property         |
+|--------------------------------------------|---------------------|------------------|
+| ContentOverviewService::EVENT_DEFINE_PAGES | DefinePagesEvent    | $pages           |
+| Page::EVENT_DEFINE_TABS                    | DefineTabsEvent     | $tab             |
+| Tab::EVENT_DEFINE_COLUMNS                  | DefineColumnsEvent  | $columns         |
+| Column::EVENT_DEFINE_SECTIONS              | DefineSectionsEvent | $sections        |
+| Section::EVENT_DEFINE_ACTIONS              | DefineActionsEvent  | $entry, $actions |
+
+Add a `handle` to a model so that it can easily be identified in your event handler.
+
+All event properties are `Collections`, so they can be modified 
+using [all collection methods](https://laravel.com/docs/9.x/collections#available-methods).
+
+For convenience, all event classes have a `user` property containing the current user, and, where appropriate, a reference to their parent object.
+
+For a better overview it is recommended to define all possible objects in your config files and filter out what is not needed,
+instead of adding stuff in your event handlers.
+
+Examples:
+
+```php
+Event::on(
+    ContentOverviewService::class,
+    ContentOverviewService::EVENT_DEFINE_PAGES,
+    function(DefinePagesEvent $event) {
+        if (!$event->user->can('yourpermission')) {
+            $event->pages = $event->pages->filter(function($page) {
+                return $page->handle !== 'workpage';
+            });
+        }
+    }
+);
+```
+
+```php
+Event::on(
+    Section::class,
+    Section::EVENT_DEFINE_ACTIONS,
+    function(DefineActionsEvent $event) {
+        $event->actions = $event->actions->filter(function($action) use ($event) {
+            if ($action instanceof Action && $action->handle === 'publishAction') {
+                return $event->entry->status !== 'live';
+            }
+            return true;
+        });
+    }
+);
+```
+
+### Modify Settings for Current User
+
+Sometimes it makes sense to modify plugin settings for the current user, based on their role or preferences.
+
+Currently implemented for the `replaceDashboard` and `showPages` settings.
+
+The event contains `$key` and `$value` properties.
+
+```php
+Event::on(
+    Settings::class,
+    Settings::EVENT_DEFINE_USER_SETTING,
+    function(DefineUserSettingEvent $event) {
+        $currentUser = Craft::$app->user;
+        
+        // Give users a custom field so that they can decide whether to see links in the main nav or in sidebar
+        // depending on their screen size
+        if ($event->key === 'showPages') {
+            $showPages = $currentUser->identity->showContentoverviewPages->value ?? 'default';
+            if ($showPages !== 'default') {
+                $event->value = $showPages;
+            }
+        }
+
+        // Always show dashboard for admins
+        if ($event->key === 'replaceDashboard') {
+            if ($currentUser->getIsAdmin()) {
+                $event->value = false;
+            }
+        }
+    }
+);
+```
 
 ## Link Widget
 

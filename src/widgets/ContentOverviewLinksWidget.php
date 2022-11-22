@@ -21,13 +21,13 @@ class ContentOverviewLinksWidget extends Widget
 
     public function getBodyHtml(): ?string
     {
-        /** @var Settings $settings */
-        $settings = Plugin::getInstance()->getSettings();
-        $pages = $settings->getPages();
+        /** @var Settings $service */
+        $service = Plugin::getInstance()->contentoverview;
+        $pages = $service->getPages();
 
         return Craft::$app->view->renderTemplate('contentoverview/widgets/linkswidget.twig', [
-            'pages' => $pages->map(function($page, $pageKey) {
-                return Plugin::getInstance()->contentoverview->createPage(
+            'pages' => $pages->map(function($page, $pageKey) use ($service) {
+                return $service->createPage(
                     $pageKey,
                     ['label' => $page['label'], 'url' => $page['url']]
                 );

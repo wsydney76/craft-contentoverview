@@ -8,11 +8,12 @@ use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefinePagesEvent;
 use wsydney76\contentoverview\events\DefineUserSettingEvent;
 use wsydney76\contentoverview\Plugin;
+use wsydney76\contentoverview\services\ContentOverviewService;
 
 
 class Settings extends Model
 {
-    public const EVENT_DEFINE_PAGES = 'eventDefinePages';
+
     public const EVENT_DEFINE_USER_SETTING = 'eventDefineUserSetting';
 
     // see read me for doc
@@ -39,6 +40,7 @@ class Settings extends Model
 
     protected array $_tabs = [];
 
+    public string $serviceClass = ContentOverviewService::class;
     public string $pageClass = Page::class;
     public string $tabClass = Tab::class;
     public string $columnClass = Column::class;
@@ -52,54 +54,16 @@ class Settings extends Model
         ];
     }
 
+
+
+
     /**
-     * Returns a collection of page configs available for the current user
+     * Get settings with modifications by user events
      *
-     * @return Collection
+     * @param $key
+     * @return mixed
      */
-    public function getPages($isSidebar = false): Collection
-    {
-        $pages = $this->pages;
-        if (!$pages) {
-            // create a single page for use in list widgets
-            $pages = [
-                $this->defaultPage => [
-                    'label' => $this->pluginTitle,
-                    'url' => 'contentoverview'
-                ]
-            ];
-        }
-
-        $currentUser = Craft::$app->user->identity;
-
-        $pages = collect($pages)
-            ->filter(function($page) use ($currentUser) {
-                return $currentUser->admin || !isset($page['group']) || $currentUser->isInGroup($page['group']);
-            });
-
-        if (!$isSidebar) {
-            $pages = $pages->filter(function($page) {
-                return !isset($page['heading']);
-            });
-        }
-
-        $service = Plugin::getInstance()->contentoverview;
-        $pages = $pages->map(fn($page, $key) => $service->createPage($key, $page));
-
-        if ($this->hasEventHandlers(self::EVENT_DEFINE_PAGES)) {
-            $event = new DefinePagesEvent([
-                'pages' => $pages
-            ]);
-
-            $this->trigger(self::EVENT_DEFINE_PAGES, $event);
-
-            $pages = $event->pages;
-        }
-
-        return $pages;
-    }
-
-    public function getUserSetting($key)
+    public function getUserSetting($key): mixed
     {
         $setting = $this->$key;
 

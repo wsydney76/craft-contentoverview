@@ -34,14 +34,18 @@ class Plugin extends \craft\base\Plugin
 
     public function init()
     {
+
         parent::init();
+
+        /** @var Settings $settings */
+        $settings = $this->getSettings();
 
         if (!Craft::$app->request->isCpRequest) {
             return;
         }
 
         $this->setComponents([
-            'contentoverview' => ContentOverviewService::class
+            'contentoverview' => $settings->serviceClass
         ]);
 
 
@@ -54,8 +58,7 @@ class Plugin extends \craft\base\Plugin
         );
 
 
-        /** @var Settings $settings */
-        $settings = $this->getSettings();
+
         $showPages = $settings->getUserSetting('showPages');
 
         if ($showPages === 'nav' || $showPages === 'sidebar') {
@@ -70,15 +73,14 @@ class Plugin extends \craft\base\Plugin
                         'fontIcon' => 'field'
                     ];
 
-                    if ($settings->getPages()->count() > 1 && $showPages === 'nav') {
+                    $pages = $this->contentoverview->getPages();
+                    if ($pages->count() > 1 && $showPages === 'nav') {
                         // Translate labels
-                        $navItem['subnav'] = $settings->getPages()->transform(fn($page) => [
+                        $navItem['subnav'] = $pages->transform(fn($page) => [
                             'label' => Craft::t('site', $page['label']),
                             'url' => $page['url'],
                         ]);
                     }
-
-                    // \Craft::dd($navItem);
 
                     array_splice($event->navItems, 1, 0, [
                         $navItem

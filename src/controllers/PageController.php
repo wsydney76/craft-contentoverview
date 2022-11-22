@@ -20,7 +20,7 @@ class PageController extends Controller
 
         $pageKey = $pageKey ?: $settings->defaultPage;
 
-        $page = $settings->getPages()->get($pageKey);
+        $page = Plugin::getInstance()->contentoverview->getPages()->get($pageKey);
 
         if (!$page) {
             throw new InvalidArgumentException("$pageKey is not a valid pageKey.");

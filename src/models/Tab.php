@@ -2,6 +2,7 @@
 
 namespace wsydney76\contentoverview\models;
 
+use Craft;
 use craft\helpers\StringHelper;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineColumnsEvent;
@@ -53,6 +54,7 @@ class Tab extends BaseModel
 
         if ($this->hasEventHandlers(self::EVENT_DEFINE_COLUMNS)) {
             $event = new DefineColumnsEvent([
+                'user' => Craft::$app->user->identity,
                 'tab' => $this,
                 'columns' => $columns
             ]);

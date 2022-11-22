@@ -4,7 +4,8 @@
 
 * Multipage setup: Links can now appear in the main navigation (default) or in the sidebar.
 * Added replaceDashboard setting.
-* The `getPages` method now returns a collection of `Page` models.
+* The `getPages` method now returns a collection of `Page` models and is moved to `ContenoverviewService`.
+* Added `query` section setting.
 
 ### Enhanced customization
 
@@ -12,7 +13,7 @@ New possibilities to make adjustments to a project have been introduced.
 
 This is to prevent minor, very specific requirements from leading to a change request for the plugin.
 
-* It is now possible to overwrite the Page/Tab/Column/Section classes.
+* It is now possible to overwrite the Page/Tab/Column/Section/Action classes.
 * Actions are now created as an Action model, that has an `isActiveForEntry` method taken into accout by the `getActions` method.
 * Added `DefinePagesEvent`, `DefineTabsEvent`, `DefineColumnsEvent`, `DefineSectionsEvent`, `DefineActionsEvent`.
 * Added `DefineUserSetting` event and `Settings::getUserSetting()` method, be able to overwrite any setting on a user basis.

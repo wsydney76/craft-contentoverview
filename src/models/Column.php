@@ -2,6 +2,7 @@
 
 namespace wsydney76\contentoverview\models;
 
+use Craft;
 use craft\base\Model;
 use wsydney76\contentoverview\events\DefineSectionsEvent;
 use yii\base\InvalidConfigException;
@@ -46,6 +47,7 @@ class Column extends BaseModel
 
         if ($this->hasEventHandlers(self::EVENT_DEFINE_SECTIONS)) {
             $event = new DefineSectionsEvent([
+                'user' => Craft::$app->user->identity,
                 'column' => $this,
                 'sections' => $sections
             ]);

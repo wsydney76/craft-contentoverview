@@ -5,6 +5,7 @@ namespace wsydney76\contentoverview\models;
 use Craft;
 use craft\base\Field;
 use craft\db\Paginator;
+use craft\elements\db\ElementQueryInterface;
 use craft\elements\Entry;
 use craft\fields\BaseOptionsField;
 use craft\fields\Entries;
@@ -49,6 +50,7 @@ class Section extends BaseSection
     public array|string $orderBy = '';
     public bool $ownDraftsOnly = false;
     public array|string $popupInfo = '';
+    public ?ElementQueryInterface $query = null;
     public bool $search = false;
     public array $searchAttributes = [];
     public array|string $section = '';
@@ -118,6 +120,13 @@ class Section extends BaseSection
         return $this;
     }
 
+
+    /**
+     * Set entry type handle
+     *
+     * @param array|string $entryType
+     * @return $this
+     */
     public function entryType(array|string $entryType): self
     {
         $this->entryType = $entryType;
@@ -363,6 +372,25 @@ class Section extends BaseSection
 
 
     /**
+     * Defines base query for this section.
+     * The query will still be modified with other settings.
+     * A heading has be defined.
+     * See Multi Section setup
+     *
+     * @param ElementQueryInterface $query
+     * @return $this
+     */
+    public function query(ElementQueryInterface $query): self
+    {
+        $this->query = $query;
+
+        // No sections defined where this buttons could link to
+        $this->showNewButton = false;
+        $this->showIndexButton = false;
+        return $this;
+    }
+
+    /**
      * Whether the section is searchable
      *
      * @param bool $search
@@ -468,11 +496,16 @@ class Section extends BaseSection
     public function getPermittedSections(string $permission): array
     {
 
+        if ($this->query) {
+            // No sections explicitly defined
+            return ['*'];
+        }
+
         $currentUser = Craft::$app->user->identity;
         $sections = [];
 
         foreach ($this->_normalizeToArray($this->section) as $section) {
-            if (Craft::$app->user->identity
+            if ($currentUser
                 ->can($permission . ':' . Craft::$app->sections->getSectionByHandle($section)->uid)) {
                 $sections[] = $section;
             }
@@ -602,6 +635,7 @@ class Section extends BaseSection
 
         if ($this->hasEventHandlers(self::EVENT_DEFINE_ACTIONS)) {
             $event = new DefineActionsEvent([
+                'user' => Craft::$app->user->identity,
                 'entry' => $entry,
                 'sectionConfig' => $this,
                 'actions' => $actions
@@ -628,7 +662,7 @@ class Section extends BaseSection
 
         $currentSite = Craft::$app->request->getParam('site', Craft::$app->sites->primarySite->handle);
 
-        $query = Entry::find()
+        $query = $this->query ?? Entry::find()
             ->section($this->section)
             ->type($this->entryType)
             ->status(null);
