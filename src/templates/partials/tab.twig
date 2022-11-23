@@ -5,21 +5,21 @@
 {% for column in tab.getColumns() %}
 
     {% set columnIndex = loop.index0 %}
+    <div class="container-column co-column-{{ column.width }}">
+        <div class="co-column">
 
-    <div class="co-column-{{ column.width }}">
+            {% for sectionConfig in column.getSections() %}
 
-        {% for sectionConfig in column.getSections() %}
+                {# sectionPath allows ajax requests to identify a section #}
+                {% set sectionPath = "#{page.pageKey}-#{tabIndex}-#{columnIndex}-#{loop.index0}" %}
 
-            {# sectionPath allows ajax requests to identify a section #}
-            {% set sectionPath = "#{page.pageKey}-#{tabIndex}-#{columnIndex}-#{loop.index0}" %}
+                {% include [
+                    "_contentoverview/#{sectionConfig.sectionTemplate}",
+                    "contentoverview/#{sectionConfig.sectionTemplate}"
+                ] %}
 
-            {% include [
-                "_contentoverview/#{sectionConfig.sectionTemplate}",
-                "contentoverview/#{sectionConfig.sectionTemplate}"
-            ] %}
-
-
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 
 {% endfor %}

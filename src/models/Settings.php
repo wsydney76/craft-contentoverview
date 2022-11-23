@@ -36,6 +36,7 @@ class Settings extends Model
         'cards' => ['width' => 400, 'height' => 200, 'format' => 'webp'],
         'line' => null // no image in line layout
     ];
+    public string $useCSS = 'all';
 
 
     protected array $_tabs = [];

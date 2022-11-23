@@ -1,11 +1,11 @@
-
-
 {% for tab in pageTabs %}
     {% set tabIndex = loop.index0 %}
-    <div id="{{ "#{tab.id}" }}" class="co {{ loop.index > 1 ? 'hidden' }}">
-        {% include [
-            '_contentoverview/partials/tab.twig',
-            'contentoverview/partials/tab.twig'
-        ] %}
+    <div class="container-page">
+        <div id="{{ "#{tab.id}" }}" class="co {{ loop.index > 1 ? 'hidden' }}">
+            {% include [
+                '_contentoverview/partials/tab.twig',
+                'contentoverview/partials/tab.twig'
+            ] %}
+        </div>
     </div>
 {% endfor %}

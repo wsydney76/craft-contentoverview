@@ -3,6 +3,8 @@
 namespace wsydney76\contentoverview\assets;
 
 use craft\web\AssetBundle;
+use craft\web\twig\nodes\SwitchNode;
+use wsydney76\contentoverview\Plugin;
 
 class ContentOverviewAssetBundle extends AssetBundle
 {
@@ -10,13 +12,17 @@ class ContentOverviewAssetBundle extends AssetBundle
     {
         $this->sourcePath = '@wsydney76/contentoverview/assets/dist';
 
-        $this->css = [
-            'cpstyles.css'
-        ];
+        $useCSS = Plugin::getInstance()->getSettings()->getUserSetting('useCSS');
 
-        $this->js = [
-            'cpscripts.js'
-        ];
+        $this->css = match($useCSS) {
+            'modern' => ['cpstyles.css', 'cpstyles-modern.css'],
+            default  => ['cpstyles.css', 'cpstyles-legacy.css', 'cpstyles-modern.css'],
+        };
+
+        $this->js = match($useCSS) {
+            'modern' => ['cpscripts.js', 'container-query-polyfill.js'],
+            default => ['cpscripts.js']
+        };
 
         parent::init();
     }

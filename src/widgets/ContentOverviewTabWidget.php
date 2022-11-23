@@ -61,7 +61,7 @@ class ContentOverviewTabWidget extends Widget
             ]) .
 
             Cp::selectFieldHtml([
-                'label' => Craft::t('contentoverview', 'Optimize grid for this number of columns'),
+                'label' => Craft::t('contentoverview', 'Optimize grid for this number of columns (Legacy Browsers only)'),
                 'id' => 'cols',
                 'name' => 'cols',
                 'value' => $this->cols,

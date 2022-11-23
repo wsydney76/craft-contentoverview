@@ -17,7 +17,7 @@ return [
     'No permission to view entries' => 'Keine Berechtigung zum Anzeigen von Einträgen',
     'Nothing found' => 'Nichts gefunden',
     'of' => 'von',
-    'Optimize grid for this number of columns' => 'Optimieren Sie das Gitter für diese Anzahl von Spalten',
+    'Optimize grid for this number of columns (Legacy Browsers only)' => 'Gitter für diese Anzahl von Spalten optimieren (nur Legacy-Browser)',
     'Page' => 'Seite',
     'Previous page' => 'Vorherige Seite',
     'Reset' => 'Zurücksetzen',
