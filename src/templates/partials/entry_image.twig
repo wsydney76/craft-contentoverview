@@ -11,7 +11,7 @@
         {% set image = null %}
         {% set imageField = sectionConfig.getImageField(entry) %}
         {% if imageField %}
-            {% set image = entry.getFieldValue(imageField).one %}
+            {% set image = entry.getFieldValue(imageField).one ?? settings.fallbackImage %}
         {% endif %}
         {% if image %}
             {{ image.img(settings.transforms[sectionConfig.layout ?: settings.defaultLayout]) }}

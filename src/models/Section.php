@@ -52,6 +52,7 @@ class Section extends BaseSection
     public bool $showIndexButton = true;
     public ?bool $sortByScore = false;
     public ?string $status = null;
+    public string $titleObjectTemplate = '{title}';
 
 
     // make it easer to detect custom sections, instead of using class names
@@ -455,6 +456,18 @@ class Section extends BaseSection
     public function status(string $status): self
     {
         $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * Object template that will be rendered for the layout title
+     *
+     * @param string $titleObjectTemplate
+     * @return $this
+     */
+    public function titleObjectTemplate(string $titleObjectTemplate): self
+    {
+        $this->titleObjectTemplate = $titleObjectTemplate;
         return $this;
     }
 

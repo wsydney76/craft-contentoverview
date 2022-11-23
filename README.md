@@ -56,6 +56,7 @@ Create a file `contentoverview.php` in your config folder.
 - defaultLayout (?string, list (default)|cardlets|cards|line)
 - customTemplatePath (?string, folder for custom templates, default = contentoverview)
 - defaultIcon (?string, file path to a svg icon, default = @appicons/newspaper.svg)
+- fallbackImage (?Asset, an image that will be used in a layout if no image is set on an entry)
 - transforms (?array, image transforms for layouts)
 - pages (!array, defines subpages)
 
@@ -182,6 +183,7 @@ Structure of this file:
             - query (ElementQuery, define your own query)
             - heading (?string, heading of the section, defaults to section name)
             - limit (?int, number of entries to show)
+            - titleObjectTemplate (?string, an object template that will be rendered for the title in a layout. Defaults to, well, `{title})
             - info (?string|array, object template to render in addition to the title)
             - popupInfo (?string, object template to render in an information popup)
             - infoTemplate (?array|string, path to a twig template inside the projects templates folder. Will be called with
@@ -340,6 +342,14 @@ The image field is determined in the following sequence of keys:
 Entries can be shown in different layouts.
 
 List and line layouts can show indentations for different levels in a structure.
+
+The image is defined by the `imageField` section config.
+
+You can set a fallback image in yout `config/contentoverview.php` file:
+
+```php
+'fallbackImage' => GlobalSet::find()->handle('siteInfo')->one()->featuredImage->one(),
+```
 
 ### Cards
 

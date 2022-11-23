@@ -6,6 +6,11 @@
 * Added replaceDashboard setting.
 * The `getPages` method now returns a collection of `Page` models and is moved to `ContenoverviewService`.
 * Added `query` section setting.
+* CSS now uses container queries.
+* * A new (temporary) plugin setting `useCSS` can be set to `all` to load the old CSS for legacy browsers, or `modern` to load a polyfill.
+* Added a `fallbackImage` plugin setting (defaults to null) that will be used if no image is available for an entry.
+* Added `titleObjectTemplate` section config setting (defaults to `{title}`)
+
 
 ### Enhanced customization
 

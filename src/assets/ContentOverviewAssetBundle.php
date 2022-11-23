@@ -3,7 +3,6 @@
 namespace wsydney76\contentoverview\assets;
 
 use craft\web\AssetBundle;
-use craft\web\twig\nodes\SwitchNode;
 use wsydney76\contentoverview\Plugin;
 
 class ContentOverviewAssetBundle extends AssetBundle

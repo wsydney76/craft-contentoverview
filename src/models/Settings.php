@@ -2,12 +2,9 @@
 
 namespace wsydney76\contentoverview\models;
 
-use Craft;
 use craft\base\Model;
-use Illuminate\Support\Collection;
-use wsydney76\contentoverview\events\DefinePagesEvent;
+use craft\elements\Asset;
 use wsydney76\contentoverview\events\DefineUserSettingEvent;
-use wsydney76\contentoverview\Plugin;
 use wsydney76\contentoverview\services\ContentOverviewService;
 
 
@@ -28,6 +25,7 @@ class Settings extends Model
     public string $defaultLayout = 'list';
     public string $defaultPage = 'default';
     public string $defaultIcon = '@appicons/newspaper.svg';
+    public ?Asset $fallbackImage = null;
     public array $iconSize = ['width' => '20px', 'height' => '20px'];
     public string $customTemplatePath = '_contentoverview';
     public array $transforms = [
