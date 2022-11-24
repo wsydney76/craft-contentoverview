@@ -115,12 +115,13 @@ class ContentOverviewService extends Component
         return Craft::createObject($className ?? Plugin::getInstance()->getSettings()->actionClass);
     }
 
-    public function createFilter(string $type = 'field', $handle): Filter
+    public function createFilter(string $type = 'field', $handle, $orderBy = ''): Filter
     {
         return Craft::createObject([
             'class' => Plugin::getInstance()->getSettings()->filterClass,
             'type' => $type,
-            'handle' => $handle
+            'handle' => $handle,
+            'orderBy' => $orderBy
         ]);
     }
 
