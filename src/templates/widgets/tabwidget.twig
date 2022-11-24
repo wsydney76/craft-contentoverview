@@ -2,14 +2,18 @@
 {# @param settings array The complete config  #}
 
 {% if tab %}
-    <div class="co {{ cols }}">
-        {% include 'contentoverview/partials/tab.twig' with {
-            tab,
-            settings,
-            page,
-            tabIndex
-        } only %}
+    <div class="container-page">
+        <div class="co {{ cols }}">
+            {% include 'contentoverview/partials/tab.twig' with {
+                tab,
+                settings,
+                page,
+                tabIndex
+            } only %}
+        </div>
     </div>
 {% else %}
     <p>Invalid tab config</p>
 {% endif %}
+
+{% include 'contentoverview/js/container-query-polyfill.twig' %}
