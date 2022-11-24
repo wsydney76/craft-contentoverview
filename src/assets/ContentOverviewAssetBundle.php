@@ -14,8 +14,8 @@ class ContentOverviewAssetBundle extends AssetBundle
         $useCSS = Plugin::getInstance()->getSettings()->getUserSetting('useCSS');
 
         $this->css = match ($useCSS) {
-            'modern' => ['cpstyles.css', 'cpstyles-modern.css'],
-            default => ['cpstyles.css', 'cpstyles-legacy.css', 'cpstyles-modern.css'],
+            'modern' => ['cpstyles.css'],
+            default => ['cpstyles.css', 'cpstyles-legacy.css'],
         };
 
         $this->js = [

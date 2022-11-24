@@ -1,3 +1,4 @@
+{% css %}
 @supports (container-type: inline-size) {
 
     .co-cards .co-entry, .co-cardlets .co-entry, .co-list .co-entry, .co-line .co-entry {
@@ -68,55 +69,16 @@
         container-name: column;
     }
 
-    @container column (min-width: 400px) {
-        .co-cards {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
+{% for breakpoint, layoutColumns in settings.containerBreakpointColumns %}
+    @container column (min-width: {{ breakpoint }}px) {
+        {% for layout, columns in layoutColumns %}
+            .co-{{ layout }} {grid-template-columns: repeat({{ columns }}, minmax(0, 1fr));}
+        {% endfor %}
     }
-
-    @container column (min-width: 500px) {
-        .co-cardlets {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-    }
-
-    @container column (min-width: 800px) {
-        .co-cards {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-    }
-
-    @container column (min-width: 900px) {
-        .co-cardlets {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-    }
-
-    @container column (min-width: 1000px) {
-        .co-cards {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-        }
-    }
-
-    @container column (min-width: 1200px) {
-        .co-cards {
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-        }
-    }
-
-    @container column (min-width: 1400px) {
-        .co-cardlets {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-        }
-    }
-
-    @container column (min-width: 1600px) {
-        .co-cards {
-            grid-template-columns: repeat(6, minmax(0, 1fr));
-        }
-        .co-cardlets {
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-        }
-    }
+{% endfor %}
 
 }
+{% endcss %}
+
+
+   

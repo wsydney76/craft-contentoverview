@@ -35,6 +35,34 @@ class Settings extends Model
         'line' => null // no image in line layout
     ];
     public string $useCSS = 'all';
+    public array $containerBreakpointColumns = [
+        400 => [
+            'cards' => 2
+        ],
+        500 => [
+            'cardlets' => 2
+        ],
+        800 => [
+            'cards' => 3
+        ],
+        900 => [
+            'cardlets' => 3
+        ],
+        1000 => [
+            'cards' => 4
+        ],
+        1200 => [
+            'cards' => 5
+        ],
+        1400 => [
+            'cardlets' => 4
+        ],
+        1600 => [
+            'cards' => 6,
+            'cardlets' => 5
+        ]
+
+    ];
 
 
     protected array $_tabs = [];
@@ -53,8 +81,6 @@ class Settings extends Model
             ['pluginTitle', 'string', 'max' => 30]
         ];
     }
-
-
 
 
     /**
