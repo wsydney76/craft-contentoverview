@@ -441,8 +441,9 @@ Entries can be filtered by a custom field value.
 ->filters([
     $co->createFilter('field', 'topics'),
 
-    $co->createFilter('field', 'assignedTo', 'lastName, firstName')       
-        ->label('Responsible'),
+    $co->createFilter('field', 'assignedTo')       
+        ->label('Responsible')
+        ->orderBy('lastName, firstName'),
     
     $co->createFilter('field', 'workflowStatus'),
 ```

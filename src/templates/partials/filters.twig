@@ -14,15 +14,14 @@
         {% switch filter.fieldType %}
 
         {% case "custom" %}
-            
-            {% set options = filter.getOptions() %}
+
             {% set label = filter.label %}
 
         {% endswitch %}
 
         {{ forms.select({
             name: "#{sectionPath}-filter",
-            options: filter.options
+            options: filter.getOptions()
                 .prepend({label: 'Filter by'|t('contentoverview') ~ ': ' ~ filter.label|t('site'), value: ''}),
             inputAttributes: {
                 data: {

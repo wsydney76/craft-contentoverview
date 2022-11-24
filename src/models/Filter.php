@@ -34,9 +34,9 @@ class Filter extends BaseModel
     public Collection $options;
     public string $fieldType = '';
 
-    public function init(): void
+    protected function normalizeFilter(): void
     {
-        parent::init();
+        // parent::init();
         if ($this->type === 'field') {
 
             $segments = explode('.', $this->handle);
@@ -116,6 +116,8 @@ class Filter extends BaseModel
 
     public function getOptions()
     {
+        $this->normalizeFilter();
+
         if ($this->hasEventHandlers(self::EVENT_DEFINE_CUSTOM_FILTER_OPTIONS)) {
             $event = new DefineCustomFilterOptionsEvent([
                 'user' => Craft::$app->user->identity,
