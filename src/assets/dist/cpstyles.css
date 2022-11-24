@@ -117,7 +117,7 @@
   ==========================================*/
 
 .co-list .co-entries {
-    display: block;
+    display: grid;
 }
 
 .co-list .co-entry {

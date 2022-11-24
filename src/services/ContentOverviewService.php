@@ -136,7 +136,7 @@ class ContentOverviewService extends Component
         if (!$pages) {
             // create a single page for use in list widgets
             $pages = [
-                $this->defaultPage => [
+                $settings->defaultPage => [
                     'label' => $settings->pluginTitle,
                     'url' => 'contentoverview'
                 ]

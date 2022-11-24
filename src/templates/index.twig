@@ -16,7 +16,9 @@
 
 
 {% block contextMenu %}
-    {% include "contentoverview/partials/sitemenu.twig" %}
+    {% if craft.app.isMultiSite %}
+        {% include "contentoverview/partials/sitemenu.twig" %}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
