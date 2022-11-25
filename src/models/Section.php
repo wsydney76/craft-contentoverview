@@ -33,6 +33,7 @@ class Section extends BaseSection
     public bool $allSites = false;
     public array $custom = [];
     public array|string $entryType = '';
+    public array|string $fallbackImageField = [];
     public ?array $filters = null;
     public string $filtersPosition = 'inline';
     public array|string $icon = [];
@@ -145,6 +146,18 @@ class Section extends BaseSection
     }
 
     /**
+     * Image field to use if imageField is empty
+     *
+     * @param array|string $fallbackImageField
+     * @return $this
+     */
+    public function fallbackImageField(array|string $fallbackImageField): self
+    {
+        $this->fallbackImageField = $fallbackImageField;
+        return $this;
+    }
+
+    /**
      * Defines simple filters that can be applied to searches
      *
      * e.g. ['type' => 'relation', 'section' => 'topics' ]
@@ -253,6 +266,17 @@ class Section extends BaseSection
     public function getImageField(Entry $entry)
     {
         return $this->_getConfigForEntry('imageField', $entry);
+    }
+
+    /**
+     * Get fallback ImageField for entry
+     *
+     * @param Entry $entry
+     * @return mixed|string
+     */
+    public function getFallbackImageField(Entry $entry)
+    {
+        return $this->_getConfigForEntry('fallbackImageField', $entry);
     }
 
 
@@ -702,6 +726,30 @@ class Section extends BaseSection
                     ]
                 ]);
             }
+            
+        }
+
+        if ($this->fallbackImageField) {
+
+            if (is_string($this->fallbackImageField)) {
+                $fallbackImageFields = [$this->fallbackImageField];
+            } else {
+                $fallbackImageFields = [];
+                foreach ($this->fallbackImageField as $fieldHandle) {
+                    if (!isset($fallbackImageFields[$fieldHandle])) {
+                        $fallbackImageFields[] = $fieldHandle;
+                    }
+                }
+            }
+
+            foreach ($fallbackImageFields as $fallbackImageField) {
+                $query->andWith([
+                    $fallbackImageField, [
+                        'withTransforms' => [$this->getTransform()]
+                    ]
+                ]);
+            }
+
         }
 
         switch ($this->scope) {

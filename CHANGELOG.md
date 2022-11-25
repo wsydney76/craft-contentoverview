@@ -14,6 +14,7 @@
 * Added `titleObjectTemplate` section config setting (defaults to `{title}`)
 * Added `table` layout
 * Added `size` section config setting.
+* Added `fallbackImageField` section config setting.
 
 
 ### Enhanced customization

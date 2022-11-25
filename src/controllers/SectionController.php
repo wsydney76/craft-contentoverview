@@ -45,7 +45,8 @@ class SectionController extends Controller
                 'sectionPath' => $sectionPath,
                 'entries' => $results->getPageResults(),
                 'sectionPageNo' => $sectionPageNo,
-                'orderBy' => $orderBy
+                'orderBy' => $orderBy,
+                'transform' => $section->getTransform()
             ]),
             'paginateHtml' => $this->view->renderTemplate('contentoverview/partials/paginate.twig', [
                 'sectionPath' => $sectionPath,

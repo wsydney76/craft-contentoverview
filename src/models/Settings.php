@@ -43,7 +43,8 @@ class Settings extends Model
     public array $containerBreakpointColumns = [
         400 => [
             'medium' => 2,
-            'small' => 3
+            'small' => 3,
+            'tiny' => 4
         ],
         500 => [
             'large' => 2
@@ -51,7 +52,8 @@ class Settings extends Model
         800 => [
             'medium' => 3,
             'small' => 4,
-        ],
+            'tiny' => 6
+         ],
         920 => [
             'large' => 3
         ],
@@ -60,7 +62,8 @@ class Settings extends Model
             'small' => 5,
         ],
         1200 => [
-            'medium' => 5
+            'medium' => 5,
+            'tiny' => 8
         ],
         1400 => [
             'large' => 4,

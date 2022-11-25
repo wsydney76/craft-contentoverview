@@ -12,8 +12,20 @@
         {% set image = null %}
         {% set imageField = sectionConfig.getImageField(entry) %}
         {% if imageField %}
-            {% set image = entry.getFieldValue(imageField).one ?? settings.fallbackImage %}
+            {% set image = entry.getFieldValue(imageField).one  %}
         {% endif %}
+
+        {% if not image %}
+            {% set imageField = sectionConfig.getFallbackImageField(entry) %}
+            {% if imageField %}
+                {% set image = entry.getFieldValue(imageField).one  %}
+            {% endif %}
+        {% endif %}
+
+        {% if not image and settings.fallbackImage %}
+            {% set image = settings.fallbackImage %}
+        {% endif %}
+
         {% if image %}
             {{ image.img(transform) }}
         {% else %}
