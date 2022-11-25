@@ -15,7 +15,7 @@
 
             {% case "slideout" %}
 
-                {% if settings.enableSlideoutEditor and sectionConfig.layout != 'line' %}
+                {% if settings.enableSlideoutEditor and sectionConfig.getLayout() != 'line' %}
                     <button title="{{ "Edit in slideout"|t('contentoverview') }}"
                             class="co-action-icon"
                             aria-label="{{ "Edit in slideout"|t('contentoverview') }}"

@@ -6,6 +6,7 @@
 * Added replaceDashboard setting.
 * The `getPages` method now returns a collection of `Page` models and is moved to `ContenoverviewService`.
 * Added `query` section setting.
+* Added `imageRatio` section setting.
 * CSS now uses container queries.
 * * Added a `containerBreakpointColumns` plugin setting that defines container breakpoints and grid columns for layouts. 
 * * A new (temporary) plugin setting `useCSS` can be set to `all` to load the old CSS for legacy browsers, or `modern` to load a polyfill.

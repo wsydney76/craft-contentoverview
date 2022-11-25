@@ -23,7 +23,7 @@
         'contentoverview/partials/entry_image.twig'
     ] %}
 
-    {% set layout = sectionConfig.layout  ? sectionConfig.layout : settings.defaultLayout %}
+    {% set layout = sectionConfig.getLayout() %}
     {% set levelStyle = entry.level and layout in ['list','line']  ? "padding-left: #{(entry.level-1)*32}px" : '' %}
 
     <div class="co-content co-level-{{ entry.level }}" style="{{ levelStyle }};">

@@ -20,6 +20,7 @@ use function implode;
 use function in_array;
 use function is_array;
 use function is_string;
+use function round;
 
 class Section extends BaseSection
 {
@@ -36,9 +37,10 @@ class Section extends BaseSection
     public string $filtersPosition = 'inline';
     public array|string $icon = [];
     public array|string $imageField = [];
+    public ?float $imageRatio = null;
     public array|string $info = '';
     public array|string $infoTemplate = '';
-    public string $layout = '';
+    public ?string $layout = null;
     public ?int $limit = null;
     public array|string $orderBy = '';
     public bool $ownDraftsOnly = false;
@@ -212,6 +214,18 @@ class Section extends BaseSection
     public function imageField(array|string $imageField): self
     {
         $this->imageField = $imageField;
+        return $this;
+    }
+
+    /**
+     * Sets an aspect ratio for layout=cards
+     *
+     * @param float $imageRatio
+     * @return $this
+     */
+    public function imageRatio(float $imageRatio): self
+    {
+        $this->imageRatio = $imageRatio;
         return $this;
     }
 
@@ -493,6 +507,21 @@ class Section extends BaseSection
         return '';
     }
 
+    public function getLayout() : string
+    {
+        return $this->layout ?? Plugin::getInstance()->getSettings()->defaultLayout;
+    }
+
+    public function getTransform(): array
+    {
+        $transform = Plugin::getInstance()->getSettings()->transforms[$this->getLayout()];
+
+        if ($this->imageRatio) {
+            $transform['height'] = round(($transform['width'] / $this->imageRatio) , 0);
+        }
+
+        return $transform;
+    }
 
     /**
      * Is current user allowed to do this for at least one section?
@@ -648,7 +677,7 @@ class Section extends BaseSection
             foreach ($imageFields as $imageField) {
                 $query->andWith([
                     $imageField, [
-                        'withTransforms' => [$settings->transforms[$this->layout ?: $settings->defaultLayout]]
+                        'withTransforms' => [$this->getTransform()]
                     ]
                 ]);
             }

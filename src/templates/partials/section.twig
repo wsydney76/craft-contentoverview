@@ -4,8 +4,7 @@
 {# @var sectionConfig \wsydney76\contentoverview\models\Section #}
 {# @var results \craft\db\Paginator #}
 
-{% set layout = sectionConfig.layout  ? sectionConfig.layout : settings.defaultLayout %}
-{% set transform = settings.transforms[layout] %}
+{% set layout = sectionConfig.getLayout() %}
 
 {% embed 'contentoverview/embeds/section.twig' with {
     heading: sectionConfig.getHeading()|t('site'),

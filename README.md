@@ -191,6 +191,7 @@ Structure of this file:
             - infoTemplate (array|string, path to a twig template inside the projects templates folder. Will be called with
               an entries variable)
             - imageField (array|string, name of the image field to use)
+            - imageRatio (float, aspect ratio of the image. Only makes sense for card layout)
             - icon (array|string, path to an svg icon, that is display if no image is found)
             - layout (string, (list (default)|cardlets|cards|line)
             - scope (string, whether drafts should be shown, drafts|provisional|all, default: only published entries
