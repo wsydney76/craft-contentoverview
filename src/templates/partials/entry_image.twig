@@ -9,7 +9,10 @@
 {% if sectionConfig.getLayout() != 'line' %}
     <div class="co-image {{ settings.enableSlideoutEditor ? 'co-slideout' }}"
          onclick="{{ createEditorJs }}">
-        {% set image = null %}
+
+        {% set image = sectionConfig.getImage(entry) %}
+
+        {#{% set image = null %}
         {% set imageField = sectionConfig.getImageField(entry) %}
         {% if imageField %}
             {% set image = entry.getFieldValue(imageField).one  %}
@@ -24,7 +27,7 @@
 
         {% if not image and settings.fallbackImage %}
             {% set image = settings.fallbackImage %}
-        {% endif %}
+        {% endif %}#}
 
         {% if image %}
             {{ image.img(transform) }}

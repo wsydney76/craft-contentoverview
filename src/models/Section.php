@@ -4,12 +4,14 @@ namespace wsydney76\contentoverview\models;
 
 use Craft;
 use craft\db\Paginator;
+use craft\elements\Asset;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\Entry;
 use craft\helpers\ElementHelper;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineActionsEvent;
 use wsydney76\contentoverview\events\DefineFiltersEvent;
+use wsydney76\contentoverview\events\DefineImageEvent;
 use wsydney76\contentoverview\events\FilterContentOverviewQueryEvent;
 use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
 use wsydney76\contentoverview\Plugin;
@@ -28,6 +30,7 @@ class Section extends BaseSection
     public const EVENT_FILTER_CONTENTOVERVIEW_QUERY = 'filterContentoverviewQuery';
     public const EVENT_DEFINE_ACTIONS = 'defineActionsEvent';
     public const EVENT_DEFINE_FILTERS = 'defineFiltersEvent';
+    public const EVENT_DEFINE_IMAGE = 'defineImageEvent';
 
     public array $actions = [];
     public bool $allSites = false;
@@ -633,6 +636,39 @@ class Section extends BaseSection
         return collect($this->orderBy);
     }
 
+
+    public function getImage(Entry $entry): ?Asset
+    {
+        $image = null;
+
+        if ($this->hasEventHandlers(self::EVENT_DEFINE_IMAGE)) {
+            $event = new DefineImageEvent([
+                'section' => $this,
+                'entry' => $entry
+            ]);
+            $this->trigger(self::EVENT_DEFINE_IMAGE, $event);
+            $image = $event->image;
+        }
+
+        if (!$image && $this->imageField) {
+            $imageField = $this->getImageField($entry);
+            if ($imageField) {
+                $image = $entry->getFieldValue($imageField)->one();
+            }
+            if (!$image && $this->fallbackImageField) {
+                $imageField = $this->getFallbackImageField($entry);
+                if ($imageField) {
+                    $image = $entry->getFieldValue($imageField)->one();
+                }
+            }
+        }
+
+        if (!$image) {
+            $image = Plugin::getInstance()->getSettings()->fallbackImage;
+        }
+
+        return $image;
+    }
 
     public function getActions(Entry $entry): Collection
     {
