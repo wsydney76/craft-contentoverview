@@ -5,6 +5,8 @@
 {# @var results \craft\db\Paginator #}
 
 {% set layout = sectionConfig.getLayout() %}
+{% set transform = sectionConfig.getTransform() %}
+{% set size = sectionConfig.getSize() %}
 
 {% embed 'contentoverview/embeds/section.twig' with {
     heading: sectionConfig.getHeading()|t('site'),
@@ -34,7 +36,7 @@
             ] %}
 
             <div id="{{ sectionPath }}">
-                <div class="co-entries co-{{ layout }} co-{{ layout }}-{{ column.width }}">
+                <div class="co-entries co-{{ layout }} co-{{ size }} co-{{ layout }}-{{ column.width }}">
 
                     {% include [
                         "_contentoverview/partials/#{sectionConfig.entriesTemplate}",

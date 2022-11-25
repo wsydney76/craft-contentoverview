@@ -7,14 +7,15 @@
 
 
 {% if sectionConfig.getLayout() != 'line' %}
-    <div class="co-image {{ settings.enableSlideoutEditor ? 'co-slideout' }}" onclick="{{ createEditorJs }}">
+    <div class="co-image {{ settings.enableSlideoutEditor ? 'co-slideout' }}"
+         onclick="{{ createEditorJs }}">
         {% set image = null %}
         {% set imageField = sectionConfig.getImageField(entry) %}
         {% if imageField %}
             {% set image = entry.getFieldValue(imageField).one ?? settings.fallbackImage %}
         {% endif %}
         {% if image %}
-            {{ image.img(sectionConfig.getTransform()) }}
+            {{ image.img(transform) }}
         {% else %}
             {% set icon = sectionConfig.getIcon(entry) %}
             {% set icon = icon ? view.renderObjectTemplate(icon, entry) : settings.defaultIcon %}

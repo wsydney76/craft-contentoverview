@@ -36,31 +36,39 @@ class Settings extends Model
         'table' => ['width' => 35, 'height' => 35, 'format' => 'webp']
     ];
     public string $useCSS = 'all';
+    public array $layoutSizes = [
+        'cards' => 'medium',
+        'cardlets' => 'large'
+    ];
     public array $containerBreakpointColumns = [
         400 => [
-            'cards' => 2
+            'medium' => 2,
+            'small' => 3
         ],
         500 => [
-            'cardlets' => 2
+            'large' => 2
         ],
         800 => [
-            'cards' => 3
+            'medium' => 3,
+            'small' => 4,
         ],
-        900 => [
-            'cardlets' => 3
+        920 => [
+            'large' => 3
         ],
         1000 => [
-            'cards' => 4
+            'medium' => 4,
+            'small' => 5,
         ],
         1200 => [
-            'cards' => 5
+            'medium' => 5
         ],
         1400 => [
-            'cardlets' => 4
+            'large' => 4,
+            'small' => 6
         ],
         1600 => [
-            'cards' => 6,
-            'cardlets' => 5
+            'medium' => 6,
+            'large' => 5
         ]
 
     ];

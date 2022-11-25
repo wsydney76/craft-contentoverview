@@ -50,6 +50,7 @@ class Section extends BaseSection
     public array $searchAttributes = [];
     public array|string $section = '';
     public ?string $scope = null;
+    public ?string $size = null;
     public bool $showNewButton = true;
     public bool $showIndexButton = true;
     public ?bool $sortByScore = false;
@@ -62,7 +63,7 @@ class Section extends BaseSection
 
     public string $entriesTemplate = 'section_entries.twig';
 
-    protected $_layouts = ['list', 'cardlets', 'cards', 'line'];
+    protected $_layouts = ['list', 'cardlets', 'cards', 'line', 'table'];
 
 
     /**
@@ -89,6 +90,18 @@ class Section extends BaseSection
     public function allSites(bool $allSites): self
     {
         $this->allSites = $allSites;
+        return $this;
+    }
+
+    /**
+     * Sets horizontal size of layouts: small, medium, large
+     *
+     * @param string $size
+     * @return $this
+     */
+    public function size(string $size): self
+    {
+        $this->size = $size;
         return $this;
     }
 
@@ -513,6 +526,12 @@ class Section extends BaseSection
     {
         return $this->layout ?? Plugin::getInstance()->getSettings()->defaultLayout;
     }
+
+    public function getSize(): string
+    {
+        return $this->size ?? Plugin::getInstance()->getSettings()->layoutSizes[$this->getLayout()] ?? 'none';
+    }
+
 
     public function getTransform(): array
     {
