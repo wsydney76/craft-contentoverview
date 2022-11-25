@@ -13,6 +13,8 @@ use wsydney76\contentoverview\models\Filter;
 use wsydney76\contentoverview\models\Page;
 use wsydney76\contentoverview\models\Section;
 use wsydney76\contentoverview\models\Tab;
+use wsydney76\contentoverview\models\TableColumn;
+use wsydney76\contentoverview\models\TableSection;
 use wsydney76\contentoverview\models\WidgetSection;
 use wsydney76\contentoverview\Plugin;
 use function collect;
@@ -121,6 +123,23 @@ class ContentOverviewService extends Component
             'class' => Plugin::getInstance()->getSettings()->filterClass,
             'type' => $type,
             'handle' => $handle
+        ]);
+    }
+
+    public function createTableSection(string $heading, array $columns): TableSection
+    {
+        return Craft::createObject([
+            'class' => Plugin::getInstance()->getSettings()->tableSectionClass,
+            'heading' => $heading,
+            'columns' => $columns
+        ]);
+    }
+
+    public function createTableColumn(string $type='custom'): TableColumn
+    {
+        return Craft::createObject([
+            'class' => Plugin::getInstance()->getSettings()->tableColumnClass,
+            'type' => $type
         ]);
     }
 

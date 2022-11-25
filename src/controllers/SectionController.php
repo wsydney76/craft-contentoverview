@@ -39,7 +39,7 @@ class SectionController extends Controller
         $results = $section->getEntries($sectionPageNo, $q, $filters, $orderBy);
 
         return $this->asJson([
-            'entriesHtml' => $this->view->renderTemplate('contentoverview/partials/section_entries.twig', [
+            'entriesHtml' => $this->view->renderTemplate("contentoverview/partials/{$section->entriesTemplate}", [
                 'sectionConfig' => $section,
                 'settings' => Plugin::getInstance()->getSettings(),
                 'sectionPath' => $sectionPath,

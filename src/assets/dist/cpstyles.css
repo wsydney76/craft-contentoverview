@@ -112,6 +112,10 @@
     margin-right: 4px;
 }
 
+.co-table .co-align-right {
+    text-align: right;
+}
+
 /* ========================================
     List Layout
   ==========================================*/

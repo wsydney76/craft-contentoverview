@@ -32,7 +32,8 @@ class Settings extends Model
         'list' => ['width' => 50, 'height' => 50, 'format' => 'webp'],
         'cardlets' => ['width' => 150, 'height' => 150, 'format' => 'webp'],
         'cards' => ['width' => 400, 'height' => 200, 'format' => 'webp'],
-        'line' => null // no image in line layout
+        'line' => null, // no image in line layout
+        'table' => ['width' => 35, 'height' => 35, 'format' => 'webp']
     ];
     public string $useCSS = 'all';
     public array $containerBreakpointColumns = [
@@ -74,6 +75,8 @@ class Settings extends Model
     public string $sectionClass = Section::class;
     public string $actionClass = Action::class;
     public string $filterClass = Filter::class;
+    public string $tableSectionClass = TableSection::class;
+    public string $tableColumnClass = TableColumn::class;
 
     public function rules(): array
     {

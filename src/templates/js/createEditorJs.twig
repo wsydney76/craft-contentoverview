@@ -1,0 +1,3 @@
+{%- if settings.enableSlideoutEditor -%}
+    co_createElementEditor({{ entry.canonicalId }},{{ entry.siteId }},{{ (not entry.isProvisionalDraft and entry.draftId) ? entry.draftId : "null" }},'{{ sectionPath }}',{{ sectionPageNo }})
+{%- endif -%}

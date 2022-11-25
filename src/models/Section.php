@@ -60,6 +60,8 @@ class Section extends BaseSection
     // make it easer to detect custom sections, instead of using class names
     public bool $isCustomSection = false;
 
+    public string $entriesTemplate = 'section_entries.twig';
+
     protected $_layouts = ['list', 'cardlets', 'cards', 'line'];
 
 

@@ -4,17 +4,7 @@
 {# @var settings \wsydney76\contentoverview\models\Settings #}
 {# @var sectionConfig \wsydney76\contentoverview\models\Section #}
 
-{% set createEditorJs = '' %}
-{% if settings.enableSlideoutEditor %}
-    {% set createEditorJs %}
-        co_createElementEditor(
-        {{ entry.canonicalId }},
-        {{ entry.siteId }},
-        {{ (not entry.isProvisionalDraft and entry.draftId) ? entry.draftId : "null" }},
-        '{{ sectionPath }}',
-        {{ sectionPageNo }})
-    {% endset %}
-{% endif %}
+{% set createEditorJs = include('contentoverview/js/createEditorJs.twig', {entry}) %}
 
 <div class="co-entry {{ entry.isDraft ? 'draft' : 'published' }} {{ entry.isUnpublishedDraft ? 'provisional' }}">
 

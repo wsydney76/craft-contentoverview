@@ -23,6 +23,7 @@
 
     {% block content %}
 
+
         {% set permittedSections = sectionConfig.getPermittedSections('viewentries') %}
         {% if permittedSections %}
             {% set results = sectionConfig.entries %}
@@ -36,8 +37,8 @@
                 <div class="co-entries co-{{ layout }} co-{{ layout }}-{{ column.width }}">
 
                     {% include [
-                        '_contentoverview/partials/section_entries.twig',
-                        'contentoverview/partials/section_entries.twig'
+                        "_contentoverview/partials/#{sectionConfig.entriesTemplate}",
+                        "contentoverview/partials/#{sectionConfig.entriesTemplate}"
                     ] with {
                         entries: results.pageResults
                     } %}
