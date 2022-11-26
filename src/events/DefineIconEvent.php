@@ -7,8 +7,9 @@ use craft\elements\Entry;
 use wsydney76\contentoverview\models\Section;
 use yii\base\Event;
 
-class DefineImageEvent extends Event
+class DefineIconEvent extends Event
 {
     public Entry $entry;
-    public ?Asset $image = null;
+    public ?string $icon = null;
+    public ?string $iconBgColor = null;
 }

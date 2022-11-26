@@ -6,6 +6,7 @@ class TableColumn extends BaseModel
 {
     public string $type = 'custom';
     public string $label = '';
+    public string $value = '';
     public string $template = '';
     public string $align = 'left';
     
@@ -18,6 +19,12 @@ class TableColumn extends BaseModel
     public function label(string $label): self
     {
         $this->label = $label;
+        return $this;
+    }
+
+    public function value(string $value): self
+    {
+        $this->value = $value;
         return $this;
     }
 

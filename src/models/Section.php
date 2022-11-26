@@ -11,6 +11,7 @@ use craft\helpers\ElementHelper;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineActionsEvent;
 use wsydney76\contentoverview\events\DefineFiltersEvent;
+use wsydney76\contentoverview\events\DefineIconEvent;
 use wsydney76\contentoverview\events\DefineImageEvent;
 use wsydney76\contentoverview\events\FilterContentOverviewQueryEvent;
 use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
@@ -31,6 +32,7 @@ class Section extends BaseSection
     public const EVENT_DEFINE_ACTIONS = 'defineActionsEvent';
     public const EVENT_DEFINE_FILTERS = 'defineFiltersEvent';
     public const EVENT_DEFINE_IMAGE = 'defineImageEvent';
+    public const EVENT_DEFINE_ICON = 'defineIconEvent';
 
     public array $actions = [];
     public bool $allSites = false;
@@ -40,6 +42,7 @@ class Section extends BaseSection
     public ?array $filters = null;
     public string $filtersPosition = 'inline';
     public array|string $icon = [];
+    public string $iconBgColor = 'var(--gray-200)';
     public array|string $imageField = [];
     public ?float $imageRatio = null;
     public array|string $info = '';
@@ -201,14 +204,43 @@ class Section extends BaseSection
     }
 
     /**
+     * Color of icon background, hex color code or CSS variable
+     *
+     * @param string $iconBgColor
+     * @return $this
+     */
+    public function iconBgColor(string $iconBgColor): self
+    {
+        $this->iconBgColor = $iconBgColor;
+        return $this;
+    }
+
+    /**
      * Get icon for entry
      *
      * @param $entry
-     * @return array|string
+     * @return array [icon, iconBgColor]
      */
-    public function getIcon($entry): array|string
+    public function getIconData($entry): array
     {
-        return $this->_getConfigForEntry('icon', $entry);
+        $icon = $this->_getConfigForEntry('icon', $entry);
+        $iconBgColor = $this->iconBgColor;
+
+        if ($this->hasEventHandlers(self::EVENT_DEFINE_ICON)) {
+            $event = new DefineIconEvent([
+                'entry' => $entry,
+                'icon' => $icon,
+                'iconBgColor' => $this->iconBgColor
+            ]);
+            $this->trigger(self::EVENT_DEFINE_ICON, $event);
+            $icon = $event->icon;
+            $iconBgColor = $event->iconBgColor;
+        }
+
+        return [
+            'icon' => $icon,
+            'iconBgColor' => $iconBgColor
+        ];
     }
 
     /**
@@ -643,7 +675,6 @@ class Section extends BaseSection
 
         if ($this->hasEventHandlers(self::EVENT_DEFINE_IMAGE)) {
             $event = new DefineImageEvent([
-                'section' => $this,
                 'entry' => $entry
             ]);
             $this->trigger(self::EVENT_DEFINE_IMAGE, $event);
@@ -661,10 +692,9 @@ class Section extends BaseSection
                     $image = $entry->getFieldValue($imageField)->one();
                 }
             }
-        }
-
-        if (!$image) {
-            $image = Plugin::getInstance()->getSettings()->fallbackImage;
+            if (!$image) {
+                $image = Plugin::getInstance()->getSettings()->fallbackImage;
+            }
         }
 
         return $image;

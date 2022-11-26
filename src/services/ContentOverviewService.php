@@ -71,7 +71,7 @@ class ContentOverviewService extends Component
     public function createColumn(int $width = 12, array $sections = []): Column
     {
         return Craft::createObject([
-           'class' => Plugin::getInstance()->getSettings()->columnClass,
+            'class' => Plugin::getInstance()->getSettings()->columnClass,
             'width' => $width,
             'sections' => $sections
         ]);
@@ -84,9 +84,18 @@ class ContentOverviewService extends Component
      * @return Section
      * @throws \yii\base\InvalidConfigException
      */
-    public function createSection(string $className = null): Section
+    public function createSection(string $className = null, Section|array $config = null): Section
     {
-        return Craft::createObject($className ?? Plugin::getInstance()->getSettings()->sectionClass);
+        /** @var Section $section */
+        $section = Craft::createObject($className ?? Plugin::getInstance()->getSettings()->sectionClass);
+        if ($config) {
+            if ($config instanceof Section) {
+                $section->setAttributes($config->getAttributes(), false);
+            } else {
+                $section->setAttributes($config, false);
+            }
+        }
+        return $section;
     }
 
     /**
@@ -117,7 +126,7 @@ class ContentOverviewService extends Component
         return Craft::createObject($className ?? Plugin::getInstance()->getSettings()->actionClass);
     }
 
-    public function createFilter(string $type = 'field', $handle): Filter
+    public function createFilter(string $type, string $handle): Filter
     {
         return Craft::createObject([
             'class' => Plugin::getInstance()->getSettings()->filterClass,
@@ -135,7 +144,7 @@ class ContentOverviewService extends Component
         ]);
     }
 
-    public function createTableColumn(string $type='custom'): TableColumn
+    public function createTableColumn(string $type = 'custom'): TableColumn
     {
         return Craft::createObject([
             'class' => Plugin::getInstance()->getSettings()->tableColumnClass,

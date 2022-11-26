@@ -32,7 +32,11 @@
                     {% case "actions" %}
                         {% include 'contentoverview/partials/entry_actions.twig' %}
                     {% default %}
-                        {{ view.renderObjectTemplate(column.template, entry)|raw }}
+                        {% if column.value %}
+                            {{ view.renderObjectTemplate(column.value, entry)|raw|purify(settings.purifierConfig) }}
+                        {% else %}
+                            {{ view.renderTemplate(column.template, {entry}, 'site')|raw|purify(settings.purifierConfig) }}
+                        {% endif %}
                     {% endswitch %}
                 </td>
             {% endfor %}

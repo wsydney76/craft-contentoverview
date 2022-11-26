@@ -14,70 +14,42 @@ class Settings extends Model
     public const EVENT_DEFINE_USER_SETTING = 'eventDefineUserSetting';
 
     // see read me for doc
-    public string $pluginTitle = 'Content Overview';
-    public bool $replaceDashboard = false;
-    public array $pages = [];
-    public string $showPages = 'nav';
-    public bool $enableWidgets = true;
-    public string $widgetText = 'Get a quick overview of your content';
-    public string $linkTarget = '_blank';
-    public bool $enableSlideoutEditor = true;
+
+    public string $customTemplatePath = '_contentoverview';
     public string $defaultLayout = 'list';
-    public string $defaultPage = 'default';
     public string $defaultIcon = '@appicons/newspaper.svg';
+    public string $defaultPage = 'default';
+    public bool $enableSlideoutEditor = true;
+    public bool $enableWidgets = true;
     public ?Asset $fallbackImage = null;
     public array $iconSize = ['width' => '20px', 'height' => '20px'];
-    public string $customTemplatePath = '_contentoverview';
+    public array $layoutSizes = [
+        'cards' => 'card',
+        'cardlets' => 'large'
+    ];
+    // 'min,max' 1fr = fill up grid row
+    public array $layoutWidth = [
+        'tiny' => '10rem,1fr',
+        'small' => '16rem,1fr',
+        'medium' => '24rem',
+        'large' => '36rem,1fr',
+        'card' => '280px,450px' // don't let cards exceed the image width
+    ];
+    public string $linkTarget = '_blank';
+    public array $pages = [];
+    public string $pluginTitle = 'Content Overview';
+    public array|string|null $purifierConfig = null;
+    public bool $replaceDashboard = false;
+    public string $showPages = 'nav';
     public array $transforms = [
         'list' => ['width' => 50, 'height' => 50, 'format' => 'webp'],
         'cardlets' => ['width' => 150, 'height' => 150, 'format' => 'webp'],
-        'cards' => ['width' => 400, 'height' => 200, 'format' => 'webp'],
+        'cards' => ['width' => 450, 'height' => 225, 'format' => 'webp'],
         'line' => null, // no image in line layout
-        'table' => ['width' => 50, 'height' => 50, 'format' => 'webp']
+        'table' => ['width' => 60, 'height' => 30, 'format' => 'webp']
     ];
-    public string $useCSS = 'all';
-    public array $layoutSizes = [
-        'cards' => 'medium',
-        'cardlets' => 'large'
-    ];
-    public array $containerBreakpointColumns = [
-        400 => [
-            'medium' => 2,
-            'small' => 3,
-            'tiny' => 4
-        ],
-        500 => [
-            'large' => 2
-        ],
-        800 => [
-            'medium' => 3,
-            'small' => 4,
-            'tiny' => 6
-         ],
-        920 => [
-            'large' => 3
-        ],
-        1000 => [
-            'medium' => 4,
-            'small' => 5,
-        ],
-        1200 => [
-            'medium' => 5,
-            'tiny' => 8
-        ],
-        1400 => [
-            'large' => 4,
-            'small' => 6
-        ],
-        1600 => [
-            'medium' => 6,
-            'large' => 5
-        ]
+    public string $widgetText = 'Get a quick overview of your content';
 
-    ];
-
-
-    protected array $_tabs = [];
 
     public string $serviceClass = ContentOverviewService::class;
     public string $pageClass = Page::class;
@@ -88,14 +60,6 @@ class Settings extends Model
     public string $filterClass = Filter::class;
     public string $tableSectionClass = TableSection::class;
     public string $tableColumnClass = TableColumn::class;
-
-    public function rules(): array
-    {
-        return [
-            ['pluginTitle', 'string', 'max' => 30]
-        ];
-    }
-
 
     /**
      * Get settings with modifications by user events

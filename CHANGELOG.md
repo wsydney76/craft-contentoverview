@@ -15,9 +15,12 @@
 * Added `titleObjectTemplate` section config setting (defaults to `{title}`)
 * Added `table` layout
 * Added `size` section config setting.
-* Added `DefineImageEvent`
-
-
+* Added `iconBgColor` section config setting.
+* Added `DefineImageEvent`, `DefineIconEvent`
+* Added `purifierConfig` plugin setting.
+* Added `config` param to `ContentOverviewService::createSection`. This allows to create default settings and apply them to multiple sections.
+* Added `layoutSizes` and `layoutWidths` plugin config setting.
+* Improved CSS for arranging cards/cardlets inside their container.
 
 ### Enhanced customization
 

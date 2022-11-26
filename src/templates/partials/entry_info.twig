@@ -7,13 +7,13 @@
 
 {% if info %}
     <div>
-        {{ view.renderObjectTemplate(info, entry)|raw }}
+        {{ view.renderObjectTemplate(info, entry)|raw|purify(settings.purifierConfig) }}
     </div>
 {% endif %}
 
 {% set template = sectionConfig.getInfoTemplate(entry) %}
 {% if template %}
     <div>
-        {{ view.renderTemplate(template, {entry}, 'site')|raw }}
+        {{ view.renderTemplate(template, {entry}, 'site')|raw|purify(settings.purifierConfig) }}
     </div>
 {% endif %}

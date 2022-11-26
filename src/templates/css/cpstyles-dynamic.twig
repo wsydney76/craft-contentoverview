@@ -1,0 +1,9 @@
+{% css %}
+
+{% for size, width in settings.layoutWidth %}
+    .co-entries.co-{{ size }} {
+        grid-template-columns: repeat(auto-fill, minmax({{ width }}));
+    }
+{% endfor %}
+
+{% endcss %}

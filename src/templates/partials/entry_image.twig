@@ -5,9 +5,11 @@
 {# @var settings \wsydney76\contentoverview\models\Settings #}
 {# @var sectionConfig \wsydney76\contentoverview\models\Section #}
 
+{% set iconData = sectionConfig.getIconData(entry) %}
 
 {% if sectionConfig.getLayout() != 'line' %}
     <div class="co-image {{ settings.enableSlideoutEditor ? 'co-slideout' }}"
+         style="background-color: {{ iconData.iconBgColor }}"
          onclick="{{ createEditorJs }}">
 
         {% set image = sectionConfig.getImage(entry) %}
@@ -32,8 +34,7 @@
         {% if image %}
             {{ image.img(transform) }}
         {% else %}
-            {% set icon = sectionConfig.getIcon(entry) %}
-            {% set icon = icon ? view.renderObjectTemplate(icon, entry) : settings.defaultIcon %}
+            {% set icon = iconData.icon ? view.renderObjectTemplate(iconData.icon, entry) : settings.defaultIcon %}
             {{ svg(icon)|attr(settings.iconSize) }}
         {% endif %}
     </div>

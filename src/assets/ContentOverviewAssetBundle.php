@@ -11,12 +11,10 @@ class ContentOverviewAssetBundle extends AssetBundle
     {
         $this->sourcePath = '@wsydney76/contentoverview/assets/dist';
 
-        $useCSS = Plugin::getInstance()->getSettings()->getUserSetting('useCSS');
 
-        $this->css = match ($useCSS) {
-            'modern' => ['cpstyles.css'],
-            default => ['cpstyles.css', 'cpstyles-legacy.css'],
-        };
+        $this->css =  [
+            'cpstyles.css'
+        ];
 
         $this->js = [
             'cpscripts.js'

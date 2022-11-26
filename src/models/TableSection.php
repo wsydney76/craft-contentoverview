@@ -19,7 +19,7 @@ class TableSection extends Section
     public bool $showStatus = true;
     public bool $showTitle = true;
 
-    public string $entriesTemplate = 'section_table.twig';
+    public string $entriesTemplate = 'tablesection_entries.twig';
 
     public function getColumns(): Collection
     {
