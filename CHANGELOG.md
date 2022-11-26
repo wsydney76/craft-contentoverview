@@ -21,6 +21,7 @@
 * Added `config` param to `ContentOverviewService::createSection`. This allows to create default settings and apply them to multiple sections.
 * Added `layoutSizes` and `layoutWidths` plugin config setting.
 * Improved CSS for arranging cards/cardlets inside their container.
+* Added `loadSectionsAsync` plugin setting.
 
 ### Enhanced customization
 

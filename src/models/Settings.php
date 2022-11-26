@@ -35,6 +35,7 @@ class Settings extends Model
         'large' => '36rem,1fr',
         'card' => '280px,450px' // don't let cards exceed the image width
     ];
+    public bool $loadSectionsAsync = true;
     public string $linkTarget = '_blank';
     public array $pages = [];
     public string $pluginTitle = 'Content Overview';

@@ -5,8 +5,6 @@
  * @param sectionPageNo
  */
 function co_getSectionHtml(sectionPath, sectionPageNo = 1) {
-    // TODO: Add error handling
-
     const data = {
         sectionPath: sectionPath,
         sectionPageNo: sectionPageNo,
@@ -22,6 +20,10 @@ function co_getSectionHtml(sectionPath, sectionPageNo = 1) {
                 // Has pagination html?
                 containerElement.children[1].innerHTML = response.data.paginateHtml
             }
+        })
+        .catch((error) => {
+            console.log(error.response)
+            Craft.cp.displayError(error.response.data.error)
         })
 }
 
@@ -197,4 +199,22 @@ function co_getOrderByInput(sectionPath) {
 
 function co_getFilterElements(sectionPath) {
     return document.getElementsByName(sectionPath + '-filter')
+}
+
+
+function respondToVisibility(element, callback) {
+    var options = {
+        root: document.documentElement
+    }
+
+    var observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                callback(entry.intersectionRatio > 0);
+                observer.disconnect()
+            }
+        });
+    }, options);
+
+    observer.observe(element);
 }
