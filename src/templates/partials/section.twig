@@ -8,6 +8,8 @@
 {% set transform = sectionConfig.getTransform() %}
 {% set size = sectionConfig.getSize() %}
 
+
+
 {% set loadAsync = settings.loadSectionsAsync %}
 
 {% embed 'contentoverview/embeds/section.twig' with {
@@ -37,7 +39,7 @@
                 'contentoverview/partials/toolbar.twig'
             ] %}
 
-            <div id="{{ sectionPath }}">
+            <div id="{{ sectionPath }}" class="co-entries-wrapper">
                 <div class="co-entries co-{{ layout }} co-{{ size }} co-{{ layout }}-{{ column.width }}">
 
                     {% if not loadAsync %}
@@ -59,6 +61,14 @@
                         ] %}
                     {% endif %}
                 </div>
+
+                {% if loadAsync and settings.showLoadingIndicator %}
+                    <div id="{{ sectionPath }}-spinner" class="spinner-overlay">
+                        <div class="spinner">
+                        </div>
+                    </div>
+                {% endif %}
+
             </div>
 
             {% if sectionConfig.showIndexButton %}
@@ -84,6 +94,6 @@
     respondToVisibility(document.getElementById('{{ sectionPath }}'), visible => {
     console.log('Loading section {{ sectionPath }} ')
     co_getSectionHtml('{{ sectionPath }}')
-});
+    })
 {% endjs %}
 {% endif %}

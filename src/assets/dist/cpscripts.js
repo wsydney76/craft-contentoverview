@@ -12,6 +12,10 @@ function co_getSectionHtml(sectionPath, sectionPageNo = 1) {
         filters: co_getFilters(sectionPath),
         orderBy: co_getOrderBy(sectionPath)
     }
+    var spinnerElement = document.getElementById(sectionPath + '-spinner')
+
+    spinnerElement && spinnerElement.classList.add('ajax-request')
+
     Craft.sendActionRequest('POST', 'contentoverview/section/get-section-html', {data})
         .then((response) => {
             containerElement = document.getElementById(sectionPath)
@@ -25,6 +29,10 @@ function co_getSectionHtml(sectionPath, sectionPageNo = 1) {
             console.log(error.response)
             Craft.cp.displayError(error.response.data.error)
         })
+        .finally(() => {
+            spinnerElement && spinnerElement.classList.remove('ajax-request')
+        })
+
 }
 
 

@@ -31,16 +31,17 @@ class Settings extends Model
     public array $layoutWidth = [
         'tiny' => '10rem,1fr',
         'small' => '16rem,1fr',
-        'medium' => '24rem',
+        'medium' => '24rem,1fr',
         'large' => '36rem,1fr',
         'card' => '280px,450px' // don't let cards exceed the image width
     ];
-    public bool $loadSectionsAsync = true;
+    public bool $loadSectionsAsync = false;
     public string $linkTarget = '_blank';
     public array $pages = [];
     public string $pluginTitle = 'Content Overview';
     public array|string|null $purifierConfig = null;
     public bool $replaceDashboard = false;
+    public bool $showLoadingIndicator = false;
     public string $showPages = 'nav';
     public array $transforms = [
         'list' => ['width' => 50, 'height' => 50, 'format' => 'webp'],

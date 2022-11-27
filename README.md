@@ -58,9 +58,14 @@ Create a file `contentoverview.php` in your config folder.
 - defaultIcon (string, file path to a svg icon, default = @appicons/newspaper.svg)
 - fallbackImage (Asset, an image that will be used in a layout if no image is set on an entry)
 - transforms (array, image transforms for layouts)
+- layoutSizes (array, which size is used by default for a layout)
+- layoutWidth (array, the grid column width for a layout size. Technically the `minmax` value for a `grid-template-columns` css directive)
+- purifierConfig (string|array The html purifier config used to make output from object templates safe)
+- loadSectionsAsync (bool, Whether to load section html via ajax request. Loads all sections of a tab when the tab becomes visible.)
+- showLoadingIndicator (bool, Whether to show a loading indicator/overlay while an ajax request is pending.)
 - pages (array, defines subpages)
-- useCss (string, modern: enable containerqueries + polyfill, all: also load legacy css)
-- containerBreakpointColumns (array, defines container breakpoints and grid columns for layouts)
+
+Defaults are defined in `models\Settings.php`.
 
 ```php
 <?php
@@ -191,8 +196,11 @@ Structure of this file:
             - infoTemplate (array|string, path to a twig template inside the projects templates folder. Will be called with
               an entries variable)
             - imageField (array|string, name of the image field to use)
+            - fallbackImageField (array|string, name of an image field to use if there is no image set in `imageField`)
             - imageRatio (float, aspect ratio of the image. Only makes sense for card layout)
+            - size (string, the grid colum size of an entry (card, cardlet). tiny|small|medum|large|card)
             - icon (array|string, path to an svg icon, that is display if no image is found)
+            - iconBgColor (string, the background color for an icon)
             - layout (string, (list (default)|cardlets|cards|line)
             - scope (string, whether drafts should be shown, drafts|provisional|all, default: only published entries
               will be included)
@@ -207,6 +215,10 @@ Structure of this file:
             - sortByScore (bool, whether search results will be sorted by score. default=false)
             - filters (array, Array of fields whose values can be applied as filters. See Search doc below)
             - custom  (array, any custom keys, can be used to modify the entries query via event, see Events below)
+
+A `handle` setting can be applied to every object that helps to identify it in events.
+
+A `custom` array setting can be applied to every object that can contain any data that you want to use in custom templates/events.
 
 Example:
 
@@ -356,15 +368,32 @@ You can set a fallback image in yout `config/contentoverview.php` file:
 
 ### Cards
 
-A vertical layout that allows unlimited multi line content.
+A vertical layout that put emphasis on an image and allows unlimited multi line content.
 
 ![Layout Cards](/images/layout_cards.jpg)
+
+#### Size and image aspect ratio
+
+The visual impression of a card is highly depending on the type of image and the content/actions (e.g. typical length of title) in it.
+
+So you may want to change the grid column width and the aspect ratio of the image for a better experience.
+
+For example, for a person directory a smaller width and a portrait mode will be better:
+
+```php
+->size('tiny')
+->imageRatio(4/5)
+```
+
+![Screenshot](/images/tinysection.jpg)
 
 ### Cardlets
 
 A more compact layout, less space for info
 
 ![Layout Cardlets](/images/layout_cardlets.jpg)
+
+A size section config setting can be applied.
 
 ### List
 
@@ -379,6 +408,120 @@ Horizontal layout without image. The most compact layout.
 ![Layout Line](/images/layout_line.jpg)
 
 Do not specify a `imageField` for this layout.
+
+### Table
+
+A table with multiple columns.
+
+![Screenshot](/images/tablelayout.jpg)
+
+```php
+$co->createTableSection('News', [
+    $co->createTableColumn()
+        ->label('Tagline')
+        ->value('{tagline}'),
+    $co->createTableColumn()
+        ->label('PostDate')
+        ->value('{postDate|date("short")}'),
+    $co->createTableColumn()
+        ->label('Workflow')
+        ->template('_contentoverview/columns/workflow.twig')
+])
+    ->section('news')
+    // all section config settings are available here
+```
+
+Available settings:
+
+- TableSection
+    - showImage (bool, whether to show the image column)
+    - showStatus (bool, whether to show the status column)
+    - showTitle (bool, whether to show the title column)
+    - columns[] (array of TableColumns models)
+        - label (string, column heading)
+        - value (string, an object template) or:
+        - template (string, a custom twig template, an `entry` variable will be available)
+        - align (string, left (default)|right, alignment of the column content)
+
+A `TableSection::EVENT_DEFINE_TABLECOLUMNS` event is available if you want to taylor the columns.
+
+## Images and Icons
+
+### Image
+
+People are visual creatures, so images are important.
+
+Which image will be displayed for an entry is determined in the following order in the `Section::getImage($entry))` method:
+
+* An image is defined via the `Section::EVENT_DEFINE_IMAGE` event. See example below.
+* An image field is defined in the `imageField` section config setting, and at least one image is attached to that field.
+* An image field is defined in the `fallbackImageField` section config setting, and at least one image is attached to that field.
+* An image asset is defined in the `fallbackImage` plugin settings.
+
+Event example:
+
+```php
+use wsydney76\contentoverview\models\Section;
+use wsydney76\contentoverview\events\DefineImageEvent;
+...
+Event::on(
+    Section::class,
+    Section::EVENT_DEFINE_IMAGE,
+    function(DefineImageEvent $event) {
+        /** @var Entry $entry */
+        $entry = $event->entry;
+        if ($entry->section->handle === 'film') {
+            // TODO: improve performance, load/cache fallback images in advance
+            $event->image = $entry->featuredImage->one() ??
+                $entry->series->one()->featuredImage->one() ??
+                GlobalSet::find()->handle('siteInfo')->one()->featuredImage->one() ??
+                null;
+        }
+    }
+);
+```
+
+### Icon
+
+If there is no image, an icon is used.
+
+Which icon will be displayed with which background color for an entry is determined in the following order in the `Section::getIconData($entry))` method:
+
+* An icon/background color is defined via the `Section::EVENT_DEFINE_ICON` event. See example below.
+* An icon/background color is defined in the `icon`/`iconBgColor` section settings.
+* A `defaultIcon` is defined in your `config\contentoverview.php` file.
+* The `defaultIcon` that is defined in the main settings file `models\Settings.php`.
+
+The icon is defined as a path to a svg image. Can contain an alias as in `@appicons/wand.svg`.
+
+The background color is defined as anything than can be passed to the `background-image` css property.
+
+Event example:
+
+```php
+// Section config
+->icon('@appicons/newspaper.svg')
+->iconBgColor('var(--blue-400')
+```
+
+```php
+// Custom module
+use wsydney76\contentoverview\models\Section;
+use wsydney76\contentoverview\events\DefineIconEvent;
+...
+Event::on(
+    Section::class,
+    Section::EVENT_DEFINE_ICON,
+    function(DefineIconEvent $event) {
+        if ($event->entry->type->handle === 'privacy') {
+            $event->icon = '@appicons/bullhorn.svg';
+            $event->iconBgColor = 'var(--red-400)';
+        }
+    }
+);
+```
+
+![Screenshot](/images/icons.jpg)
 
 ## Searching
 
@@ -858,20 +1001,23 @@ are described in the 'Filters' chapter.
 
 ### Modify Collections
 
-Every collection of models in the chain Pages -> Tabs -> Columns -> Sections -> Actions/Filters can be modified.
+Every collection of models in the chain Pages -> Tabs -> Columns -> Sections -> Actions/Filters/TableColumns can be modified.
 
 This is especially useful if you want to apply rules based on a users role and entry content.
 
-| Event                                      | Event Class         | Property         |
-|--------------------------------------------|---------------------|------------------|
-| ContentOverviewService::EVENT_DEFINE_PAGES | DefinePagesEvent    | $pages           |
-| Page::EVENT_DEFINE_TABS                    | DefineTabsEvent     | $tab             |
-| Tab::EVENT_DEFINE_COLUMNS                  | DefineColumnsEvent  | $columns         |
-| Column::EVENT_DEFINE_SECTIONS              | DefineSectionsEvent | $sections        |
-| Section::EVENT_DEFINE_ACTIONS              | DefineActionsEvent  | $entry, $actions |
-| Section::EVENT_DEFINE_FILTERS              | DefineFiltersEvent  | $filters         |
+| Event                                      | Event Class             | Property              |
+|--------------------------------------------|-------------------------|-----------------------|
+| ContentOverviewService::EVENT_DEFINE_PAGES | DefinePagesEvent        | $pages                |
+| Page::EVENT_DEFINE_TABS                    | DefineTabsEvent         | $tab                  |
+| Tab::EVENT_DEFINE_COLUMNS                  | DefineColumnsEvent      | $columns              |
+| Column::EVENT_DEFINE_SECTIONS              | DefineSectionsEvent     | $sections             |
+| Section::EVENT_DEFINE_ACTIONS              | DefineActionsEvent      | $entry, $actions      |
+| Section::EVENT_DEFINE_FILTERS              | DefineFiltersEvent      | $filters              |
+| TableSection::EVENT_DEFINE_TABLECOLUMNS    | DefineTableColumnsEvent | $table, $tableColumns |
 
 Add a `handle` to a model so that it can easily be identified in your event handler.
+
+Additionally, you can add a `custom` setting to any model that contains arbitrary data.
 
 All event properties are `Collections`, so they can be modified 
 using [all collection methods](https://laravel.com/docs/9.x/collections#available-methods).
@@ -946,6 +1092,10 @@ Event::on(
 );
 ```
 
+### Define images/icons.
+
+See above for how to use `Section::EVENT_DEFINE_IMAGE`, `Section::EVENT_DEFINE_ICON` events.
+
 ## Link Widget
 
 There is a small dashboard widget, offering quick links to each tab of the overview page.
@@ -954,13 +1104,7 @@ There is a small dashboard widget, offering quick links to each tab of the overv
 
 ## Tab Widget
 
-A single tab can be shown in a dashboad widget.
-
-Select a tab to show and set the widget width to Full (full width), if you want to spread the widget over all dashboard
-columns,
-otherwise to Two (half width) in order to use it with two or three columns.
-
-One column is too narrow to be useful.
+A single tab can be shown in a dashboad widget. Available tabs are defined in `widgets.php` page.
 
 ![screenshot](/images/widgetsettings.jpg)
 
@@ -975,7 +1119,7 @@ No need to include translations in your config files.
 ## Known issues
 
 * 'info' popups do not work if the section html is loaded via ajax. Obviously event handlers have to be attached, but how??
-* CSS is created for screen sizes > 1600 < 2000 px. Things may look weird elsewhere...
+* Undocumented things from Craft 4.3 core are uses: css classes, css variables, scripts, icons... This may break anytime. 
 
 ## TODOS:
 

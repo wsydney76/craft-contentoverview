@@ -36,7 +36,6 @@ class Section extends BaseSection
 
     public array $actions = [];
     public bool $allSites = false;
-    public array $custom = [];
     public array|string $entryType = '';
     public array|string $fallbackImageField = [];
     public ?array $filters = null;
@@ -126,18 +125,6 @@ class Section extends BaseSection
         return $this;
     }
 
-    /**
-     * Array of custom attributes
-     *
-     * @param array $custom
-     * @return $this
-     */
-    public function custom(array $custom): self
-    {
-        $this->custom = $custom;
-        return $this;
-    }
-
 
     /**
      * Set entry type handle
@@ -224,13 +211,14 @@ class Section extends BaseSection
     public function getIconData($entry): array
     {
         $icon = $this->_getConfigForEntry('icon', $entry);
-        $iconBgColor = $this->iconBgColor;
+        $iconBgColor = $this->_getConfigForEntry('iconBgColor', $entry);
+
 
         if ($this->hasEventHandlers(self::EVENT_DEFINE_ICON)) {
             $event = new DefineIconEvent([
                 'entry' => $entry,
                 'icon' => $icon,
-                'iconBgColor' => $this->iconBgColor
+                'iconBgColor' => $iconBgColor
             ]);
             $this->trigger(self::EVENT_DEFINE_ICON, $event);
             $icon = $event->icon;

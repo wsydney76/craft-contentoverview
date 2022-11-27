@@ -8,8 +8,6 @@
 * Added `query` section setting.
 * Added `imageRatio` section setting.
 * Added `fallbackImageField` section config setting.
-* CSS now uses container queries.
-* * Added a `containerBreakpointColumns` plugin setting that defines container breakpoints and grid columns for layouts. 
 * * A new (temporary) plugin setting `useCSS` can be set to `all` to load the old CSS for legacy browsers, or `modern` to load a polyfill.
 * Added a `fallbackImage` plugin setting (defaults to null) that will be used if no image is available for an entry.
 * Added `titleObjectTemplate` section config setting (defaults to `{title}`)
@@ -21,7 +19,8 @@
 * Added `config` param to `ContentOverviewService::createSection`. This allows to create default settings and apply them to multiple sections.
 * Added `layoutSizes` and `layoutWidths` plugin config setting.
 * Improved CSS for arranging cards/cardlets inside their container.
-* Added `loadSectionsAsync` plugin setting.
+* Added `loadSectionsAsync`, `showLoadingIndicator` plugin settings.
+* The `custom` setting is now available for all models.
 
 ### Enhanced customization
 

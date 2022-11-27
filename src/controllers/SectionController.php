@@ -9,6 +9,7 @@ use wsydney76\contentoverview\Plugin;
 use yii\base\InvalidConfigException;
 use yii\web\ForbiddenHttpException;
 use function explode;
+use function sleep;
 
 class SectionController extends Controller
 {

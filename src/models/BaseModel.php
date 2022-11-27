@@ -7,6 +7,7 @@ use craft\base\Model;
 class BaseModel extends Model
 {
     public string $handle = '';
+    public array $custom = [];
 
     /**
      * Sets an optional handle for a model.
@@ -19,6 +20,18 @@ class BaseModel extends Model
     public function handle(string $handle): self
     {
         $this->handle = $handle;
+        return $this;
+    }
+
+    /**
+     * Array of custom attributes
+     *
+     * @param array $custom
+     * @return $this
+     */
+    public function custom(array $custom): self
+    {
+        $this->custom = $custom;
         return $this;
     }
 }
