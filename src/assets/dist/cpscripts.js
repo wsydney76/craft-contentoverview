@@ -232,9 +232,9 @@ function co_getFilterElements(sectionPath) {
 }
 
 
-function respondToVisibility(element, callback) {
+function respondToVisibility(element, callback, root = null) {
     var options = {
-        root: document.documentElement
+        root: root
     }
 
     var observer = new IntersectionObserver((entries, observer) => {

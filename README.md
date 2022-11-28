@@ -1129,7 +1129,7 @@ Response time is highly dependent on your individual config, so here are just a 
 * We found that people prefer a longer initial load time and having anything they need available from the start, rather than jumping around between different pages.
 * Better hosting always pays off.
 * By default, all content on a page is rendered server side (including all tabs). 
-* Set the `loadSectionsAsync` plugin setting to `true` if the section html shall be loaded by ajax calls. So stuff on a tab will only be loaded if this tab is open.
+* Set the `loadSectionsAsync` plugin setting to `true` if the section html shall be loaded by ajax calls. So section will only be loaded if the section is in the viewport.
 * Set the `showLoadingIndicator` plugin setting to `true` if you want a visual clue while an ajax request is running.
 * Because single request will likely be fast, this can be somewhat confusing.
 * Transformed images are generated on the fly if they don't already exist, so a lower `limit` can speed up things.
