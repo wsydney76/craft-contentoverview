@@ -4,10 +4,12 @@ This plugin shows configurable overviews of a site's content.
 
 ## Disclaimer
 
+First final evaluation version. (4.0)
+
 * This plugin was initially developed as a side/training project for internal use only.
 * Added a bunch of customization options when evaluating it in a real-life project.
 * It works for us, but may not work everywhere.
-* There may be (well, is) an unlimited amount of
+* There still may be (well, are) some
     * bugs
     * rough edges (the CSS is a mess...)
     * incompatibilities
@@ -53,8 +55,9 @@ Create a file `contentoverview.php` in your config folder.
 - widgetText (string, text for dashboard link widget)
 - linkTarget (string, set to '_blank' to open edit screens in a new tab (default), else blank '')
 - enableSlideoutEditor (bool, whether a slideout editor can be opened for an entry by a double click on the status indicator, or by clicking an icon. Experimental)
+- enableCreateInSlideoutEditor (bool, whether new entries will be created in a slideout editor. Defaults to false on multi-site installs, else true)
 - defaultLayout (string, list (default)|cardlets|cards|line)
-- customTemplatePath (string, folder for custom templates, default = contentoverview)
+- customTemplatePath (string, folder for custom templates, default = _contentoverview)
 - defaultIcon (string, file path to a svg icon, default = @appicons/newspaper.svg)
 - fallbackImage (Asset, an image that will be used in a layout if no image is set on an entry)
 - transforms (array, image transforms for layouts)
@@ -210,6 +213,7 @@ Structure of this file:
             - orderBy (string|array see [docs](https://craftcms.com/docs/4.x/entries.html#orderby)
             - showNewButton (bool whether button 'All entry' will be shown)
             - showIndexButton (bool whether button 'All entries' will be shown)
+            - showRefreshButton (bool, whether to show a refresh button for this section)
             - linkToPage (string, the key of a page the heading is linked to. May contain an anchor, e.g. `page1#tab1`)
             - search (bool, whether search will be enabled)
             - sortByScore (bool, whether search results will be sorted by score. default=false)
@@ -368,7 +372,7 @@ You can set a fallback image in yout `config/contentoverview.php` file:
 
 ### Cards
 
-A vertical layout that put emphasis on an image and allows unlimited multi line content.
+A vertical layout that puts emphasis on an image and allows unlimited multi line content.
 
 ![Layout Cards](/images/layout_cards.jpg)
 
@@ -1062,7 +1066,7 @@ Event::on(
 
 Sometimes it makes sense to modify plugin settings for the current user, based on their role or preferences.
 
-Currently implemented for the `replaceDashboard` and `showPages` settings.
+Currently implemented for the `replaceDashboard`, `showPages`, `enableCreateInSlideoutEditor` settings.
 
 The event contains `$key` and `$value` properties.
 
@@ -1116,6 +1120,31 @@ The plugin takes care of translating custom strings in your configuration using 
 
 No need to include translations in your config files.
 
+## Performance
+
+Response time is highly dependent on your individual config, so here are just a few notes:
+
+* Obviously, more things on a page will make it slower, leading to more queries/image transforms (Sorry for this trivial statement...). 
+* So it is all about finding a balance.
+* We found that people prefer a longer initial load time and having anything they need available from the start, rather than jumping around between different pages.
+* Better hosting always pays off.
+* By default, all content on a page is rendered server side (including all tabs). 
+* Set the `loadSectionsAsync` plugin setting to `true` if the section html shall be loaded by ajax calls. So stuff on a tab will only be loaded if this tab is open.
+* Set the `showLoadingIndicator` plugin setting to `true` if you want a visual clue while an ajax request is running.
+* Because single request will likely be fast, this can be somewhat confusing.
+* Transformed images are generated on the fly if they don't already exist, so a lower `limit` can speed up things.
+* Images and their transforms are automatically eager loaded if defined via `imageField` or `fallbackImageField`.
+* If you want to eager load other related elements, use the `Section::EVENT_MODIFY_CONTENTOVERVIEW_QUERY` event.
+* You can populate the `custom` setting in your config with any data in advance.
+* You can overwrite any class if you need some special handling.
+
+## Security
+
+The output from object templates or twig templates can potentially contain harmful content, so it is
+run through a [purify](https://craftcms.com/docs/4.x/dev/filters.html#purify) filter.
+
+Set the `purifierConfig` plugin config if you do not want to use the default purifier config.
+
 ## Known issues
 
 * 'info' popups do not work if the section html is loaded via ajax. Obviously event handlers have to be attached, but how??
@@ -1128,3 +1157,4 @@ No need to include translations in your config files.
 * Some translations are missing...
 * Some inline comments are missing...
 * Check accessibility...
+* Check this doc for completeness

@@ -8,6 +8,7 @@ class BaseModel extends Model
 {
     public string $handle = '';
     public array $custom = [];
+    public bool $showRefreshButton = false;
 
     /**
      * Sets an optional handle for a model.
@@ -32,6 +33,18 @@ class BaseModel extends Model
     public function custom(array $custom): self
     {
         $this->custom = $custom;
+        return $this;
+    }
+
+    /**
+     * Whether to show a refresh button
+     *
+     * @param bool $showRefreshButton
+     * @return $this
+     */
+    public function showRefreshButton(bool $showRefreshButton): self
+    {
+        $this->showRefreshButton = $showRefreshButton;
         return $this;
     }
 }

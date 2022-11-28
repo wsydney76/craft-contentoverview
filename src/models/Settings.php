@@ -2,6 +2,7 @@
 
 namespace wsydney76\contentoverview\models;
 
+use Craft;
 use craft\base\Model;
 use craft\elements\Asset;
 use wsydney76\contentoverview\events\DefineUserSettingEvent;
@@ -20,6 +21,7 @@ class Settings extends Model
     public string $defaultIcon = '@appicons/newspaper.svg';
     public string $defaultPage = 'default';
     public bool $enableSlideoutEditor = true;
+    public bool $enableCreateInSlideoutEditor = true;
     public bool $enableWidgets = true;
     public ?Asset $fallbackImage = null;
     public array $iconSize = ['width' => '20px', 'height' => '20px'];
@@ -62,6 +64,14 @@ class Settings extends Model
     public string $filterClass = Filter::class;
     public string $tableSectionClass = TableSection::class;
     public string $tableColumnClass = TableColumn::class;
+
+    public function init(): void
+    {
+        parent::init();
+        if (Craft::$app->isMultiSite) {
+            $this->enableCreateInSlideoutEditor = false;
+        }
+    }
 
     /**
      * Get settings with modifications by user events

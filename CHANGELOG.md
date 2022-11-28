@@ -21,6 +21,9 @@
 * Improved CSS for arranging cards/cardlets inside their container.
 * Added `loadSectionsAsync`, `showLoadingIndicator` plugin settings.
 * The `custom` setting is now available for all models.
+* Section html can now be refreshed.
+* Added a `showRefreshButton` section config setting.
+* Added the `enableCreateInSlideoutEditor` plugin config setting.
 
 ### Enhanced customization
 

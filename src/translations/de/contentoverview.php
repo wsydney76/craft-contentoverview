@@ -20,6 +20,7 @@ return [
     'Optimize grid for this number of columns (Legacy Browsers only)' => 'Gitter für diese Anzahl von Spalten optimieren (nur Legacy-Browser)',
     'Page' => 'Seite',
     'Previous page' => 'Vorherige Seite',
+    'Refresh' => 'Neu laden',
     'Reset' => 'Zurücksetzen',
     'Search in' => 'Suchen in',
     'Search' => 'Suchen',

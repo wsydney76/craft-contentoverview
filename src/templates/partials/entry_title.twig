@@ -3,5 +3,6 @@
 {# @var entry \craft\elements\Entry #}
 {# @var settings \wsydney76\contentoverview\models\Settings #}
 
-<a href="{{ entry.cpEditUrl }}" target="{{ settings.linkTarget }}">{{ view.renderObjectTemplate(sectionConfig.titleObjectTemplate, entry) }}</a>
+<a href="{{ entry.cpEditUrl }}"
+   target="{{ settings.linkTarget }}">{{ view.renderObjectTemplate(sectionConfig.titleObjectTemplate, entry) ?: 'Untitled entry'|t('app') }}</a>
 

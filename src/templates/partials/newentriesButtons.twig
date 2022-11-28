@@ -1,14 +1,25 @@
-{# @params sectionConfig #}
+{# @params sectionConfig, sectionPath, sectionPageNo #}
 {# @var sectionConfig \wsydney76\contentoverview\models\Section #}
-
+{# @var settings \wsydney76\contentoverview\models\Settings #}
 
 {% set permittedSections = sectionConfig.getPermittedSections('saveentries') %}
 <div>
+
+    {% set siteHandle = craft.app.request.queryParam('site') %}
+    {% set site = siteHandle ? craft.app.sites.siteByHandle(siteHandle) : craft.app.sites.primarySite %}
+    {% set useSlideout = settings.userSetting('enableCreateInSlideoutEditor') %}
+
     {% if permittedSections|length == 1 %}
         {% set section = permittedSections[0] %}
-        <a class="btn submit add icon" href="{{ cpUrl("entries/#{section}/new") }}">
-            {{ "New entry"|t('contentoverview') }}
-        </a>
+        {% if useSlideout %}
+            <button class="btn submit add icon" onclick="co_createEntry('{{ section }}', {{ site.id }}, '{{ sectionPath }}', {{ sectionPageNo }})">
+                {{ "New entry"|t('contentoverview') }}
+            </button>
+        {% else %}
+            <a class="btn submit add icon" href="{{ cpUrl("entries/#{section}/new") }}">
+                {{ "New entry"|t('contentoverview') }}
+            </a>
+        {% endif %}
     {% else %}
         <div class="btngroup">
             <button class="btn submit add icon">{{ "New entry"|t('contentoverview') }}</button>
@@ -20,9 +31,17 @@
                 <ul>
                     {% for section in permittedSections %}
                         <li>
-                            <a href="{{ cpUrl("entries/#{section}/new") }}">
-                                {{ "New entry in"|t('contentoverview') }} "{{ craft.app.sections.sectionByHandle(section).name|t('site') }}"
-                            </a>
+                            {% if useSlideout %}
+                                <button onclick="co_createEntry('{{ section }}', {{ site.id }}, '{{ sectionPath }}', {{ sectionPageNo }})">
+                                    {{ "New entry in"|t('contentoverview') }}
+                                    "{{ craft.app.sections.sectionByHandle(section).name|t('site') }}"
+                                </button>
+                            {% else %}
+                                <a href="{{ cpUrl("entries/#{section}/new") }}">
+                                    {{ "New entry in"|t('contentoverview') }}
+                                    "{{ craft.app.sections.sectionByHandle(section).name|t('site') }}"
+                                </a>
+                            {% endif %}
                         </li>
                     {% endfor %}
                 </ul>

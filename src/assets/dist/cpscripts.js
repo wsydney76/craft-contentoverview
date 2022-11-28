@@ -130,6 +130,28 @@ function co_getFilters(sectionPath) {
 }
 
 /**
+ * Creates a new entry and opens it in slideout
+ *
+ *
+ * @param sectionHandle
+ * @param siteId
+ * @param sectionPath
+ * @param sectionPageNo
+ */
+function co_createEntry(sectionHandle, siteId, sectionPath, sectionPageNo) {
+    Craft.sendActionRequest("POST", 'entries/create', {data: {section: sectionHandle, siteId: siteId}})
+        .then((response) => {
+            Craft.cp.displayNotice(response.data.message, response.data.notificationSettings)
+            entry = response.data.entry
+            co_createElementEditor(entry.id, siteId, entry.draftId, sectionPath, sectionPageNo)
+        })
+        .catch((error) => {
+            Craft.cp.displayError(error.response.data.message)
+            console.log(error.response)
+        })
+}
+
+/**
  * Open slideout editor and refresh section html after submit
  *
  * @param elementId

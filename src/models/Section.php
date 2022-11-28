@@ -59,6 +59,7 @@ class Section extends BaseSection
     public ?string $size = null;
     public bool $showNewButton = true;
     public bool $showIndexButton = true;
+    public bool $showRefreshButton = true;
     public ?bool $sortByScore = false;
     public ?string $status = null;
     public string $titleObjectTemplate = '{title}';

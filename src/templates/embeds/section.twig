@@ -8,8 +8,17 @@
                 {{ heading }}
             {% endif %}
         </h2>
-
-        {% block headingButtons %}{% endblock %}
+        <div class="co-heading-actions">
+            {% if sectionConfig.showRefreshButton and sectionPath is defined %}
+                <button class="co-refresh-button" type="button" onclick="co_getSectionHtml('{{ sectionPath }}')"
+                        title="{{ "Refresh"|t('contentoverview') }}" aria-label="{{ "Refresh"|t('contentoverview') }}">
+                    {{ svg('@wsydney76/contentoverview/icons/refresh.svg') }}
+                </button>
+            {% endif %}
+            <div class="co-heading-buttons">
+                {% block headingButtons %}{% endblock %}
+            </div>
+        </div>
     </div>
 
     <div>

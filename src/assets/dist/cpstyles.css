@@ -68,6 +68,22 @@
     height: 40px;
 }
 
+.co-heading-actions {
+    display: flex;
+}
+.co-heading-actions .co-heading-buttons {
+    margin-left: 8px;
+}
+
+.co-refresh-button svg {
+    height: 18px;
+    width: 18px;
+}
+
+.menu button {
+    margin: 4px;
+}
+
 .co-count {
     margin: 12px 0;
 }
