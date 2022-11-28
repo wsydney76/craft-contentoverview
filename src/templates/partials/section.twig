@@ -62,10 +62,9 @@
                     {% endif %}
                 </div>
 
-                {% if loadAsync and settings.showLoadingIndicator %}
+                {% if settings.showLoadingIndicator %}
                     <div id="{{ sectionPath }}-spinner" class="spinner-overlay">
-                        <div class="spinner">
-                        </div>
+                        <div class="spinner"></div>
                     </div>
                 {% endif %}
 

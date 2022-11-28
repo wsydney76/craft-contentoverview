@@ -10,10 +10,15 @@
         </h2>
         <div class="co-heading-actions">
             {% if sectionConfig.showRefreshButton and sectionPath is defined %}
-                <button class="co-refresh-button" type="button" onclick="co_getSectionHtml('{{ sectionPath }}')"
+
+                <button id="{{ sectionPath }}-refresh-button" class="btn co-refresh-button" type="button" onclick="co_getSectionHtml('{{ sectionPath }}', 1, true)"
                         title="{{ "Refresh"|t('contentoverview') }}" aria-label="{{ "Refresh"|t('contentoverview') }}">
-                    {{ svg('@wsydney76/contentoverview/icons/refresh.svg') }}
+                    <div class="label">
+                        {{ svg('@wsydney76/contentoverview/icons/refresh.svg') }}
+                    </div>
+                    <div class="spinner spinner-absolute"></div>
                 </button>
+
             {% endif %}
             <div class="co-heading-buttons">
                 {% block headingButtons %}{% endblock %}

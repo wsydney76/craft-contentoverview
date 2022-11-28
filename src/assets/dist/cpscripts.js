@@ -3,8 +3,9 @@
  *
  * @param sectionPath
  * @param sectionPageNo
+ * @param isRefresh Whether refresh button loading state shall be handled
  */
-function co_getSectionHtml(sectionPath, sectionPageNo = 1) {
+function co_getSectionHtml(sectionPath, sectionPageNo = 1, isRefresh = false) {
     const data = {
         sectionPath: sectionPath,
         sectionPageNo: sectionPageNo,
@@ -13,8 +14,12 @@ function co_getSectionHtml(sectionPath, sectionPageNo = 1) {
         orderBy: co_getOrderBy(sectionPath)
     }
     var spinnerElement = document.getElementById(sectionPath + '-spinner')
-
     spinnerElement && spinnerElement.classList.add('ajax-request')
+
+    if (isRefresh) {
+        var refreshButtonElement = document.getElementById(sectionPath + '-refresh-button')
+        refreshButtonElement && refreshButtonElement.classList.add('loading')
+    }
 
     Craft.sendActionRequest('POST', 'contentoverview/section/get-section-html', {data})
         .then((response) => {
@@ -31,9 +36,13 @@ function co_getSectionHtml(sectionPath, sectionPageNo = 1) {
         })
         .finally(() => {
             spinnerElement && spinnerElement.classList.remove('ajax-request')
+            if (isRefresh) {
+                refreshButtonElement && refreshButtonElement.classList.remove('loading')
+            }
         })
 
 }
+
 
 
 /**
