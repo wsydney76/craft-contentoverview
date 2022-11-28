@@ -5,7 +5,7 @@
  * @param sectionPageNo
  * @param isRefresh Whether refresh button loading state shall be handled
  */
-function co_getSectionHtml(sectionPath, sectionPageNo = 1, isRefresh = false) {
+function co_getSectionHtml(sectionPath, sectionPageNo = 1, isRefresh = true) {
     const data = {
         sectionPath: sectionPath,
         sectionPageNo: sectionPageNo,
@@ -240,8 +240,14 @@ function co_getFilterElements(sectionPath) {
     return document.getElementsByName(sectionPath + '-filter')
 }
 
+function co_registerSectionObserver(sectionPath) {
+    co_respondToVisibility(document.getElementById(sectionPath), visible => {
+        console.log('Loading section  ' + sectionPath)
+        co_getSectionHtml(sectionPath, 1, true)
+    })
+}
 
-function respondToVisibility(element, callback, root = null) {
+function co_respondToVisibility(element, callback, root = null) {
     var options = {
         root: root
     }

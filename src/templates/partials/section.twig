@@ -90,9 +90,6 @@
 
 {% if loadAsync %}
     {% js %}
-    respondToVisibility(document.getElementById('{{ sectionPath }}'), visible => {
-    console.log('Loading section {{ sectionPath }} ')
-    co_getSectionHtml('{{ sectionPath }}')
-    })
-{% endjs %}
+    co_registerSectionObserver('{{ sectionPath }}')
+    {% endjs %}
 {% endif %}
