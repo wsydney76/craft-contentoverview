@@ -29,7 +29,6 @@ class SectionController extends Controller
         if (!$config) {
             throw new InvalidConfigException("$sectionPath is an invalid path.");
         }
-
         /** @var Section $section */
         $section = $config['tabs'][$segments[1]]['columns'][$segments[2]]['sections'][$segments[3]];
 

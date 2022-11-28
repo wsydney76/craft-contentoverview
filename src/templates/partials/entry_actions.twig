@@ -34,6 +34,14 @@
                     {{ svg('@wsydney76/contentoverview/icons/trash.svg')|attr({width: '18px', height: '18px', stroke: 'currentColor'}) }}
                 </button>
 
+            {% case "view" %}
+
+                {% if entry.url and entry.status == 'live' %}
+                    <div>
+                        <a class="co-action-icon" title="{{ 'View'|t('contentoverview') }}" href="{{ entry.url }}" target="_blank">{{ svg('@appicons/world.svg')|attr({width: '18px', height: '18px'}) }}</a>
+                    </div>
+                {% endif %}
+
             {% default %}
                 {% if action.jsFunction %}
                     {{ _self.displayButton(action,

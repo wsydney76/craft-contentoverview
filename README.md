@@ -830,6 +830,7 @@ Actions can be:
 
 * slideout: predefined, opens the entry in a slideout editor.
 * delete: predefined, deletes the entry (with user confirmation).
+* view: predefined, open the entry url in a new tab (only live entries at the moment).
 * A custom javascript function.
 * A CP link to a page provided e.g. by a custom module.
 * A custom controller action (executed with user confirmation).
@@ -839,6 +840,7 @@ Actions can be:
 ->actions([
     'slideout',
     'delete',
+    'view'
     
     // Open a new CP page
     // elementId and draftId params will be added to the url.
@@ -1148,7 +1150,7 @@ Set the `purifierConfig` plugin config if you do not want to use the default pur
 ## Known issues
 
 * 'info' popups do not work if the section html is loaded via ajax. Obviously event handlers have to be attached, but how??
-* Undocumented things from Craft 4.3 core are uses: css classes, css variables, scripts, icons... This may break anytime. 
+* Undocumented things from Craft 4.3 core are used: css classes, css variables, scripts, icons... This may break anytime. 
 
 ## TODOS:
 

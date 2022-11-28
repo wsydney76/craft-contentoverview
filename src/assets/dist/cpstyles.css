@@ -159,6 +159,10 @@
     vertical-align: top;
 }
 
+.co-table .co-actions {
+    display:flex;
+}
+
 .co-warning {
     color: var(--red-700);
     font-weight: bold;
