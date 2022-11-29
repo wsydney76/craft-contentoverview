@@ -6,6 +6,7 @@ use Craft;
 use craft\helpers\StringHelper;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineColumnsEvent;
+use wsydney76\contentoverview\Plugin;
 
 class Tab extends BaseModel
 {
@@ -35,6 +36,20 @@ class Tab extends BaseModel
     public function columns(array $columns): self
     {
         $this->columns = $columns;
+        return $this;
+    }
+
+    /**
+     * Creates one column and sets it's sections
+     *
+     * @param array $sections
+     * @return $this
+     */
+    public function sections(array $sections): self
+    {
+        $this->columns([
+            Plugin::getInstance()->contentoverview->createColumn(12, $sections)
+        ]);
         return $this;
     }
 

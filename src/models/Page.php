@@ -3,10 +3,9 @@
 namespace wsydney76\contentoverview\models;
 
 use Craft;
-use craft\base\Model;
 use Illuminate\Support\Collection;
-use wsydney76\contentoverview\events\DefinePagesEvent;
 use wsydney76\contentoverview\events\DefineTabsEvent;
+use wsydney76\contentoverview\Plugin;
 use function collect;
 
 class Page extends BaseModel
@@ -35,7 +34,7 @@ class Page extends BaseModel
         if (!$this->_tabs) {
             $config = Craft::$app->config->getConfigFromFile("contentoverview/$this->pageKey");
             if ($config) {
-                $this->_tabs = $config['tabs'];
+                $this->_tabs = $this->_getTabsFromConfig($config);
             }
         }
 
@@ -85,7 +84,29 @@ class Page extends BaseModel
             'tab' => $selectedTab,
             'tabIndex' => $i
         ];
-
     }
 
+    protected function _getTabsFromConfig(array $config)
+    {
+
+        if (!empty($config['columns'])) {
+            return [
+                Plugin::getInstance()->contentoverview->createTab('Dummy',
+                    $config['columns']
+                )
+            ];
+        }
+
+        if (!empty($config['sections'])) {
+            $co = Plugin::getInstance()->contentoverview;
+            return [
+                $co->createTab('Dummy', [
+                        $co->createColumn(12, $config['sections'])
+                    ]
+                )
+            ];
+        }
+
+        return $config['tabs'];
+    }
 }

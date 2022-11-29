@@ -52,7 +52,7 @@ class ContentOverviewService extends Component
      * @param array $columns Array of column models
      * @return Tab
      */
-    public function createTab(string $label, array $columns): Tab
+    public function createTab(string $label, array $columns = []): Tab
     {
         return Craft::createObject([
             'class' => Plugin::getInstance()->getSettings()->tabClass,

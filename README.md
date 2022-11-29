@@ -29,7 +29,8 @@ Run `composer require wsydney76/craft-contentoverview`
 
 Run `craft plugin/install contentoverview`
 
-This is currently work in progress, set your `composer.json` requirement to `"wsydney76/craft-contentoverview": "dev-main"`
+This is currently work in progress, set your `composer.json` requirement
+to `"wsydney76/craft-contentoverview": "dev-main"`
 and run `composer update` to get the latest stuff.
 
 ## Screenshots
@@ -54,19 +55,24 @@ Create a file `contentoverview.php` in your config folder.
 - defaultPage (string, page key for the first/only page.)
 - widgetText (string, text for dashboard link widget)
 - linkTarget (string, set to '_blank' to open edit screens in a new tab (default), else blank '')
-- enableSlideoutEditor (bool, whether a slideout editor can be opened for an entry by a double click on the status indicator, or by clicking an icon. Experimental)
-- enableCreateInSlideoutEditor (bool, whether new entries will be created in a slideout editor. Defaults to false on multi-site installs, else true)
+- enableSlideoutEditor (bool, whether a slideout editor can be opened for an entry by a double click on the status
+  indicator, or by clicking an icon. Experimental)
+- enableCreateInSlideoutEditor (bool, whether new entries will be created in a slideout editor. Defaults to false on
+  multi-site installs, else true)
 - defaultLayout (string, list (default)|cardlets|cards|line)
 - customTemplatePath (string, folder for custom templates, default = _contentoverview)
 - defaultIcon (string, file path to a svg icon, default = @appicons/newspaper.svg)
 - fallbackImage (Asset, an image that will be used in a layout if no image is set on an entry)
 - transforms (array, image transforms for layouts)
 - layoutSizes (array, which size is used by default for a layout)
-- layoutWidth (array, the grid column width for a layout size. Technically the `minmax` value for a `grid-template-columns` css directive)
+- layoutWidth (array, the grid column width for a layout size. Technically the `minmax` value for
+  a `grid-template-columns` css directive)
 - purifierConfig (string|array The html purifier config used to make output from object templates safe)
-- loadSectionsAsync (bool, Whether to load section html via ajax request. Loads all sections of a tab when the tab becomes visible.)
+- loadSectionsAsync (bool, Whether to load section html via ajax request. Loads all sections of a tab when the tab
+  becomes visible.)
 - showLoadingIndicator (bool, Whether to show a loading indicator/overlay while an ajax request is pending.)
-- hideUnpermittedSections (bool, Whether to hide sections a user does not have view permission instead of displaying a message. May lead to ugly empty tabs.)
+- hideUnpermittedSections (bool, Whether to hide sections a user does not have view permission instead of displaying a
+  message. May lead to ugly empty tabs.)
 - pages (array, defines subpages)
 
 Defaults are defined in `models\Settings.php`.
@@ -120,7 +126,8 @@ Alternatively, the pages can be displayed in the sidebar.
 
 Set the `showPage` plugin setting to 'sidebar'.
 
-This is more consistent with the rest of the CP and is more convenient when many pages are displayed and grouping is useful , however it consumes more space.
+This is more consistent with the rest of the CP and is more convenient when many pages are displayed and grouping is
+useful , however it consumes more space.
 
 ```php
    'showPages' => 'sidebar',
@@ -171,18 +178,19 @@ Setup config files in `config/contentoverview/<pagename>.php`.
 
 If you are using a single page, name this page according to the `defaultPage` setting.
 
-For the sake of simplicity, a page is always structured as follows:
+A page is always structured as follows:
 
-A page 
-* has one or more tabs 
-* * which have one or more columns 
-* * * which have one or more sections
+A page
 
-(The term 'section' is, admittedly, ambiguous. Here it means a part of a page, which in most cases, but not always, displays  entries from one Craft section.)
+* has one or more tabs
+*
+    * which have one or more columns
+*
+    *
+        * which have one or more sections
 
-So if you want to have a page with just one thing on it, 
-configure a page with one tab (the tab label will not be displayed)
-with one column (width: 12) with one section.
+(The term 'section' is, admittedly, ambiguous. Here it means a part of a page, which in most cases, but not always,
+displays entries from one Craft section.)
 
 Structure of this file:
 
@@ -196,10 +204,12 @@ Structure of this file:
             - query (ElementQuery, define your own query)
             - heading (string, heading of the section, defaults to section name)
             - limit (int, number of entries to show)
-            - titleObjectTemplate (string, an object template that will be rendered for the title in a layout. Defaults to, well, `{title})
+            - titleObjectTemplate (string, an object template that will be rendered for the title in a layout. Defaults
+              to, well, `{title})
             - info (string|array, object template to render in addition to the title)
             - popupInfo (string, object template to render in an information popup)
-            - infoTemplate (array|string, path to a twig template inside the projects templates folder. Will be called with
+            - infoTemplate (array|string, path to a twig template inside the projects templates folder. Will be called
+              with
               an entries variable)
             - imageField (array|string, name of the image field to use)
             - fallbackImageField (array|string, name of an image field to use if there is no image set in `imageField`)
@@ -225,7 +235,8 @@ Structure of this file:
 
 A `handle` setting can be applied to every object that helps to identify it in events.
 
-A `custom` array setting can be applied to every object that can contain any data that you want to use in custom templates/events.
+A `custom` array setting can be applied to every object that can contain any data that you want to use in custom
+templates/events.
 
 Example:
 
@@ -308,7 +319,6 @@ $co->createSection(config: $sectionDefaults)
 
 ```
 
-
 You can also use a custom section class, this may be useful if your want to overwrite or add functionality.
 
 ```php
@@ -352,6 +362,37 @@ class NewsSection extends Section
 }
 
 ];
+```
+
+### Shortcuts
+
+In case you have only one tab, one column, you can leave these steps out, a default object will be created behind the scenes.
+
+```php
+// pageconfig
+
+// Only one tab
+return [
+    'columns' => [
+        $co->createColumn(...),      
+        $co->createColumn(...),      
+    ]
+];
+
+
+// Only one tab, one column
+return [
+    'sections' => [
+        $co->createSection(...),
+        $co->createSection(...),
+    ]       
+];
+
+// Only one column inside a tab
+$co->createTab('Label')
+    ->sections([
+        $co->createSection(...),
+        $co->createSection(...),
 ```
 
 ![screenshot](/images/autocomplete.jpg)
@@ -408,7 +449,8 @@ A vertical layout that puts emphasis on an image and allows unlimited multi line
 
 #### Size and image aspect ratio
 
-The visual impression of a card is highly depending on the type of image and the content/actions (e.g. typical length of title) in it.
+The visual impression of a card is highly depending on the type of image and the content/actions (e.g. typical length of
+title) in it.
 
 So you may want to change the grid column width and the aspect ratio of the image for a better experience.
 
@@ -485,11 +527,14 @@ A `TableSection::EVENT_DEFINE_TABLECOLUMNS` event is available if you want to ta
 
 People are visual creatures, so images are important.
 
-Which image will be displayed for an entry is determined in the following order in the `Section::getImage($entry))` method:
+Which image will be displayed for an entry is determined in the following order in the `Section::getImage($entry))`
+method:
 
 * An image is defined via the `Section::EVENT_DEFINE_IMAGE` event. See example below.
-* An image field is defined in the `imageField` section config setting, and at least one image is attached to that field.
-* An image field is defined in the `fallbackImageField` section config setting, and at least one image is attached to that field.
+* An image field is defined in the `imageField` section config setting, and at least one image is attached to that
+  field.
+* An image field is defined in the `fallbackImageField` section config setting, and at least one image is attached to
+  that field.
 * An image asset is defined in the `fallbackImage` plugin settings.
 
 Event example:
@@ -519,7 +564,8 @@ Event::on(
 
 If there is no image, an icon is used.
 
-Which icon will be displayed with which background color for an entry is determined in the following order in the `Section::getIconData($entry))` method:
+Which icon will be displayed with which background color for an entry is determined in the following order in
+the `Section::getIconData($entry))` method:
 
 * An icon/background color is defined via the `Section::EVENT_DEFINE_ICON` event. See example below.
 * An icon/background color is defined in the `icon`/`iconBgColor` section settings.
@@ -722,7 +768,7 @@ Specify fields in the form `matrixFieldHandle.blockTypeHandle.subFieldHandle`.
 
 If there is only one block type, you can use `matrixFieldHandle.subFieldHandle`
 
-## Customize 
+## Customize
 
 ### Overwrite templates
 
@@ -734,11 +780,13 @@ All twig templates are called like so:
     'contentoverview/partials/entry.twig'
 ] %}
 ```
+
 where the template root  `_contentoverview` by default points to your project's `templates/_contentoverview` folder.
 
 This allows you to overwrite any twig template in case you have special needs.
 
-Templates are included without an `only` parameter, because we know what our templates need, but maybe you need more in your templates.
+Templates are included without an `only` parameter, because we know what our templates need, but maybe you need more in
+your templates.
 Required params passed to a template are listed in an `@params` comment.
 
 Generally available variables:
@@ -798,13 +846,12 @@ $co->createWidgetSection()
 This just calls the constructor and the `getBodyHtml` method of the widget. The widget is not
 loaded in the context it expects, so it may or may not work properly. (Javascript errors, missing css etc).
 
-
 ### Twig Page Blocks
 
-[Control panel templates](https://craftcms.com/docs/4.x/extend/cp-templates.html#available-blocks) make 
+[Control panel templates](https://craftcms.com/docs/4.x/extend/cp-templates.html#available-blocks) make
 a number of twig `{% block %}` areas available, where custom templates can be rendered.
 
-This can be helpful if you want to add instructions/help/guides/link lists/whatever to your page 
+This can be helpful if you want to add instructions/help/guides/link lists/whatever to your page
 in order to support editors.
 
 Your template must live in the `settings.customTemplatePath` folder, by default `templates/_contentoverview`
@@ -827,7 +874,7 @@ Available blocks:
 
 The `page` and `settings` variable are availabe in this templates.
 
-Example: 
+Example:
 
 ```twig
 <div class="meta" style="padding: 12px;">
@@ -966,10 +1013,9 @@ class PublishAction extends Action
 
 ```
 
-
 ### Overwrite Classes
 
-Classes are instantiated via a poor man's version of dependency injection: 
+Classes are instantiated via a poor man's version of dependency injection:
 The class names are defined in `models\Settings.php`.
 
 ```php
@@ -989,7 +1035,6 @@ a class that extends the plugin's class.
 public string $sectionClass = \modules\cp\models\MyClassThatDoesItBetter::class;
 ```
 
-
 ### Customization Example
 
 Managing screenings for a film festival:
@@ -999,7 +1044,8 @@ Managing screenings for a film festival:
 * Guide with project specific help
 * Easy filtering with fewer clicks
 * Show an image from a related entry (film).
-* Add new screenings without loading new pages. Especially useful when there is a lot of repetition. Just change date/time, click 'Create', done.
+* Add new screenings without loading new pages. Especially useful when there is a lot of repetition. Just change
+  date/time, click 'Create', done.
 * Add actions: delete and a custom 'Approve' action.
 
 ## Events
@@ -1037,7 +1083,8 @@ are described in the 'Filters' chapter.
 
 ### Modify Collections
 
-Every collection of models in the chain Pages -> Tabs -> Columns -> Sections -> Actions/Filters/TableColumns can be modified.
+Every collection of models in the chain Pages -> Tabs -> Columns -> Sections -> Actions/Filters/TableColumns can be
+modified.
 
 This is especially useful if you want to apply rules based on a users role and entry content.
 
@@ -1055,12 +1102,14 @@ Add a `handle` to a model so that it can easily be identified in your event hand
 
 Additionally, you can add a `custom` setting to any model that contains arbitrary data.
 
-All event properties are `Collections`, so they can be modified 
+All event properties are `Collections`, so they can be modified
 using [all collection methods](https://laravel.com/docs/9.x/collections#available-methods).
 
-For convenience, all event classes have a `user` property containing the current user, and, where appropriate, a reference to their parent object.
+For convenience, all event classes have a `user` property containing the current user, and, where appropriate, a
+reference to their parent object.
 
-For a better overview it is recommended to define all possible objects in your config files and filter out what is not needed,
+For a better overview it is recommended to define all possible objects in your config files and filter out what is not
+needed,
 instead of adding stuff in your event handlers.
 
 Examples:
@@ -1148,7 +1197,8 @@ A single tab can be shown in a dashboad widget. Available tabs are defined in `w
 
 Static texts are translated using a `contentoverview` translation category. A german translation file is included.
 
-The plugin takes care of translating custom strings in your configuration using the `site` category, e.g. defined in `translations\de\site.php`.
+The plugin takes care of translating custom strings in your configuration using the `site` category, e.g. defined
+in `translations\de\site.php`.
 
 No need to include translations in your config files.
 
@@ -1156,12 +1206,15 @@ No need to include translations in your config files.
 
 Response time is highly dependent on your individual config, so here are just a few notes:
 
-* Obviously, more things on a page will make it slower, leading to more queries/image transforms (Sorry for this trivial statement...). 
+* Obviously, more things on a page will make it slower, leading to more queries/image transforms (Sorry for this trivial
+  statement...).
 * So it is all about finding a balance.
-* We found that people prefer a longer initial load time and having anything they need available from the start, rather than jumping around between different pages.
+* We found that people prefer a longer initial load time and having anything they need available from the start, rather
+  than jumping around between different pages.
 * Better hosting always pays off.
-* By default, all content on a page is rendered server side (including all tabs). 
-* Set the `loadSectionsAsync` plugin setting to `true` if the section html shall be loaded by ajax calls. So section will only be loaded if the section is in the viewport.
+* By default, all content on a page is rendered server side (including all tabs).
+* Set the `loadSectionsAsync` plugin setting to `true` if the section html shall be loaded by ajax calls. So section
+  will only be loaded if the section is in the viewport.
 * Set the `showLoadingIndicator` plugin setting to `true` if you want a visual clue while an ajax request is running.
 * Because single request will likely be fast, this can be somewhat confusing.
 * Transformed images are generated on the fly if they don't already exist, so a lower `limit` can speed up things.
@@ -1179,8 +1232,10 @@ Set the `purifierConfig` plugin config if you do not want to use the default pur
 
 ## Known issues
 
-* 'info' popups do not work if the section html is loaded via ajax. Obviously event handlers have to be attached, but how??
-* Undocumented things from Craft 4.3 core are used: css classes, css variables, scripts, icons... This may break anytime. 
+* 'info' popups do not work if the section html is loaded via ajax. Obviously event handlers have to be attached, but
+  how??
+* Undocumented things from Craft 4.3 core are used: css classes, css variables, scripts, icons... This may break
+  anytime.
 
 ## TODOS:
 
