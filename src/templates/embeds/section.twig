@@ -1,3 +1,5 @@
+{# @params layout, linkToPage, permittedSections #}
+
 <div class="co-section {{ layout is defined ? "co-#{layout}" }}">
     <div class="co-btns">
         <h2>
@@ -9,7 +11,7 @@
             {% endif %}
         </h2>
         <div class="co-heading-actions">
-            {% if sectionConfig.showRefreshButton and sectionPath is defined %}
+            {% if sectionConfig.showRefreshButton and sectionPath is defined and permittedSections %}
 
                 <button id="{{ sectionPath }}-refresh-button" class="btn co-refresh-button" type="button" onclick="co_getSectionHtml('{{ sectionPath }}', 1, true)"
                         title="{{ "Refresh"|t('contentoverview') }}" aria-label="{{ "Refresh"|t('contentoverview') }}">

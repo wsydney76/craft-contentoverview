@@ -3,6 +3,7 @@
 {# @var settings \wsydney76\contentoverview\models\Settings #}
 
 {% set permittedSections = sectionConfig.getPermittedSections('saveentries') %}
+
 <div>
 
     {% set siteHandle = craft.app.request.queryParam('site') %}
@@ -20,7 +21,7 @@
                 {{ "New entry"|t('contentoverview') }}
             </a>
         {% endif %}
-    {% else %}
+    {% elseif permittedSections|length > 1 %}
         <div class="btngroup">
             <button class="btn submit add icon">{{ "New entry"|t('contentoverview') }}</button>
             {% set menuId = "more-actions-menu-#{random()}" %}

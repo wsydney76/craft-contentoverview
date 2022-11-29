@@ -2,16 +2,15 @@
 
 {# @var sectionConfig \wsydney76\contentoverview\models\Section #}
 
-{% for column in tab.getColumns() %}
+{% for columnIndex, column in tab.getColumns() %}
 
-    {% set columnIndex = loop.index0 %}
     <div class="container-column co-column-{{ column.width }}">
         <div class="co-column">
 
-            {% for sectionConfig in column.getSections() %}
+            {% for sectionIndex, sectionConfig in column.getSections() %}
 
                 {# sectionPath allows ajax requests to identify a section #}
-                {% set sectionPath = "#{page.pageKey}-#{tabIndex}-#{columnIndex}-#{loop.index0}" %}
+                {% set sectionPath = "#{page.pageKey}-#{tabIndex}-#{columnIndex}-#{sectionIndex}" %}
 
                 {% include [
                     "_contentoverview/#{sectionConfig.sectionTemplate}",

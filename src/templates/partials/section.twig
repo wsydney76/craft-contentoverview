@@ -8,7 +8,7 @@
 {% set transform = sectionConfig.getTransform() %}
 {% set size = sectionConfig.getSize() %}
 {% set sectionPageNo = sectionPageNo ?? 1 %}
-
+{% set permittedSections = sectionConfig.getPermittedSections('viewentries') %}
 
 {% set loadAsync = settings.loadSectionsAsync %}
 
@@ -29,10 +29,7 @@
 
     {% block content %}
 
-
-        {% set permittedSections = sectionConfig.getPermittedSections('viewentries') %}
         {% if permittedSections %}
-
 
             {% include [
                 '_contentoverview/partials/toolbar.twig',
@@ -43,7 +40,7 @@
                 <div class="co-entries co-{{ layout }} co-{{ size }} co-{{ layout }}-{{ column.width }}">
 
                     {% if not loadAsync %}
-                        {% set results = sectionConfig.entries %}
+                        {% set results = sectionConfig.getEntries() %}
                         {% include [
                             "_contentoverview/partials/#{sectionConfig.entriesTemplate}",
                             "contentoverview/partials/#{sectionConfig.entriesTemplate}"
@@ -88,7 +85,7 @@
 
 
 
-{% if loadAsync %}
+{% if loadAsync and permittedSections %}
     {% js %}
     co_registerSectionObserver('{{ sectionPath }}')
     {% endjs %}

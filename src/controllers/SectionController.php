@@ -29,8 +29,11 @@ class SectionController extends Controller
         if (!$config) {
             throw new InvalidConfigException("$sectionPath is an invalid path.");
         }
+
+        $page = Plugin::getInstance()->contentoverview->createPage($segments[0], $config);
+
         /** @var Section $section */
-        $section = $config['tabs'][$segments[1]]['columns'][$segments[2]]['sections'][$segments[3]];
+        $section = $page->getTabs()[$segments[1]]->getColumns()[$segments[2]]->getSections()[$segments[3]];
 
         if ($section->section && !$section->getPermittedSections('viewentries')) {
             throw new ForbiddenHttpException();
