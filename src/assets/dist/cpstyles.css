@@ -296,6 +296,11 @@
     font-size: 14px;
 }
 
+.co-cards .co-actions {
+    display: flex;
+    justify-content: end;
+}
+
 /* ========================================
     Cardlets Layout
   ==========================================*/
@@ -369,6 +374,11 @@
     color: var(--gray-600);
     font-size: 14px;
     margin-top: 4px;
+}
+
+.co-cardlets .co-actions {
+    display: flex;
+    justify-content: end;
 }
 
 .\? {

@@ -36,9 +36,32 @@
 
             {% case "view" %}
 
-                {% if entry.url and entry.status == 'live' %}
+                {% if entry.url %}
+                    {# TODO: Do it the 'official' way #}
+                    {% if entry.isCanonical and entry.status == 'live' and not entry.isUnpublishedDraft %}
+                        {% set frontendUrl = entry.url %}
+                    {% else %}
+                        {% set token = entry.uid|replace({'-':''}) %}
+
+                        {% if not craft.app.tokens.getTokenRoute(token) %}
+                            {% set token = craft.app.tokens.createPreviewToken([
+                                'preview/preview', {
+                                    elementType: className(entry),
+                                    canonicalId: entry.canonicalId|integer,
+                                    siteId: entry.siteId,
+                                    draftId: entry.isDraft and not entry.isProvisionalDraft ? entry.draftId : null,
+                                    revisionId: null,
+                                    userId: currentUser.id
+                                }], null, token
+                            ) %}
+                        {% endif %}
+
+                        {% set frontendUrl = url(entry.url, {'token': token}) %}
+
+                    {% endif %}
                     <div>
-                        <a class="co-action-icon" title="{{ 'View'|t('contentoverview') }}" href="{{ entry.url }}" target="_blank">{{ svg('@appicons/world.svg')|attr({width: '18px', height: '18px'}) }}</a>
+                        <a class="co-action-icon" title="{{ 'View'|t('contentoverview') }}" href="{{ frontendUrl }}"
+                           target="_blank">{{ svg('@appicons/world.svg')|attr({width: '18px', height: '18px'}) }}</a>
                     </div>
                 {% endif %}
 
