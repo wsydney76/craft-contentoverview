@@ -66,6 +66,7 @@ Create a file `contentoverview.php` in your config folder.
 - purifierConfig (string|array The html purifier config used to make output from object templates safe)
 - loadSectionsAsync (bool, Whether to load section html via ajax request. Loads all sections of a tab when the tab becomes visible.)
 - showLoadingIndicator (bool, Whether to show a loading indicator/overlay while an ajax request is pending.)
+- hideUnpermittedSections (bool, Whether to hide sections a user does not have view permission instead of displaying a message. May lead to ugly empty tabs.)
 - pages (array, defines subpages)
 
 Defaults are defined in `models\Settings.php`.
@@ -275,29 +276,60 @@ return [
             ->layout('cardlets')
             ->scope('provisional')
             ->ownDraftsOnly(true),
-        
-        // Optinal param: Class name of a class extending wsydney76\contentoverview\models\Section,
-        // where you can set defaults to avoid repeating yourself.      
-        $co->createSection(NewsSection::class)
-            ->heading('Pending')
-            ->status('pending'),
-            
-        $co->createSection(NewsSection::class)
-            ->heading('Drafts')
-            ->scope('drafts')
-            ->popupInfo( Craft::t('site', 'Draft created by') . ' {creator.name}' . '<br>' .
-                    Craft::t('site', 'Draft created at') . ' {draftCreatedAt|date("short")}' . '<br>' .
-                    '{draftNotes ? "Draft Notes:"}' . '<br>' .
-                    '{draftNotes}'),
-                    ])
+       
 
-        // Use 'query' to build individual queries that can't be composed with predefined parameters
-        // Requires headings, disables Add new/List all buttons (can be any section). 
-        $co->createSection()
-            ->heading('Custom Field')           
-            ->query(Craft::$app->user->identity->handpickedEntries)  // entries field           
-            ->info('{postDate|datetime("short")}, {workflowStatus}')
-        ])
+```
+
+Phpstorms autocompletion can give hints about the available settings and their parameters.
+
+### Using defaults
+
+You can pass default settings to the `createSection` method in order to avoid repetitions.
+
+```php
+$sectionDefaults = $co->createSection()
+    ->imageField('featuredImage')
+    ->orderBy('title')
+    ->layout('cards')
+    ->size('small')
+    ->limit(6)
+    ->search(true)
+    ->info('{postDate|date("short")}')
+    ->actions(['slideout']);
+
+...
+
+$co->createSection(config: $sectionDefaults)
+    ->heading('Films')
+    ->section('film')
+    // Individual settings here
+
+```
+
+
+You can also use a custom section class, this may be useful if your want to overwrite or add functionality.
+
+```php
+$co->createSection(NewsSection::class)
+    ->heading('Pending')
+    ->status('pending'),
+    
+$co->createSection(NewsSection::class)
+    ->heading('Drafts')
+    ->scope('drafts')
+    ->popupInfo( Craft::t('site', 'Draft created by') . ' {creator.name}' . '<br>' .
+            Craft::t('site', 'Draft created at') . ' {draftCreatedAt|date("short")}' . '<br>' .
+            '{draftNotes ? "Draft Notes:"}' . '<br>' .
+            '{draftNotes}'),
+            ])
+
+// Use 'query' to build individual queries that can't be composed with predefined parameters
+// Requires headings, disables Add new/List all buttons (can be any section). 
+$co->createSection()
+    ->heading('Custom Field')           
+    ->query(Craft::$app->user->identity->handpickedEntries)  // entries field           
+    ->info('{postDate|datetime("short")}, {workflowStatus}')
+])
 
 // modules/main/NewsSection.php
 
@@ -318,11 +350,7 @@ class NewsSection extends Section
 }
 
 ];
-
-
 ```
-
-Phpstorms autocompletion can give hints about the available settings and their parameters.
 
 ![screenshot](/images/autocomplete.jpg)
 

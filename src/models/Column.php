@@ -5,6 +5,7 @@ namespace wsydney76\contentoverview\models;
 use Craft;
 use craft\base\Model;
 use wsydney76\contentoverview\events\DefineSectionsEvent;
+use wsydney76\contentoverview\Plugin;
 use yii\base\InvalidConfigException;
 
 class Column extends BaseModel
@@ -44,6 +45,11 @@ class Column extends BaseModel
 
     public function getSections() {
         $sections = collect($this->sections);
+
+        if (Plugin::getInstance()->getSettings()->hideUnpermittedSections) {
+            $sections = $sections
+                ->filter(fn($section) => !$section instanceof Section || $section->getPermittedSections('viewentries'));
+        }
 
         if ($this->hasEventHandlers(self::EVENT_DEFINE_SECTIONS)) {
             $event = new DefineSectionsEvent([
