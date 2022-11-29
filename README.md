@@ -178,6 +178,8 @@ A page
 * * which have one or more columns 
 * * * which have one or more sections
 
+(The term 'section' is, admittedly, ambiguous. Here it means a part of a page, which in most cases, but not always, displays  entries from one Craft section.)
+
 So if you want to have a page with just one thing on it, 
 configure a page with one tab (the tab label will not be displayed)
 with one column (width: 12) with one section.
@@ -188,8 +190,8 @@ Structure of this file:
     - label (string, tab text)
     - columns[] (array, columns inside the tab container, uses a 12 columns grid)
         - width (int, number of columns occupied, 1-12)
-        - sections[] (array, sections display inside the column)
-            - section (array|string, section handle)
+        - sections[] (array, sections displayed inside the column)
+            - section (array|string, Craft section handle)
             - elementType (array|string, elementType handle)
             - query (ElementQuery, define your own query)
             - heading (string, heading of the section, defaults to section name)
