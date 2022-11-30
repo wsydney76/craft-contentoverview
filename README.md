@@ -48,32 +48,27 @@ Support your workflow and quality management: Show drafts / status / own provisi
 
 Create a file `contentoverview.php` in your config folder.
 
-- pluginTitle (string, label for primary navigation, page title)
-- replaceDashboard (bool Whether to remove dashboard link and redirect to contentoverview on login)
-- showPages (string, default nav, where to show multiple pages: nav|sidebar|no)
-- enableWidgets (bool, default true, enable dashboard widgets that display a single tab)
-- defaultPage (string, page key for the first/only page.)
-- widgetText (string, text for dashboard link widget)
-- linkTarget (string, set to '_blank' to open edit screens in a new tab (default), else blank '')
-- enableSlideoutEditor (bool, whether a slideout editor can be opened for an entry by a double click on the status
-  indicator, or by clicking an icon. Experimental)
-- enableCreateInSlideoutEditor (bool, whether new entries will be created in a slideout editor. Defaults to false on
-  multi-site installs, else true)
-- defaultLayout (string, list (default)|cardlets|cards|line)
 - customTemplatePath (string, folder for custom templates, default = _contentoverview)
 - defaultIcon (string, file path to a svg icon, default = @appicons/newspaper.svg)
+- defaultLayout (string, list (default)|cardlets|cards|line)
+- defaultPage (string, page key for the first/only page.)
+- enableCreateInSlideoutEditor (bool, whether new entries will be created in a slideout editor. Defaults to false on multi-site installs, else true)
+- enableSlideoutEditor (bool, whether a slideout editor can be opened for an entry by a double click on the status indicator, or by clicking an icon. Experimental)
+- enableWidgets (bool, default true, enable dashboard widgets that display a single tab)
 - fallbackImage (Asset, an image that will be used in a layout if no image is set on an entry)
-- transforms (array, image transforms for layouts)
+- hideUnpermittedSections (bool, Whether to hide sections a user does not have view permission instead of displaying a message. May lead to ugly empty tabs.)
 - layoutSizes (array, which size is used by default for a layout)
-- layoutWidth (array, the grid column width for a layout size. Technically the `minmax` value for
-  a `grid-template-columns` css directive)
-- purifierConfig (string|array The html purifier config used to make output from object templates safe)
-- loadSectionsAsync (bool, Whether to load section html via ajax request. Loads all sections of a tab when the tab
-  becomes visible.)
-- showLoadingIndicator (bool, Whether to show a loading indicator/overlay while an ajax request is pending.)
-- hideUnpermittedSections (bool, Whether to hide sections a user does not have view permission instead of displaying a
-  message. May lead to ugly empty tabs.)
+- layoutWidth (array, the grid column width for a layout size. Technically the `minmax` value for a `grid-template-columns` css directive)
+- linkTarget (string, set to '_blank' to open edit screens in a new tab (default), else blank '')
+- loadSectionsAsync (bool, Whether to load section html via ajax request. Loads all sections of a tab when the tab becomes visible.)
 - pages (array, defines subpages)
+- pluginTitle (string, label for primary navigation, page title)
+- purifierConfig (string|array The html purifier config used to make output from object templates safe)
+- replaceDashboard (bool Whether to remove dashboard link and redirect to contentoverview on login)
+- showLoadingIndicator (bool, Whether to show a loading indicator/overlay while an ajax request is pending.)
+- showPages (string, default nav, where to show multiple pages: nav|sidebar|no)
+- transforms (array, image transforms for layouts)
+- widgetText (string, text for dashboard link widget)
 
 Defaults are defined in `models\Settings.php`.
 
