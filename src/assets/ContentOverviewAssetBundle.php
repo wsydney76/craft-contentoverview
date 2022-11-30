@@ -2,8 +2,8 @@
 
 namespace wsydney76\contentoverview\assets;
 
+use Craft;
 use craft\web\AssetBundle;
-use wsydney76\contentoverview\Plugin;
 
 class ContentOverviewAssetBundle extends AssetBundle
 {
@@ -11,8 +11,7 @@ class ContentOverviewAssetBundle extends AssetBundle
     {
         $this->sourcePath = '@wsydney76/contentoverview/assets/dist';
 
-
-        $this->css =  [
+        $this->css = [
             'cpstyles.css'
         ];
 

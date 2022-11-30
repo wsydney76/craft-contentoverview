@@ -19,6 +19,7 @@ use wsydney76\contentoverview\Plugin;
 use yii\base\InvalidConfigException;
 use function array_map;
 use function collect;
+use function explode;
 use function implode;
 use function in_array;
 use function is_array;
@@ -570,7 +571,7 @@ class Section extends BaseSection
         return '';
     }
 
-    public function getLayout() : string
+    public function getLayout(): string
     {
         return $this->layout ?? Plugin::getInstance()->getSettings()->defaultLayout;
     }
@@ -586,7 +587,7 @@ class Section extends BaseSection
         $transform = Plugin::getInstance()->getSettings()->transforms[$this->getLayout()];
 
         if ($this->imageRatio) {
-            $transform['height'] = round(($transform['width'] / $this->imageRatio) , 0);
+            $transform['height'] = round(($transform['width'] / $this->imageRatio), 0);
         }
 
         return $transform;
@@ -625,7 +626,7 @@ class Section extends BaseSection
      */
     public function getFilters(): Collection
     {
-        $filters =  collect($this->filters);
+        $filters = collect($this->filters);
 
         if ($this->hasEventHandlers(self::EVENT_DEFINE_FILTERS)) {
             $event = new DefineFiltersEvent([
@@ -747,6 +748,54 @@ class Section extends BaseSection
             $query->orderBy($orderBy);
         }
 
+        if ($filters) {
+            foreach ($filters as $filter) {
+                if ($filter['value']) {
+                    switch ($filter['type']) {
+                        case 'entriesField':
+                        case 'usersField':
+                        {
+                            $query->andRelatedTo([
+                                'element' => $filter['value'],
+                                'field' => $filter['handle']
+                            ]);
+                            break;
+                        }
+                        case 'optionsField':
+                        {
+                            $field = Craft::$app->fields->getFieldByHandle($filter['handle']);
+                            $columnName = ElementHelper::fieldColumnFromField($field);
+
+                            $query->andWhere([$columnName => $filter['value']]);
+                            break;
+                        }
+
+                        case 'custom':
+                        {
+
+                            if ($this->hasEventHandlers(self::EVENT_FILTER_CONTENTOVERVIEW_QUERY)) {
+                                $this->trigger(self::EVENT_FILTER_CONTENTOVERVIEW_QUERY, new FilterContentOverviewQueryEvent([
+                                    'query' => $query,
+                                    'handle' => $filter['handle'],
+                                    'value' => $filter['value']
+                                ]));
+                            }
+                            break;
+                        }
+                        case 'status':
+                        {
+                            // format key:value<,key:value>...
+                            foreach (explode(',', $filter['value']) as $filterValue) {
+                                $segments = explode(':', $filterValue);
+                                $key = $segments[0];
+                                $this->$key = $segments[1];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         if ($this->status) {
             $query->status($this->status);
         }
@@ -781,7 +830,6 @@ class Section extends BaseSection
                     ]
                 ]);
             }
-            
         }
 
         if ($this->fallbackImageField) {
@@ -804,7 +852,6 @@ class Section extends BaseSection
                     ]
                 ]);
             }
-
         }
 
         switch ($this->scope) {
@@ -840,43 +887,6 @@ class Section extends BaseSection
             }
         }
 
-        if ($filters) {
-            foreach ($filters as $filter) {
-                if ($filter['value']) {
-                    switch ($filter['type']) {
-                        case 'entriesField':
-                        case 'usersField':
-                        {
-                            $query->andRelatedTo([
-                                'element' => $filter['value'],
-                                'field' => $filter['handle']
-                            ]);
-                            break;
-                        }
-                        case 'optionsField':
-                        {
-                            $field = Craft::$app->fields->getFieldByHandle($filter['handle']);
-                            $columnName = ElementHelper::fieldColumnFromField($field);
-
-                            $query->andWhere([$columnName => $filter['value']]);
-                            break;
-                        }
-
-                        case 'custom':
-                        {
-
-                            if ($this->hasEventHandlers(self::EVENT_FILTER_CONTENTOVERVIEW_QUERY)) {
-                                $this->trigger(self::EVENT_FILTER_CONTENTOVERVIEW_QUERY, new FilterContentOverviewQueryEvent([
-                                    'query' => $query,
-                                    'handle' => $filter['handle'],
-                                    'value' => $filter['value']
-                                ]));
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
         if ($this->hasEventHandlers(self::EVENT_MODIFY_CONTENTOVERVIEW_QUERY)) {
             $this->trigger(self::EVENT_MODIFY_CONTENTOVERVIEW_QUERY, new ModifyContentOverviewQueryEvent([

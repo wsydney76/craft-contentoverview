@@ -11,12 +11,14 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\helpers\App;
 use craft\services\Dashboard;
+use craft\services\Plugins;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\Cp;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
 use wsydney76\contentoverview\assets\ContentOverviewAssetBundle;
+use wsydney76\contentoverview\assets\WorkPluginAssetBundle;
 use wsydney76\contentoverview\models\Settings;
 use wsydney76\contentoverview\services\ContentOverviewService;
 use wsydney76\contentoverview\variables\ContentOverviewVariable;
@@ -147,6 +149,16 @@ class Plugin extends \craft\base\Plugin
 
         // Register CSS an JS
         Craft::$app->view->registerAssetBundle(ContentOverviewAssetBundle::class);
+
+        Event::on(
+            Plugins::class,
+            Plugins::EVENT_AFTER_LOAD_PLUGINS,
+            function($event) use ($settings) {
+                if (Craft::$app->plugins->isPluginEnabled('work')) {
+                    Craft::$app->view->registerAssetBundle(WorkPluginAssetBundle::class);
+                }
+            }
+        );
     }
 
     protected function createSettingsModel(): ?Model

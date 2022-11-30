@@ -65,6 +65,16 @@
                     </div>
                 {% endif %}
 
+
+            {% case "compare" %}
+                
+                {% if craft.app.plugins.pluginEnabled('work') and entry.draftId and not entry.isCanonical %}
+                    <button type="button"  aria-label="{{ 'Compare with current'|t('contentoverview') }}" title="{{ 'Compare with current'|t('contentoverview') }}"
+                            onclick="co_compare({{ entry.draftId }}, {{ entry.siteId }}, {{ entry.isProvisionalDraft ? 1 : 0 }})">
+                        {{ _self.displayIcon('@wsydney76/contentoverview/icons/compare.svg') }}
+                    </button>
+                {% endif %}
+
             {% default %}
                 {% if action.jsFunction %}
                     {{ _self.displayButton(action,
@@ -108,4 +118,3 @@
 {% macro displayIcon(icon) %}
     {{ svg(icon)|attr({width: '18px', height: '18px', stroke: 'currentColor'}) }}
 {% endmacro %}
-

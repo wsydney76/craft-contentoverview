@@ -15,6 +15,7 @@ use craft\models\MatrixBlockType;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineCustomFilterOptionsEvent;
 use wsydney76\contentoverview\events\DefineFiltersEvent;
+use wsydney76\contentoverview\Plugin;
 use yii\base\InvalidConfigException;
 use function collect;
 use function count;
@@ -111,6 +112,12 @@ class Filter extends BaseModel
 
         if ($this->type === 'custom') {
             $this->fieldType = 'custom';
+        }
+
+        if ($this->type === 'status') {
+            $this->fieldType = 'status';
+            $this->label = $this->label ?:' Status';
+            $this->options = collect(Plugin::getInstance()->getSettings()->statusFilterOptions);
         }
     }
 

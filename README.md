@@ -659,6 +659,8 @@ The first option will be used when initially loading the page.
 
 ## Filters
 
+### By Field
+
 Entries can be filtered by a custom field value.
 
 ```php
@@ -679,6 +681,21 @@ Currently supported:
 * Option fields (Dropdown)
 
 ![Screenshot](/images/search3.jpg)
+
+
+### Status filter
+
+Filter by workflow/entry status.
+
+```php
+$co->createFilter('status')->label('Workflow')
+```
+
+![Screenshot](/images/statusfilter.jpg)
+
+Options are defined in the `statusFilterOptions` plugin setting.
+
+### Custom filters
 
 Additionally custom filters can be defined:
 
@@ -908,9 +925,13 @@ Actions can be:
 * slideout: predefined, opens the entry in a slideout editor.
 * delete: predefined, deletes the entry (with user confirmation).
 * view: predefined, open the entry url in a new tab (only live entries at the moment).
+* compare: predefined, shows a comparison draft <-> current in a slideout. *)
 * A custom javascript function.
 * A CP link to a page provided e.g. by a custom module.
 * A custom controller action (executed with user confirmation).
+
+*) Requires `work` plugin. This is currently private, but an old PoC version (ported to Craft 4)
+is available [here](https://github.com/wsydney76/work).
 
 ```php
 

@@ -23,6 +23,7 @@ class Settings extends Model
     public bool $enableSlideoutEditor = true;
     public bool $enableCreateInSlideoutEditor = true;
     public bool $enableWidgets = true;
+    public array $externalCssFiles = [];
     public ?Asset $fallbackImage = null;
     public bool $hideUnpermittedSections = false;
     public array $iconSize = ['width' => '20px', 'height' => '20px'];
@@ -46,6 +47,16 @@ class Settings extends Model
     public bool $replaceDashboard = false;
     public bool $showLoadingIndicator = false;
     public string $showPages = 'nav';
+    public array $statusFilterOptions =  [
+        ['label' => 'Drafts', 'value' => 'scope:drafts'],
+        ['label' => 'My Drafts', 'value' => 'scope:drafts,ownDraftsOnly:true'],
+        ['label' => 'My Provisional Drafts', 'value' => 'scope:provisional,ownDraftsOnly:true'],
+        ['label' => 'Disabled', 'value' => 'status:disabled'],
+        ['label' => 'Expired', 'value' => 'status:expired'],
+        ['label' => 'Pending', 'value' => 'status:pending'],
+
+
+    ];
     public array $transforms = [
         'list' => ['width' => 50, 'height' => 50, 'format' => 'webp'],
         'cardlets' => ['width' => 150, 'height' => 150, 'format' => 'webp'],

@@ -263,3 +263,16 @@ function co_respondToVisibility(element, callback, root = null) {
 
     observer.observe(element);
 }
+
+function co_compare(draftId, siteId, isProvisionalDraft) {
+
+    url = `/admin/work/compare?draftId=${draftId}&siteId=${siteId}&isProvisionalDraft=${isProvisionalDraft}`
+    $.get(url, function(data) {
+            var slideout = new Craft.Slideout(data, {
+                containerAttributes: {class: 'compare-container'}
+            });
+        })
+        .fail(function() {
+            alert("Error");
+        })
+}

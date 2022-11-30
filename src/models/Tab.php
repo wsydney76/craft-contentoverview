@@ -40,7 +40,7 @@ class Tab extends BaseModel
     }
 
     /**
-     * Creates one column and sets it's sections
+     * Creates one column and sets its sections
      *
      * @param array $sections
      * @return $this
