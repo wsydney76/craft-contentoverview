@@ -50,6 +50,10 @@
     margin-bottom: 48px;
 }
 
+.co-section-help {
+    margin-bottom: 24px;
+}
+
 .co-entry.published {
     background-color: var(--gray-050);
 }

@@ -1,0 +1,28 @@
+{% if sectionConfig.help %}
+    {% set help = sectionConfig.help %}
+    <div class="co-section-help">
+        {% if help is string %}
+            {{ sectionConfig.help }}
+        {% else %}
+            {% set text = help.text is defined ?
+                help.text|t('site') :
+                include("#{settings.customTemplatePath}/#{help.template}") %}
+            
+            {% set text = text|raw|purify(settings.purifierConfig) %}
+
+            <div>
+                {% if help.type is defined %}
+                    <div class="readable">
+                        <blockquote class="note {{ help.type }}">
+                            {{ text }}
+                        </blockquote>
+                    </div>
+                {% else %}
+                    {{ text }}
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+    </div>
+{% endif %}

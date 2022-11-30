@@ -199,39 +199,37 @@ Structure of this file:
     - columns[] (array, columns inside the tab container, uses a 12 columns grid)
         - width (int, number of columns occupied, 1-12)
         - sections[] (array, sections displayed inside the column)
-            - section (array|string, Craft section handle)
+            - actions (array, The actions available to the section. See below)
+            - allSites (bool, true = display (unique) entries from all sites)
+            - custom  (array, any custom keys, can be used to modify the entries query via event, see Events below)
             - elementType (array|string, elementType handle)
-            - query (ElementQuery, define your own query)
-            - heading (string, heading of the section, defaults to section name)
-            - limit (int, number of entries to show)
-            - titleObjectTemplate (string, an object template that will be rendered for the title in a layout. Defaults
-              to, well, `{title})
-            - info (string|array, object template to render in addition to the title)
-            - popupInfo (string, object template to render in an information popup)
-            - infoTemplate (array|string, path to a twig template inside the projects templates folder. Will be called
-              with
-              an entries variable)
-            - imageField (array|string, name of the image field to use)
             - fallbackImageField (array|string, name of an image field to use if there is no image set in `imageField`)
-            - imageRatio (float, aspect ratio of the image. Only makes sense for card layout)
-            - size (string, the grid colum size of an entry (card, cardlet). tiny|small|medum|large|card)
+            - filters (array, Array of fields whose values can be applied as filters. See Search doc below)
+            - heading (string, heading of the section, defaults to section name)
+            - help (array|string Help text for the section)
             - icon (array|string, path to an svg icon, that is display if no image is found)
             - iconBgColor (string, the background color for an icon)
+            - imageField (array|string, name of the image field to use)
+            - imageRatio (float, aspect ratio of the image. Only makes sense for card layout)
+            - info (string|array, object template to render in addition to the title)
+            - infoTemplate (array|string, path to a twig template inside the projects templates folder. Will be called with an entries variable)
             - layout (string, (list (default)|cardlets|cards|line)
-            - scope (string, whether drafts should be shown, drafts|provisional|all, default: only published entries
-              will be included)
-            - ownDraftsOnly (bool, if true and scope is defined: show only drafts created by the current user)
-            - status (string|array, see [docs](https://craftcms.com/docs/4.x/entries.html#status)
-            - allSites (bool, true = display (unique) entries from all sites)
-            - orderBy (string|array see [docs](https://craftcms.com/docs/4.x/entries.html#orderby)
-            - showNewButton (bool whether button 'All entry' will be shown)
-            - showIndexButton (bool whether button 'All entries' will be shown)
-            - showRefreshButton (bool, whether to show a refresh button for this section)
+            - limit (int, number of entries to show)
             - linkToPage (string, the key of a page the heading is linked to. May contain an anchor, e.g. `page1#tab1`)
+            - orderBy (string|array see [docs](https://craftcms.com/docs/4.x/entries.html#orderby)
+            - ownDraftsOnly (bool, if true and scope is defined: show only drafts created by the current user)
+            - popupInfo (array|string, object template to render in an information popup)
+            - query (ElementQuery, define your own query)
+            - scope (string, whether drafts should be shown, drafts|provisional|all, default: only published entries will be included)
             - search (bool, whether search will be enabled)
+            - section (array|string, Craft section handle)
+            - showIndexButton (bool whether button 'All entries' will be shown)
+            - showNewButton (bool whether button 'All entry' will be shown)
+            - showRefreshButton (bool, whether to show a refresh button for this section)
+            - size (string, the grid colum size of an entry (card, cardlet). tiny|small|medum|large|card)
             - sortByScore (bool, whether search results will be sorted by score. default=false)
-            - filters (array, Array of fields whose values can be applied as filters. See Search doc below)
-            - custom  (array, any custom keys, can be used to modify the entries query via event, see Events below)
+            - status (string|array, see [docs](https://craftcms.com/docs/4.x/entries.html#status)
+            - titleObjectTemplate (string, an object template that will be rendered for the title in a layout. Defaults to, well, `{title})
 
 A `handle` setting can be applied to every object that helps to identify it in events.
 
@@ -915,6 +913,31 @@ Example:
     {% endfor %}
 </div>
 ```
+
+### Help
+
+A help text can be displayed for the section.
+
+You can use a simple string: 
+
+```php
+->help('Help is on the way!')
+```
+
+or use a custom template
+
+```php
+->help([
+    'template' => 'help/needsattention.twig',  // or use 'text' => 'helptext
+    'type' => 'warning' // optional, tip|warning
+])
+
+
+```
+
+![Screenshot](/images/warning.jpg)
+
+Custom templates live in the folder defined by the `customTemplatePath` plugin setting.
 
 ### Actions
 

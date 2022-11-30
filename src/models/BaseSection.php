@@ -8,6 +8,7 @@ class BaseSection extends BaseModel
 {
 
     public ?string $heading = '';
+    public array|string $help = '';
     public ?string $linkToPage = '';
 
     // The partial that will be called to render this section
@@ -26,6 +27,18 @@ class BaseSection extends BaseModel
     public function heading(string $heading): self
     {
         $this->heading = $heading;
+        return $this;
+    }
+
+    /**
+     * Sets a help text. String or array with keys 'text' or 'template', 'type' (optional, tip/warning)
+     *
+     * @param string $help
+     * @return $this
+     */
+    public function help(array|string $help): self
+    {
+        $this->help = $help;
         return $this;
     }
 
