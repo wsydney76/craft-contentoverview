@@ -235,6 +235,9 @@ Example:
 
 We use a 'fluid' config using tab/column/section models.
 
+> **Note**
+> All objects are created by the `ContentOverviewService` factory class. In this doc the variable `$doc` holds an instance of this class.  
+
 ```php
 // page1.php
 
@@ -354,6 +357,62 @@ class NewsSection extends Section
     public array|string $info = '{tagline}, {postDate|date("short")}';
 }
 
+];
+```
+
+### Extending section config
+
+A custom section config class can also be useful to add custom query params:
+
+```php
+// Config:
+->topic('sport')
+
+class NewsSection extends Section
+{
+    ... defaults as above
+    public ?string $topic = null; // your new setting
+
+    // Setter method for fluent config
+    public function topic(string $topic): self
+    {
+        $this->topic = $topic;
+        return $this;
+    }
+
+    // Add query param
+    public function getQuery(array $params): ElementQueryInterface
+    {
+        $query = parent::getQuery($params);
+
+        if ($this->topic) {
+            $topicId = Entry::find()->section('topic')->slug($this->topic)->ids();
+            if ($topicId) {
+                $query->andRelatedTo(['targetElement' => $topicId, 'field' => 'topics'] );
+            }
+        }
+
+        return $query;
+    }
+}
+```
+
+### Dynamic Configuration
+
+```php
+return [
+    'tabs' => Entry::find()
+        ->section('topic')
+        ->status(null)
+        ->collect()
+        ->map(function($entry) use ($co) {
+            return $co->createTab($entry->title, [
+               $co->createColumn(6, [
+                   $co->createSection(NewsSection::class)
+                        ->topic($entry->slug)
+               ])
+            ]);
+        })        
 ];
 ```
 

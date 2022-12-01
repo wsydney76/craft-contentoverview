@@ -1,6 +1,9 @@
 {% if sectionConfig.help %}
     {% set help = sectionConfig.help %}
     <div class="co-section-help">
+        <div>
+            <button onclick="co_openSlideout('contentoverview/section/get-section-help')">Help</button>
+        </div>
         {% if help is string %}
             {{ sectionConfig.help }}
         {% else %}
