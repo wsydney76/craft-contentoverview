@@ -3,6 +3,7 @@
 namespace wsydney76\contentoverview\controllers;
 
 use Craft;
+use craft\errors\InvalidElementException;
 use craft\web\Controller;
 use wsydney76\contentoverview\models\Section;
 use wsydney76\contentoverview\Plugin;
@@ -45,6 +46,29 @@ class SectionController extends Controller
                 'sectionPath' => $sectionPath,
                 'results' => $results
             ])
+        ]);
+    }
+
+    function actionGetActionHelp(): \yii\web\Response
+    {
+        $sectionPath = Craft::$app->request->getRequiredParam('sectionPath');
+        $sectionConfig = Plugin::getInstance()->contentoverview->getSectionByPath($sectionPath);
+        if (!$sectionConfig) {
+            throw new InvalidConfigException("Invalid section path $sectionPath");
+        }
+
+        $entryId = Craft::$app->request->getRequiredParam('entryId');
+        $entry = Craft::$app->entries->getEntryById($entryId);
+        if (!$entry) {
+            throw new InvalidElementException("Invalid entry id $entryId");
+        }
+
+        $template = Plugin::getInstance()->getSettings()->customTemplatePath . '/' . Craft::$app->request->getRequiredParam('template');
+
+
+        return $this->renderTemplate($template, [
+            'sectionConfig' => $sectionConfig,
+            'entry' => $entry
         ]);
     }
 

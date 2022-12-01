@@ -7,9 +7,11 @@ use craft\elements\Entry;
 class Action extends BaseModel
 {
     public string $label;
-    public string $icon;
+    public string $icon = '';
     public string $cpAction = '';
     public string $jsFunction = '';
+    public string $slideoutTemplate = '';
+
     public string $cpUrl = '';
 
     /**
@@ -73,6 +75,18 @@ class Action extends BaseModel
     public function cpUrl(string $cpUrl): self
     {
         $this->cpUrl = $cpUrl;
+        return $this;
+    }
+
+    /**
+     * Template that will be rendered in a slideout
+     *
+     * @param string $slideoutTemplate
+     * @return $this
+     */
+    public function slideoutTemplate(string $slideoutTemplate): self
+    {
+        $this->slideoutTemplate = $slideoutTemplate;
         return $this;
     }
 

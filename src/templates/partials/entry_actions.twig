@@ -2,6 +2,8 @@
 
 {# @var settings \wsydney76\contentoverview\models\Settings #}
 {# @var sectionConfig \wsydney76\contentoverview\models\Section #}
+{# @var action \wsydney76\contentoverview\models\Action #}
+
 
 {% set actions = sectionConfig.getActions(entry) %}
 
@@ -61,7 +63,7 @@
                     {% endif %}
                     <div>
                         <a class="co-action-icon" title="{{ 'View'|t('contentoverview') }}" href="{{ frontendUrl }}"
-                           target="_blank">{{ svg('@appicons/world.svg')|attr({width: '18px', height: '18px'}) }}</a>
+                           target="_blank">{{ _self.displayIcon('@appicons/world.svg') }}</a>
                     </div>
                 {% endif %}
 
@@ -83,21 +85,34 @@
                 {% endif %}
 
                 {% if action.cpAction %}
-                    <button title="{{ action.label|t('contentoverview') }}"
+                    <button title="{{ action.label|t('site') }}"
                             class="co-action-icon"
-                            aria-label="{{ action.label|t('contentoverview') }}"
+                            aria-label="{{ action.label|t('site') }}"
                             onclick="co_postAction('{{ action.cpAction }}','{{ action.label }}', {{ entry.id }}, {{ draftId }}, '{{ entry.title }}', '{{ sectionPath }}' , {{ sectionPageNo }})">
-                        {{ svg(action.icon)|attr({width: '18px', height: '18px', stroke: 'currentColor'}) }}
+                        {{ _self.displayIcon(action.icon) }}
                     </button>
                 {% endif %}
 
                 {% if action.cpUrl %}
                     <a class="co-action-icon"
-                       aria-label="{{ action.label|t('contentoverview') }}"
+                       aria-label="{{ action.label|t('site') }}"
                        href="{{ cpUrl(action.cpUrl, {elementId: entry.id, draftId: (draftId == 'null' ? null: draftId)}) }}"
                        target="_blank">
                         {{ _self.displayIcon(action.icon) }}
                     </a>
+                {% endif %}
+                
+                {% if action.slideoutTemplate %}
+                    <button title="{{ action.label|t('site') }}"
+                            class="co-action-icon"
+                            aria-label="{{ action.label|t('site') }}"
+                            onclick="co_openSlideout('contentoverview/section/get-action-help',{
+                                    template: '{{ action.slideoutTemplate }}',
+                                    sectionPath: '{{ sectionPath }}',
+                                    entryId: {{ entry.id }}
+                                    })">
+                        {{ _self.displayIcon(action.icon) }}
+                    </button>
                 {% endif %}
 
             {% endswitch %}
@@ -116,5 +131,5 @@
 
 
 {% macro displayIcon(icon) %}
-    {{ svg(icon)|attr({width: '18px', height: '18px', stroke: 'currentColor'}) }}
+    {{ svg(icon)|replace({'fill="#000000"': 'fill="#4b5563"'})|attr({width: '18px', height: '18px', stroke: 'currentColor'}) }}
 {% endmacro %}

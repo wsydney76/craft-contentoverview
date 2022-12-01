@@ -1002,6 +1002,7 @@ For more info about the section, you can configure a button that opens a custom 
 ])
 ```
 
+A `sectionConfig` variable is available.
 
 ![Screenshot](/images/warning.jpg)
 
@@ -1020,6 +1021,7 @@ Actions can be:
 * A custom javascript function.
 * A CP link to a page provided e.g. by a custom module.
 * A custom controller action (executed with user confirmation).
+* A template opened in a slideout.
 
 *) Requires `work` plugin. This is currently private, but an old PoC version (ported to Craft 4)
 is available [here](https://github.com/wsydney76/work).
@@ -1047,7 +1049,7 @@ is available [here](https://github.com/wsydney76/work).
         ->icon('@templates/_icons/history.svg')
         ->jsFunction('myApp_publish_release')
     
-    // Call a custom controller action
+    // Call a custom controller action (see example below)
     // elementId and draftId params will be posted to the action.
     // requires that the controller action return ->asSuccess(message) or ->asFailure(message)
     // Takes care of displaying cp notice/error, redirect/refreshing the section html
@@ -1056,6 +1058,14 @@ is available [here](https://github.com/wsydney76/work).
         ->icon('@templates/_icons/publish.svg')
         ->cpAction('main/content/publish-release')
         ->handle('publishAction')
+        
+    
+    // Open a custom template in a slideout
+    // Variables sectionConfig, entry will be available in the template
+    $co->createAction()
+        ->label('Details')
+        ->icon('@appicons/info-circle.svg')
+        ->slideoutTemplate('help/moreinfos.twig')
 ])
 
 
@@ -1137,6 +1147,9 @@ The class names are defined in `models\Settings.php`.
     public string $columnClass = Column::class;
     public string $sectionClass = Section::class;
     public string $actionClass = Action::class;
+    public string $filterClass = Filter::class;
+    public string $tableSectionClass = TableSection::class;
+    public string $tableColumnClass = TableColumn::class;
 ```
 
 So when you feel the indomitable need to use your own classes, you can do so
