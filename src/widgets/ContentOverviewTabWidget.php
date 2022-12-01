@@ -20,7 +20,7 @@ class ContentOverviewTabWidget extends Widget
 
     public static function icon(): ?string
     {
-        return '@appicons/field.svg';
+        return '@coicons/field.svg';
     }
 
     protected static function allowMultipleInstances(): bool

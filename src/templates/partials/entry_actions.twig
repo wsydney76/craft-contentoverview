@@ -22,7 +22,7 @@
                             class="co-action-icon"
                             aria-label="{{ "Edit in slideout"|t('contentoverview') }}"
                             onclick="{{ createEditorJs }}">
-                        {{ svg('@wsydney76/contentoverview/icons/slideout.svg')|attr({width: '18px', height: '18px'}) }}
+                        {{ svg('@coicons/slideout.svg')|attr({width: '18px', height: '18px'}) }}
                     </button>
 
                 {% endif %}
@@ -33,7 +33,7 @@
                         class="co-action-icon"
                         aria-label="{{ "Delete"|t('contentoverview') }}"
                         onclick="co_deleteEntry({{ entry.id }}, {{ draftId }}, '{{ entry.title }}', '{{ sectionPath }}' , {{ sectionPageNo }})">
-                    {{ svg('@wsydney76/contentoverview/icons/trash.svg')|attr({width: '18px', height: '18px', stroke: 'currentColor'}) }}
+                    {{ svg('@coicons/trash.svg')|attr({width: '18px', height: '18px', stroke: 'currentColor'}) }}
                 </button>
 
             {% case "view" %}
@@ -63,7 +63,7 @@
                     {% endif %}
                     <div>
                         <a class="co-action-icon" title="{{ 'View'|t('contentoverview') }}" href="{{ frontendUrl }}"
-                           target="_blank">{{ _self.displayIcon('@appicons/world.svg') }}</a>
+                           target="_blank">{{ _self.displayIcon('@coicons/world.svg') }}</a>
                     </div>
                 {% endif %}
 
@@ -73,7 +73,16 @@
                 {% if craft.app.plugins.pluginEnabled('work') and entry.draftId and not entry.isCanonical %}
                     <button type="button"  aria-label="{{ 'Compare with current'|t('contentoverview') }}" title="{{ 'Compare with current'|t('contentoverview') }}"
                             onclick="co_compare({{ entry.draftId }}, {{ entry.siteId }}, {{ entry.isProvisionalDraft ? 1 : 0 }})">
-                        {{ _self.displayIcon('@wsydney76/contentoverview/icons/compare.svg') }}
+                        {{ _self.displayIcon('@coicons/compare.svg') }}
+                    </button>
+                {% endif %}
+
+            {% case "relationships" %}
+                {% if craft.app.plugins.pluginEnabled('elementmap') %}
+                    {% set ajaxBaseUrl = cpUrl("elementmap-getrelations/#{entry.site.handle}/entry/#{entry.canonicalId}") %}
+                    <button type="button"  aria-label="{{ 'Relationships'|t('contentoverview') }}" title="{{ 'Relationships'|t('contentoverview') }}"
+                            onclick="co_relationships('{{ ajaxBaseUrl }}', {{ entry.draftId ?? 0 }}, this)">
+                        {{ _self.displayIcon('@coicons/relationships.svg') }}
                     </button>
                 {% endif %}
 
@@ -111,7 +120,7 @@
                                     sectionPath: '{{ sectionPath }}',
                                     entryId: {{ entry.id }}
                                     })">
-                        {{ _self.displayIcon(action.icon) }}
+                        {{ _self.displayIcon(action.icon ?: '@coicons/info.svg') }}
                     </button>
                 {% endif %}
 
@@ -124,7 +133,7 @@
                                     sectionPath: '{{ sectionPath }}',
                                     entryId: {{ entry.id }}
                                     }, this)">
-                        {{ _self.displayIcon(action.icon) }}
+                        {{ _self.displayIcon(action.icon ?: '@coicons/info.svg') }}
                     </button>
                 {% endif %}
 
@@ -144,5 +153,6 @@
 
 
 {% macro displayIcon(icon) %}
+    {# recolor Crafts own icons #}
     {{ svg(icon)|replace({'fill="#000000"': 'fill="#4b5563"'})|attr({width: '16px', height: '16px', stroke: 'currentColor'}) }}
 {% endmacro %}

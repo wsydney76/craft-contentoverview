@@ -16,7 +16,7 @@ class ContentOverviewLinksWidget extends Widget
 
     public static function icon(): ?string
     {
-        return '@appicons/field.svg';
+        return '@coicons/field.svg';
     }
 
     public function getBodyHtml(): ?string

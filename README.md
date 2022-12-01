@@ -53,7 +53,7 @@ Support your workflow and quality management: Show drafts / status / own provisi
 Create a file `contentoverview.php` in your config folder.
 
 - customTemplatePath (string, folder for custom templates, default = _contentoverview)
-- defaultIcon (string, file path to a svg icon, default = @appicons/newspaper.svg)
+- defaultIcon (string, file path to a svg icon, default = @coicons/newspaper.svg)
 - defaultLayout (string, list (default)|cardlets|cards|line)
 - defaultPage (string, page key for the first/only page.)
 - enableCreateInSlideoutEditor (bool, whether new entries will be created in a slideout editor. Defaults to false on multi-site installs, else true)
@@ -655,6 +655,8 @@ Event::on(
 );
 ```
 
+There is a `@coicons` alias that points the plugins own icon folder.
+
 ![Screenshot](/images/icons.jpg)
 
 ## Searching
@@ -1060,17 +1062,17 @@ is available [here](https://github.com/wsydney76/work).
     
     // Open a custom template in a slideout, which is recommended for longer content
     // Variables sectionConfig, entry will be available in the template
+    // Shows 'info' icon by default
     $co->createAction()
-        ->label('Details')
-        ->icon('@appicons/info-circle.svg')
+        ->label('Details')        
         ->slideoutTemplate('help/moreinfos.twig')
         
     // Open a custom template in a popup, which is recommended for shorter content
     // Variables sectionConfig, entry will be available in the template
+    // Shows 'info' icon by default
     $co->createAction()
-        ->label('Details')
-        ->icon('@appicons/info-circle.svg')
-        ->popuTemplate('help/moreinfos.twig')        
+        ->label('Details')        
+        ->popupTemplate('help/moreinfos.twig')        
 ])
 
 

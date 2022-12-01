@@ -408,6 +408,7 @@
 .co-cardlets .co-actions {
     display: flex;
     justify-content: end;
+    margin-bottom: 4px;
 }
 
 .\? {

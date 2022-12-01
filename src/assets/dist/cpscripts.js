@@ -279,6 +279,19 @@ function co_compare(draftId, siteId, isProvisionalDraft) {
         })
 }
 
+function co_relationships(ajaxBaseUrl, draftId, element) {
+    $.get(ajaxBaseUrl + '&draftId=' + draftId )
+        .done(function(data) {
+            hud = new Garnish.HUD(element, data, {
+                orientations: ['top', 'bottom', 'right', 'left'],
+                hudClass: 'hud guide-hud',
+            });
+        })
+        .fail(function() {
+            alert("error");
+        });
+}
+
 function co_openPopup(action, data = {}, element) {
     Craft.sendActionRequest('POST', action, {data})
         .then((response) => {

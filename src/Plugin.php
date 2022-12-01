@@ -18,6 +18,7 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
 use wsydney76\contentoverview\assets\ContentOverviewAssetBundle;
+use wsydney76\contentoverview\assets\ElementmapPluginAssetBundle;
 use wsydney76\contentoverview\assets\WorkPluginAssetBundle;
 use wsydney76\contentoverview\models\Settings;
 use wsydney76\contentoverview\services\ContentOverviewService;
@@ -44,10 +45,18 @@ class Plugin extends \craft\base\Plugin
         if (!Craft::$app->request->isCpRequest) {
             return;
         }
-
-        if (!Craft::$app->user->identity->can('accessPlugin-contentoverview')) {
+        $currentUser = Craft::$app->user->identity;
+        if (!$currentUser) {
             return;
         }
+
+        if (!$currentUser->can('accessPlugin-contentoverview')) {
+            return;
+        }
+
+        $this->setAliases(
+            ['@coicons' => $this->basePath . '/icons']
+        );
 
         $this->setComponents([
             'contentoverview' => $settings->serviceClass
@@ -159,6 +168,9 @@ class Plugin extends \craft\base\Plugin
             function($event) use ($settings) {
                 if (Craft::$app->plugins->isPluginEnabled('work')) {
                     Craft::$app->view->registerAssetBundle(WorkPluginAssetBundle::class);
+                }
+                if (Craft::$app->plugins->isPluginEnabled('elementmap')) {
+                    Craft::$app->view->registerAssetBundle(ElementmapPluginAssetBundle::class);
                 }
             }
         );

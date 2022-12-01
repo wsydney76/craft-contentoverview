@@ -18,7 +18,7 @@ class Settings extends Model
 
     public string $customTemplatePath = '_contentoverview';
     public string $defaultLayout = 'list';
-    public string $defaultIcon = '@appicons/newspaper.svg';
+    public string $defaultIcon = '@coicons/newspaper.svg';
     public string $defaultPage = 'default';
     public bool $enableSlideoutEditor = true;
     public bool $enableCreateInSlideoutEditor = true;
