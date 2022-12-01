@@ -17,6 +17,8 @@ use wsydney76\contentoverview\models\TableColumn;
 use wsydney76\contentoverview\models\TableSection;
 use wsydney76\contentoverview\models\WidgetSection;
 use wsydney76\contentoverview\Plugin;
+use yii\base\InvalidConfigException;
+use yii\web\ForbiddenHttpException;
 use function collect;
 
 class ContentOverviewService extends Component
@@ -201,6 +203,28 @@ class ContentOverviewService extends Component
         }
 
         return $pages;
+    }
+
+    public function getSectionByPath(string $sectionPath): Section
+    {
+        $segments = explode('-', $sectionPath);
+
+        $config = Craft::$app->config->getConfigFromFile("contentoverview/{$segments[0]}");
+
+        if (!$config) {
+            throw new InvalidConfigException("$sectionPath is an invalid path.");
+        }
+
+        $page = Plugin::getInstance()->contentoverview->createPage($segments[0], $config);
+
+        /** @var Section $section */
+        $section = $page->getTabs()[$segments[1]]->getColumns()[$segments[2]]->getSections()[$segments[3]];
+
+        if ($section->section && !$section->getPermittedSections('viewentries')) {
+            throw new ForbiddenHttpException();
+        }
+
+        return $section;
     }
 
 }

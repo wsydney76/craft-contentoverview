@@ -418,6 +418,8 @@ return [
 ];
 ```
 
+![Screenshot](/images/dynamicconfig.jpg)
+
 ### Shortcuts
 
 In case you have only one tab, one column, you can leave these steps out, a default object will be created behind the scenes.
@@ -987,9 +989,19 @@ or use a custom template
     'template' => 'help/needsattention.twig',  // or use 'text' => 'helptext
     'type' => 'warning' // optional, tip|warning
 ])
-
-
 ```
+
+For more info about the section, you can configure a button that opens a custom template in a slideout.
+
+```php
+->help([
+    'template' => 'help/needsattention.twig',
+    'type' => 'warning',
+    'buttonText' => 'Additional Info',
+    'slideoutTemplate' => 'help/wtf-should-I-do-with-it.twig'
+])
+```
+
 
 ![Screenshot](/images/warning.jpg)
 

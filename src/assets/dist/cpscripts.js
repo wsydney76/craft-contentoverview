@@ -264,6 +264,8 @@ function co_respondToVisibility(element, callback, root = null) {
     observer.observe(element);
 }
 
+
+// from work plugin
 function co_compare(draftId, siteId, isProvisionalDraft) {
 
     url = `/admin/work/compare?draftId=${draftId}&siteId=${siteId}&isProvisionalDraft=${isProvisionalDraft}`
@@ -274,5 +276,19 @@ function co_compare(draftId, siteId, isProvisionalDraft) {
         })
         .fail(function() {
             alert("Error");
+        })
+}
+
+function co_openSlideout(action, data = {}) {
+    Craft.sendActionRequest('POST', action, {data})
+        .then((response) => {
+            console.log(response)
+            new Craft.Slideout(response.data, {
+                containerAttributes: {class: 'co-slideout-container'}
+            })
+        })
+        .catch((error) => {
+            console.log(error.response)
+            Craft.cp.displayError(error.response.data.error)
         })
 }

@@ -51,7 +51,18 @@
 }
 
 .co-section-help {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 24px;
+}
+
+.co-section-help-button {
+    margin-left: 24px;
+}
+
+.co-section-help-text {
+    width: 100%;
 }
 
 .co-entry.published {
@@ -172,6 +183,19 @@
     font-weight: bold;
 }
 
+
+.co-slideout-container {
+    overflow-y: scroll;
+}
+
+.co-slideout-heading {
+    padding: 12px 24px;
+    background-color: #E4EDF6;
+    font-weight: 600;
+}
+.co-slideout-body {
+    padding: 24px;
+}
 
 /* ========================================
     List Layout

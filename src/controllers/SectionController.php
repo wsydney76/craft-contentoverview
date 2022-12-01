@@ -50,6 +50,14 @@ class SectionController extends Controller
 
     function actionGetSectionHelp(): \yii\web\Response
     {
-        return $this->renderTemplate('_contentoverview/test/slideout.twig');
+        $sectionPath = Craft::$app->request->getRequiredParam('sectionPath');
+        $sectionConfig = Plugin::getInstance()->contentoverview->getSectionByPath($sectionPath);
+        if (!$sectionConfig) {
+            throw new InvalidConfigException("Invalid section path $sectionPath");
+        }
+        $template = Plugin::getInstance()->getSettings()->customTemplatePath . '/' . Craft::$app->request->getRequiredParam('template');
+        return $this->renderTemplate($template, [
+            'sectionConfig' => $sectionConfig
+        ]);
     }
 }

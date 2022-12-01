@@ -1,31 +1,45 @@
 {% if sectionConfig.help %}
     {% set help = sectionConfig.help %}
     <div class="co-section-help">
-        <div>
-            <button onclick="co_openSlideout('contentoverview/section/get-section-help')">Help</button>
+
+        <div class="co-section-help-text">
+            {% if help is string %}
+                {{ sectionConfig.help }}
+            {% else %}
+                {% set text = help.text is defined ?
+                    help.text|t('site') :
+                    include("#{settings.customTemplatePath}/#{help.template}") %}
+
+                {% set text = text|raw|purify(settings.purifierConfig) %}
+
+                <div>
+                    {% if help.type is defined %}
+                        <div class="readable">
+                            <blockquote class="note {{ help.type }}">
+                                {{ text }}
+                            </blockquote>
+                        </div>
+                    {% else %}
+                        {{ text }}
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
         </div>
-        {% if help is string %}
-            {{ sectionConfig.help }}
-        {% else %}
-            {% set text = help.text is defined ?
-                help.text|t('site') :
-                include("#{settings.customTemplatePath}/#{help.template}") %}
-            
-            {% set text = text|raw|purify(settings.purifierConfig) %}
 
+        {% if help.slideoutTemplate is defined %}
             <div>
-                {% if help.type is defined %}
-                    <div class="readable">
-                        <blockquote class="note {{ help.type }}">
-                            {{ text }}
-                        </blockquote>
-                    </div>
-                {% else %}
-                    {{ text }}
-                {% endif %}
-
+                <button class="co-section-help-button btn"
+                        onclick="co_openSlideout('contentoverview/section/get-section-help',{
+                                template: '{{ help.slideoutTemplate }}',
+                                sectionPath: '{{ sectionPath }}'
+                                })">
+                    {{ help.buttonText ? help.buttonText|t('site') : 'Additional help'|t('contentoverview') }}
+                </button>
             </div>
 
         {% endif %}
+
     </div>
 {% endif %}
