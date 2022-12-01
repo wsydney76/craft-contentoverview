@@ -399,6 +399,8 @@ class NewsSection extends Section
 
 ### Dynamic Configuration
 
+Configs can be created dynamically based on your content:
+
 ```php
 return [
     'tabs' => Entry::find()
