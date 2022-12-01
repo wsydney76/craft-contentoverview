@@ -7,13 +7,12 @@
 <div>
 
     {% set siteHandle = craft.app.request.queryParam('site') %}
-    {% set site = siteHandle ? craft.app.sites.siteByHandle(siteHandle) : craft.app.sites.primarySite %}
     {% set useSlideout = settings.userSetting('enableCreateInSlideoutEditor') %}
 
     {% if permittedSections|length == 1 %}
         {% set section = permittedSections[0] %}
         {% if useSlideout %}
-            <button class="btn submit add icon" onclick="co_createEntry('{{ section }}', {{ site.id }}, '{{ sectionPath }}', {{ sectionPageNo }})">
+            <button class="btn submit add icon" onclick="co_createEntry('{{ section }}', {{ requestedSite.id }}, '{{ sectionPath }}', {{ sectionPageNo }})">
                 {{ "New entry"|t('contentoverview') }}
             </button>
         {% else %}

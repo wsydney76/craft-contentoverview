@@ -8,7 +8,7 @@ use craft\db\Paginator;
 use craft\elements\Asset;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\Entry;
-use craft\elements\GlobalSet;
+use craft\helpers\Cp;
 use craft\helpers\ElementHelper;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineActionsEvent;
@@ -721,7 +721,7 @@ class Section extends BaseSection
         $filters = $params['filters'] ?? [];
         $orderBy = $params['orderBy'] ?? '';
 
-        $currentSite = Craft::$app->request->getParam('site', Craft::$app->sites->primarySite->handle);
+        $requestedSite = Cp::requestedSite();
 
         $query = $this->query ?? Entry::find()
             ->section($this->section)
@@ -796,10 +796,10 @@ class Section extends BaseSection
             $query
                 ->site('*')
                 ->unique()
-                ->preferSites([$currentSite]);
+                ->preferSites([$requestedSite]);
         } else {
             $query
-                ->site($currentSite);
+                ->site($requestedSite);
         }
 
         if ($this->imageField) {
