@@ -53,7 +53,6 @@ class Section extends BaseSection
     public ?int $limit = null;
     public array|string $orderBy = '';
     public bool $ownDraftsOnly = false;
-    public array|string $popupInfo = '';
     public ?ElementQueryInterface $query = null;
     public bool $search = false;
     public array $searchAttributes = [];
@@ -391,30 +390,6 @@ class Section extends BaseSection
 
 
     /**
-     * Twig object templates for popup info
-     * Multiple templates defined in an array will be display on multitple lines
-     *
-     * @param array|string $info Twig object template(s)
-     * @return $this
-     */
-    public function popupInfo(array|string $popupInfo): self
-    {
-        $this->popupInfo = $popupInfo;
-        return $this;
-    }
-
-    /**
-     * Get popupInfo for entry
-     *
-     * @param Entry $entry
-     * @return mixed|string
-     */
-    public function getPopupInfo(Entry $entry): string
-    {
-        return $this->_getConfigForEntry('popupInfo', $entry);
-    }
-
-    /**
      * Section handle or array of section handles
      *
      * @param string $section section handle
@@ -725,7 +700,8 @@ class Section extends BaseSection
      *
      * @return Paginator
      */
-    public function getEntries(array $params): Paginator {
+    public function getEntries(array $params): Paginator
+    {
         $query = $this->getQuery($params);
         return new Paginator($query, [
             'currentPage' => $params['sectionPageNo'] ?? 1,
@@ -738,7 +714,8 @@ class Section extends BaseSection
      *
      * @return ElementQueryInterface
      */
-    public function getQuery(array $params): ElementQueryInterface {
+    public function getQuery(array $params): ElementQueryInterface
+    {
 
         $q = $params['q'] ?? '';
         $filters = $params['filters'] ?? [];
@@ -911,7 +888,6 @@ class Section extends BaseSection
 
         return $query;
     }
-
 
 
     protected function _normalizeToArray($value)

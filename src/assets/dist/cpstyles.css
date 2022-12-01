@@ -185,7 +185,7 @@
 
 
 .co-slideout-container {
-    overflow-y: scroll;
+    overflow-y: scroll !important;
 }
 
 .co-slideout-heading {
@@ -195,6 +195,7 @@
 }
 .co-slideout-body {
     padding: 24px;
+
 }
 
 /* ========================================
@@ -629,4 +630,16 @@
 
 .spinner-overlay.ajax-request {
     display: flex;
+}
+
+
+/* FIX */
+
+.compare-container {
+    overflow-y: scroll !important;
+}
+
+.diff-wrapper.diff {
+    font-size: 16px !important;
+
 }

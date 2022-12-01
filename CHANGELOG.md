@@ -24,6 +24,12 @@
 * Section html can now be refreshed.
 * Added a `showRefreshButton` section config setting.
 * Added the `enableCreateInSlideoutEditor` plugin config setting.
+* Added help functionality.
+* Added `slideoutTemplate` and `popupTemplate` actions.
+
+### Removed
+
+The `popup` section setting has been removed in favor of a `popup` action.
 
 ### Enhanced customization
 

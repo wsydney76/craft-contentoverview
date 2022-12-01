@@ -115,6 +115,19 @@
                     </button>
                 {% endif %}
 
+                {% if action.popupTemplate %}
+                    <button title="{{ action.label|t('site') }}"
+                            class="co-action-icon"
+                            aria-label="{{ action.label|t('site') }}"
+                            onclick="co_openPopup('contentoverview/section/get-action-help',{
+                                    template: '{{ action.popupTemplate }}',
+                                    sectionPath: '{{ sectionPath }}',
+                                    entryId: {{ entry.id }}
+                                    }, this)">
+                        {{ _self.displayIcon(action.icon) }}
+                    </button>
+                {% endif %}
+
             {% endswitch %}
         {% endfor %}
     </div>

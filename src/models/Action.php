@@ -11,6 +11,7 @@ class Action extends BaseModel
     public string $cpAction = '';
     public string $jsFunction = '';
     public string $slideoutTemplate = '';
+    public string $popupTemplate = '';
 
     public string $cpUrl = '';
 
@@ -75,6 +76,18 @@ class Action extends BaseModel
     public function cpUrl(string $cpUrl): self
     {
         $this->cpUrl = $cpUrl;
+        return $this;
+    }
+
+    /**
+     * Template that will be rendered in a popup (HUD)
+     *
+     * @param string $popupTemplate
+     * @return $this
+     */
+    public function popupTemplate(string $popupTemplate): self
+    {
+        $this->popupTemplate = $popupTemplate;
         return $this;
     }
 

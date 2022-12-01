@@ -217,7 +217,6 @@ Structure of this file:
             - linkToPage (string, the key of a page the heading is linked to. May contain an anchor, e.g. `page1#tab1`)
             - orderBy (string|array see [docs](https://craftcms.com/docs/4.x/entries.html#orderby)
             - ownDraftsOnly (bool, if true and scope is defined: show only drafts created by the current user)
-            - popupInfo (array|string, object template to render in an information popup)
             - query (ElementQuery, define your own query)
             - scope (string, whether drafts should be shown, drafts|provisional|all, default: only published entries will be included)
             - search (bool, whether search will be enabled)
@@ -329,12 +328,7 @@ $co->createSection(NewsSection::class)
 $co->createSection(NewsSection::class)
     ->heading('Drafts')
     ->scope('drafts')
-    ->popupInfo( Craft::t('site', 'Draft created by') . ' {creator.name}' . '<br>' .
-            Craft::t('site', 'Draft created at') . ' {draftCreatedAt|date("short")}' . '<br>' .
-            '{draftNotes ? "Draft Notes:"}' . '<br>' .
-            '{draftNotes}'),
-            ])
-
+    
 // Use 'query' to build individual queries that can't be composed with predefined parameters
 // Requires headings, disables Add new/List all buttons (can be any section). 
 $co->createSection()
@@ -466,7 +460,7 @@ The section config usually uses a single section, but can also be set to multipl
 ```
 
 Different sections and different entry types can use different field layouts, so you can take care of that by
-providing an array to the `imageField`, `info`, `popupInfo`, `icon` and `infoTemplate` config settings like so:
+providing an array to the `imageField`, `info`, `icon` and `infoTemplate` config settings like so:
 
 ```php
 ->info([
@@ -1025,7 +1019,7 @@ Actions can be:
 * A custom javascript function.
 * A CP link to a page provided e.g. by a custom module.
 * A custom controller action (executed with user confirmation).
-* A template opened in a slideout.
+* A template opened in a slideout or popup.
 
 *) Requires `work` plugin. This is currently private, but an old PoC version (ported to Craft 4)
 is available [here](https://github.com/wsydney76/work).
@@ -1064,12 +1058,19 @@ is available [here](https://github.com/wsydney76/work).
         ->handle('publishAction')
         
     
-    // Open a custom template in a slideout
+    // Open a custom template in a slideout, which is recommended for longer content
     // Variables sectionConfig, entry will be available in the template
     $co->createAction()
         ->label('Details')
         ->icon('@appicons/info-circle.svg')
         ->slideoutTemplate('help/moreinfos.twig')
+        
+    // Open a custom template in a popup, which is recommended for shorter content
+    // Variables sectionConfig, entry will be available in the template
+    $co->createAction()
+        ->label('Details')
+        ->icon('@appicons/info-circle.svg')
+        ->popuTemplate('help/moreinfos.twig')        
 ])
 
 
@@ -1361,8 +1362,6 @@ Set the `purifierConfig` plugin config if you do not want to use the default pur
 
 ## Known issues
 
-* 'info' popups do not work if the section html is loaded via ajax. Obviously event handlers have to be attached, but
-  how??
 * Undocumented things from Craft 4.3 core are used: css classes, css variables, scripts, icons... This may break
   anytime.
 
@@ -1373,4 +1372,4 @@ Set the `purifierConfig` plugin config if you do not want to use the default pur
 * Some translations are missing...
 * Some inline comments are missing...
 * Check accessibility...
-* Check this doc for completeness
+* Check this doc for accuracy and  completeness
