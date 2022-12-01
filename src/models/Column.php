@@ -3,7 +3,7 @@
 namespace wsydney76\contentoverview\models;
 
 use Craft;
-use craft\base\Model;
+use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineSectionsEvent;
 use wsydney76\contentoverview\Plugin;
 use yii\base\InvalidConfigException;
@@ -13,7 +13,7 @@ class Column extends BaseModel
     public const EVENT_DEFINE_SECTIONS = 'eventDefineSections';
 
     public int $width = 12;
-    public array $sections;
+    public array|Collection $sections;
 
     /**
      * Width of the column within a 12 columns grid

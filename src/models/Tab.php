@@ -13,7 +13,7 @@ class Tab extends BaseModel
     public const EVENT_DEFINE_COLUMNS = 'eventDefineColumns';
 
     public string $label = '';
-    public array $columns = [];
+    public array|Collection $columns = [];
 
     /**
      * Sets label of the tab. Also used for building the tab id.

@@ -3,10 +3,12 @@
 namespace wsydney76\contentoverview\models;
 
 use Craft;
+use craft\base\Element;
 use craft\db\Paginator;
 use craft\elements\Asset;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\Entry;
+use craft\elements\GlobalSet;
 use craft\helpers\ElementHelper;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineActionsEvent;
@@ -601,7 +603,7 @@ class Section extends BaseSection
     public function getPermittedSections(string $permission): array
     {
 
-        if ($this->query) {
+        if ($this->query && !$this->sections) {
             // No sections explicitly defined
             return ['*'];
         }
@@ -721,13 +723,26 @@ class Section extends BaseSection
     /**
      * Returns entries and entry count for this section
      *
-     * @return array with keys entries: array of entries (respecting a limit, if set), count: number of entries (without limit)
+     * @return Paginator
      */
-    public function getEntries(
-        int $sectionPageNo = 1, string $q = '', array $filters = [], string $orderBy = ''
-    ): Paginator {
-        /** @var Settings $settings */
-        $settings = Plugin::getInstance()->getSettings();
+    public function getEntries(array $params): Paginator {
+        $query = $this->getQuery($params);
+        return new Paginator($query, [
+            'currentPage' => $params['sectionPageNo'] ?? 1,
+            'pageSize' => $this->limit ?? 99999
+        ]);
+    }
+
+    /**
+     * Returns entry query for this section
+     *
+     * @return ElementQueryInterface
+     */
+    public function getQuery(array $params): ElementQueryInterface {
+
+        $q = $params['q'] ?? '';
+        $filters = $params['filters'] ?? [];
+        $orderBy = $params['orderBy'] ?? '';
 
         $currentSite = Craft::$app->request->getParam('site', Craft::$app->sites->primarySite->handle);
 
@@ -894,11 +909,10 @@ class Section extends BaseSection
             ]));
         }
 
-        return new Paginator($query, [
-            'currentPage' => $sectionPageNo,
-            'pageSize' => $this->limit ?? 99999
-        ]);
+        return $query;
     }
+
+
 
     protected function _normalizeToArray($value)
     {

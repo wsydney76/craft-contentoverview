@@ -22,24 +22,14 @@ class SectionController extends Controller
         $filters = Craft::$app->request->getBodyParam('filters');
         $orderBy = Craft::$app->request->getBodyParam('orderBy');
 
-        $segments = explode('-', $sectionPath);
+        $section = Plugin::getInstance()->contentoverview->getSectionByPath($sectionPath);
 
-        $config = Craft::$app->config->getConfigFromFile("contentoverview/{$segments[0]}");
-
-        if (!$config) {
-            throw new InvalidConfigException("$sectionPath is an invalid path.");
-        }
-
-        $page = Plugin::getInstance()->contentoverview->createPage($segments[0], $config);
-
-        /** @var Section $section */
-        $section = $page->getTabs()[$segments[1]]->getColumns()[$segments[2]]->getSections()[$segments[3]];
-
-        if ($section->section && !$section->getPermittedSections('viewentries')) {
-            throw new ForbiddenHttpException();
-        }
-
-        $results = $section->getEntries($sectionPageNo, $q, $filters, $orderBy);
+        $results = $section->getEntries([
+            'sectionPageNo' => $sectionPageNo,
+            'q' => $q,
+            'filters' => $filters,
+            'orderBy' => $orderBy
+        ]);
 
         return $this->asJson([
             'entriesHtml' => $this->view->renderTemplate("contentoverview/partials/{$section->entriesTemplate}", [
@@ -56,5 +46,10 @@ class SectionController extends Controller
                 'results' => $results
             ])
         ]);
+    }
+
+    function actionGetSectionHelp(): \yii\web\Response
+    {
+        return $this->renderTemplate('_contentoverview/test/slideout.twig');
     }
 }

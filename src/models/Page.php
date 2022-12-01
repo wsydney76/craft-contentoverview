@@ -21,7 +21,7 @@ class Page extends BaseModel
     public string $heading = '';
     public string $icon = '';
 
-    private array $_tabs = [];
+    private array|Collection $_tabs = [];
 
     /**
      * Returns an array of Tab models for this page
