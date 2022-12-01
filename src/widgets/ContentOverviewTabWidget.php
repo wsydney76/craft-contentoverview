@@ -30,6 +30,11 @@ class ContentOverviewTabWidget extends Widget
 
     public function getTitle(): ?string
     {
+        // This can occur if a user that had the permission to access this plugin has lost the permission in the mean time.
+        if (!Craft::$app->user->identity->can('accessPlugin-contentoverview')) {
+            return 'No permission';
+        }
+
         $page = Plugin::getInstance()->contentoverview->createPage('widgets', ['label' => 'Widgets']);
 
         if (!$this->tabId) {
@@ -46,6 +51,10 @@ class ContentOverviewTabWidget extends Widget
 
     public function getSettingsHtml(): ?string
     {
+        if (!Craft::$app->user->identity->can('accessPlugin-contentoverview')) {
+            return 'No permission';
+        }
+
         $page = Plugin::getInstance()->contentoverview->createPage('widgets', ['label' => 'Widgets']);
 
         return Cp::selectFieldHtml([
@@ -77,6 +86,11 @@ class ContentOverviewTabWidget extends Widget
 
     public function getBodyHtml(): ?string
     {
+
+        if (!Craft::$app->user->identity->can('accessPlugin-contentoverview')) {
+            return 'No permission';
+        }
+
         $settings = Plugin::getInstance()->getSettings();
 
         $page = Plugin::getInstance()->contentoverview->createPage('widgets', ['label' => 'Widgets']);

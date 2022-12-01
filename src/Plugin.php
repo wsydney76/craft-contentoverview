@@ -36,13 +36,16 @@ class Plugin extends \craft\base\Plugin
 
     public function init()
     {
-
         parent::init();
 
         /** @var Settings $settings */
         $settings = $this->getSettings();
 
         if (!Craft::$app->request->isCpRequest) {
+            return;
+        }
+
+        if (!Craft::$app->user->identity->can('accessPlugin-contentoverview')) {
             return;
         }
 

@@ -33,6 +33,10 @@ This is currently work in progress, set your `composer.json` requirement
 to `"wsydney76/craft-contentoverview": "dev-main"`
 and run `composer update` to get the latest stuff.
 
+## Permission
+
+Non-admin users need the `Access Content Overview Plugin` permission.
+
 ## Screenshots
 
 Show different sections in different layouts (cards, cardlets, list, line). Add section specific infos and image.
@@ -422,7 +426,7 @@ return [
 
 ### Shortcuts
 
-In case you have only one tab, one column, you can leave these steps out, a default object will be created behind the scenes.
+In case you have only one tab, one column, you can leave these levels out, a default object will be created behind the scenes.
 
 ```php
 // pageconfig

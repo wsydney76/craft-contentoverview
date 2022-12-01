@@ -21,6 +21,11 @@ class ContentOverviewLinksWidget extends Widget
 
     public function getBodyHtml(): ?string
     {
+        // This can occur if a user that had the permission to access this plugin has lost the permission in the mean time.
+        if (!Craft::$app->user->identity->can('accessPlugin-contentoverview')) {
+            return 'No permission';
+        }
+
         /** @var Settings $service */
         $service = Plugin::getInstance()->contentoverview;
         $pages = $service->getPages();
