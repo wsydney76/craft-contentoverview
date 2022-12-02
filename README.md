@@ -37,6 +37,41 @@ and run `composer update` to get the latest stuff.
 
 Non-admin users need the `Access Content Overview Plugin` permission.
 
+## Quick Start
+
+Create a file `config/contentoverview/default.php` with this content:
+
+```php
+<?php
+
+use wsydney76\contentoverview\services\ContentOverviewService;
+
+$co = new ContentOverviewService();
+
+return [
+    'tabs' => [
+        $co->createTab('Site', [
+            $co->createColumn(7, [
+                $co->createSection()
+                    ->section('news')
+                    ->layout('cards')
+                    ->imageField('featuredImage')
+                    ->size('small')
+                    ->info('{author.name}, {postDate|date("short")}')
+                    ->limit(12)
+            ]),
+            $co->createColumn(5, [
+                $co->createSection()
+                    ->section('page')
+            ])
+        ]),
+
+    ]
+];
+```
+
+Replace `news/page` with one or your section handles (a channel/a structure). Replace `featuredImage` with an asset fields handle. 
+
 ## Screenshots
 
 Show different sections in different layouts (cards, cardlets, list, line). Add section specific infos and image.
