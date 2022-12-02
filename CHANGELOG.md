@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 4.0.0 2022-12-02
 
 * Multipage setup: Links can now appear in the main navigation (default) or in the sidebar.
 * Added replaceDashboard setting.
