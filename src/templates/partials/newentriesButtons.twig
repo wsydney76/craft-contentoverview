@@ -32,7 +32,7 @@
                     {% for section in permittedSections %}
                         <li>
                             {% if useSlideout %}
-                                <button onclick="co_createEntry('{{ section }}', {{ site.id }}, '{{ sectionPath }}', {{ sectionPageNo }})">
+                                <button onclick="co_createEntry('{{ section }}', {{ requestedSite.id }}, '{{ sectionPath }}', {{ sectionPageNo }})">
                                     {{ "New entry in"|t('contentoverview') }}
                                     "{{ craft.app.sections.sectionByHandle(section).name|t('site') }}"
                                 </button>

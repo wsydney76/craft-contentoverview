@@ -577,7 +577,7 @@ class Section extends BaseSection
     public function getPermittedSections(string $permission): array
     {
 
-        if ($this->query && !$this->sections) {
+        if ($this->query && !$this->section) {
             // No sections explicitly defined
             return ['*'];
         }

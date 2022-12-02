@@ -1440,6 +1440,7 @@ Set the `purifierConfig` plugin config if you do not want to use the default pur
 
 ## TODOS:
 
+* Tests...
 * Improve styles
 * Improve error handling
 * Check permission handling
