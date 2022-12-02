@@ -700,7 +700,7 @@ class Section extends BaseSection
      *
      * @return Paginator
      */
-    public function getEntries(array $params): Paginator
+    public function getEntries(array $params = []): Paginator
     {
         $query = $this->getQuery($params);
         return new Paginator($query, [
