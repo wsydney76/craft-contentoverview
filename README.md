@@ -4,7 +4,7 @@ This plugin shows configurable overviews of a site's content.
 
 ## Disclaimer
 
-First final evaluation version. (4.0)
+First final evaluation/test version. (4.0)
 
 * This plugin was initially developed as a side/training project for internal use only.
 * Added a bunch of customization options when evaluating it in a real-life project.
@@ -28,10 +28,6 @@ First final evaluation version. (4.0)
 Run `composer require wsydney76/craft-contentoverview`
 
 Run `craft plugin/install contentoverview`
-
-This is currently work in progress, set your `composer.json` requirement
-to `"wsydney76/craft-contentoverview": "dev-main"`
-and run `composer update` to get the latest stuff.
 
 ## Permission
 
@@ -1054,7 +1050,8 @@ Actions can be:
 * slideout: predefined, opens the entry in a slideout editor.
 * delete: predefined, deletes the entry (with user confirmation).
 * view: predefined, open the entry url in a new tab (only live entries at the moment).
-* compare: predefined, shows a comparison draft <-> current in a slideout. *)
+* compare: integration, shows a comparison draft <-> current in a slideout. *)
+* relationships : integration, shows the relationships for an entry in a popup. **)
 * A custom javascript function.
 * A CP link to a page provided e.g. by a custom module.
 * A custom controller action (executed with user confirmation).
@@ -1062,6 +1059,10 @@ Actions can be:
 
 *) Requires `work` plugin. This is currently private, but an old PoC version (ported to Craft 4)
 is available [here](https://github.com/wsydney76/work).
+
+**) Requires `elementmap` plugin. This is currently private, but an old PoC version (ported to Craft 4)
+is available [here](https://github.com/wsydney76/craft-elementmap).
+
 
 ```php
 
@@ -1371,6 +1372,32 @@ in `translations\de\site.php`.
 
 No need to include translations in your config files.
 
+## Integrations
+
+Two integrations of other plugins are currently baked in as 'actions':
+
+### Compare
+
+Action: `compare`
+
+Shows a comparison between a draft and the current version.
+
+![Screenshot](/images/compare.jpg)
+
+Requires `work` plugin. This is currently private, but an old PoC version (ported to Craft 4)
+is available [here](https://github.com/wsydney76/work).
+
+### Relationships
+
+Action: `relationships`
+
+Show incoming and outgoing relations in a popup:
+
+![Screenshot](/images/relationships.jpg)
+
+Requires `elementmap` plugin. This is currently private, but an old PoC version (ported to Craft 4)
+is available [here](https://github.com/wsydney76/craft-elementmap).
+
 ## Performance
 
 Response time is highly dependent on your individual config, so here are just a few notes:
@@ -1403,10 +1430,18 @@ Set the `purifierConfig` plugin config if you do not want to use the default pur
 
 * Undocumented things from Craft 4.3 core are used: css classes, css variables, scripts, icons... This may break
   anytime.
+* Invalid config settings/no proper checks in custom modules may crash the Control Panel.
+
+## Did not make it into final version
+
+* Optionally show actions in dropdown
+* Global section defaults
+* Configurable integrations
 
 ## TODOS:
 
-* Improve responsive styles
+* Improve styles
+* Improve error handling
 * Check permission handling
 * Some translations are missing...
 * Some inline comments are missing...
