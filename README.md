@@ -51,7 +51,7 @@ $co = new ContentOverviewService();
 return [
     'tabs' => [
         $co->createTab('Site', [
-            $co->createColumn(7, [
+            $co->createColumn(8, [
                 $co->createSection()
                     ->section('news')
                     ->layout('cards')
@@ -60,7 +60,7 @@ return [
                     ->info('{author.name}, {postDate|date("short")}')
                     ->limit(12)
             ]),
-            $co->createColumn(5, [
+            $co->createColumn(4, [
                 $co->createSection()
                     ->section('page')
             ])
@@ -85,7 +85,9 @@ Support your workflow and quality management: Show drafts / status / own provisi
 
 ## Plugin config
 
-Create a file `contentoverview.php` in your config folder.
+Create a file `contentoverview.php` in your config folder. See [docs](https://craftcms.com/docs/4.x/extend/plugin-settings.html#overriding-setting-values).
+
+Settings in alphabetical order:
 
 - customTemplatePath (string, folder for custom templates, default = _contentoverview)
 - defaultIcon (string, file path to a svg icon, default = @coicons/newspaper.svg)
@@ -236,7 +238,7 @@ Structure of this file:
             - actions (array, The actions available to the section. See below)
             - allSites (bool, true = display (unique) entries from all sites)
             - custom  (array, any custom keys, can be used to modify the entries query via event, see Events below)
-            - elementType (array|string, elementType handle)
+            - entryType (array|string, entryType handle)
             - fallbackImageField (array|string, name of an image field to use if there is no image set in `imageField`)
             - filters (array, Array of fields whose values can be applied as filters. See Search doc below)
             - heading (string, heading of the section, defaults to section name)

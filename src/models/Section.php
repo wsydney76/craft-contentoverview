@@ -3,7 +3,6 @@
 namespace wsydney76\contentoverview\models;
 
 use Craft;
-use craft\base\Element;
 use craft\db\Paginator;
 use craft\elements\Asset;
 use craft\elements\db\ElementQueryInterface;
