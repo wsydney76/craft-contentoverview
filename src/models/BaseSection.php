@@ -2,14 +2,13 @@
 
 namespace wsydney76\contentoverview\models;
 
-use craft\base\Model;
-
 class BaseSection extends BaseModel
 {
 
     public ?string $heading = '';
     public array|string $help = '';
     public ?string $linkToPage = '';
+    public bool $showRefreshButton = false;
 
     // The partial that will be called to render this section
     public string $sectionTemplate = 'partials/section.twig';
@@ -52,6 +51,18 @@ class BaseSection extends BaseModel
     public function linkToPage(string $linkToPage): self
     {
         $this->linkToPage = $linkToPage;
+        return $this;
+    }
+
+    /**
+     * Whether to show a refresh button
+     *
+     * @param bool $showRefreshButton
+     * @return $this
+     */
+    public function showRefreshButton(bool $showRefreshButton): self
+    {
+        $this->showRefreshButton = $showRefreshButton;
         return $this;
     }
 }

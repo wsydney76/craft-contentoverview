@@ -2,6 +2,7 @@
 
 namespace wsydney76\contentoverview\models;
 
+use Craft;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineTableColumnsEvent;
 use wsydney76\contentoverview\Plugin;
@@ -44,6 +45,7 @@ class TableSection extends Section
 
         if ($this->hasEventHandlers(self::EVENT_DEFINE_TABLECOLUMNS)) {
             $event = new DefineTableColumnsEvent([
+                'user' => Craft::$app->user->identity,
                 'table' => $this,
                 'tableColumns' => $columns
             ]);

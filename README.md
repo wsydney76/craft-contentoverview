@@ -4,7 +4,7 @@ This plugin shows configurable overviews of a site's content.
 
 ## Disclaimer
 
-First final evaluation/test version. (4.0)
+Second final evaluation/test version (4.1).
 
 * This plugin was initially developed as a side/training project for internal use only.
 * Added a bunch of customization options when evaluating it in a real-life project.
@@ -71,7 +71,7 @@ Replace `news/page` with one or your section handles (a channel/a structure). Re
 ## Screenshots
 
 Show different sections in different layouts (cards, cardlets, list, line). Add section specific infos and image.
-Search and pagination is supported.
+Search, filtering and pagination is supported.
 
 ![screenshot](/images/screenshot1.jpg)
 
@@ -85,26 +85,29 @@ Create a file `contentoverview.php` in your config folder. See [docs](https://cr
 
 Settings in alphabetical order:
 
-- customTemplatePath (string, folder for custom templates, default = _contentoverview)
-- defaultIcon (string, file path to a svg icon, default = @coicons/newspaper.svg)
-- defaultLayout (string, list (default)|cardlets|cards|line)
-- defaultPage (string, page key for the first/only page.)
-- enableCreateInSlideoutEditor (bool, whether new entries will be created in a slideout editor. Defaults to false on multi-site installs, else true)
-- enableSlideoutEditor (bool, whether a slideout editor can be opened for an entry by a double click on the status indicator, or by clicking an icon. Experimental)
+- altTemplate (string, object template used to render the alt attribute of images, defaults to `{alt}`)
+- custom (array, can contain any data you want to use somewhere in your setup.)
+- customTemplatePath (string, folder for custom templates, defaults to _contentoverview)
+- defaultIcon (string, file path to a svg icon, defaults to @coicons/newspaper.svg)
+- defaultLayout (string, the layout that is used by default. list (default)|cardlets|cards|line)
+- defaultPage (string, page key for the first/only page. Defaults to 'default'.)
+- enableCreateInSlideoutEditor (bool, whether new entries will be created in a slideout editor. Defaults to false on multi-site installs, else true. Experimental)
+- enableSlideoutEditor (bool, whether a slideout editor can be opened for an entry by a double click on the status indicator, or by clicking an icon/image. Experimental)
 - enableWidgets (bool, default true, enable dashboard widgets that display a single tab)
 - fallbackImage (Asset, an image that will be used in a layout if no image is set on an entry)
 - hideUnpermittedSections (bool, Whether to hide sections a user does not have view permission instead of displaying a message. May lead to ugly empty tabs.)
 - layoutSizes (array, which size is used by default for a layout)
-- layoutWidth (array, the grid column width for a layout size. Technically the `minmax` value for a `grid-template-columns` css directive)
-- linkTarget (string, set to '_blank' to open edit screens in a new tab (default), else blank '')
-- loadSectionsAsync (bool, Whether to load section html via ajax request. Loads all sections of a tab when the tab becomes visible.)
+- layoutWidth (array, the grid column width for a layout size. Technically the `minmax` value for a `grid-template-columns` css directive.)
+- linkTarget (string, defaults to '_blank' to open edit screens in a new tab (default).)
+- loadSectionsAsync (bool, Whether to load section html via ajax request. Loads section content when it becomes visible.)
 - pages (array, defines subpages)
-- pluginTitle (string, label for primary navigation, page title)
-- purifierConfig (string|array The html purifier config used to make output from object templates safe)
-- replaceDashboard (bool Whether to remove dashboard link and redirect to contentoverview on login)
+- pluginTitle (string, label for primary navigation, page title. Defaults to 'Content Overview')
+- purifierConfig (string|array The html purifier config used to make output from object templates safe.)
+- replaceDashboard (bool Whether to remove dashboard link and redirect to contentoverview on login.)
 - showLoadingIndicator (bool, Whether to show a loading indicator/overlay while an ajax request is pending.)
 - showPages (string, default nav, where to show multiple pages: nav|sidebar|no)
 - transforms (array, image transforms for layouts)
+- useImagerX (bool, create image transforms with Imager-X plugin, if available. Defaults to true)
 - widgetText (string, text for dashboard link widget)
 
 Defaults are defined in `models\Settings.php`.
@@ -143,12 +146,17 @@ return [
 ```
 
 defaultPage: the page that is initially selected. Usually the first one.
+
 pages: an array of page configs in the form
 of [CP Sections Subnav](https://craftcms.com/docs/4.x/extend/cp-section.html#subnavs):
 
 `'<pagename>' => ['label' => '<pageheading>', 'url' => 'contentoverview/<pagename>'],`
 
-An additional param `group` can be added if this page should only be available for admins/members of this group.
+group: this page should only be available for admins/members of this group/one of these groups. 
+Can be a string (one group) or an array of group handles.
+
+blocks: array of templates that will be rendered inside a Control Panel twig block area. See Templates chapter below. 
+
 
 By default, multiple pages are display as subNav:
 
@@ -174,14 +182,12 @@ Heading rows and icons can be added to the `pages` config in `config/contentover
 'page2' => [
     'label' => 'Needs attention!',
     'url' => 'contentoverview/page2',
-    'group' => 'reviewers',
     'icon' => '@appicons/clock.svg'
 ],
 ```
 
 ![Screenshot](/images/sidebar.jpg)
 
-A param `blocks` can define custom templates that are rendered in a cp panel block, see 'Templates' below.
 
 ### Widgets
 
@@ -227,40 +233,40 @@ displays entries from one Craft section.)
 Structure of this file:
 
 - tabs[] (array, tabs of the page)
-    - label (string, tab text)
+    - label (string, tab label. Will not be visible if there is onyl one tab.)
     - columns[] (array, columns inside the tab container, uses a 12 columns grid)
         - width (int, number of columns occupied, 1-12)
         - sections[] (array, sections displayed inside the column)
             - actions (array, The actions available to the section. See below)
-            - allSites (bool, true = display (unique) entries from all sites)
-            - custom  (array, any custom keys, can be used to modify the entries query via event, see Events below)
+            - allSites (bool, true = display (unique) entries from all sites.)
+            - custom  (array, any custom data, can be used in custom events/classes/templates)
             - entryType (array|string, entryType handle)
-            - fallbackImageField (array|string, name of an image field to use if there is no image set in `imageField`)
-            - filters (array, Array of fields whose values can be applied as filters. See Search doc below)
-            - heading (string, heading of the section, defaults to section name)
-            - help (array|string Help text for the section)
-            - icon (array|string, path to an svg icon, that is display if no image is found)
-            - iconBgColor (string, the background color for an icon)
-            - imageField (array|string, name of the image field to use)
-            - imageRatio (float, aspect ratio of the image. Only makes sense for card layout)
-            - info (string|array, object template to render in addition to the title)
-            - infoTemplate (array|string, path to a twig template inside the projects templates folder. Will be called with an entries variable)
-            - layout (string, (list (default)|cardlets|cards|line)
-            - limit (int, number of entries to show)
-            - linkToPage (string, the key of a page the heading is linked to. May contain an anchor, e.g. `page1#tab1`)
+            - fallbackImageField (array|string, name of an image field to use if there is no image set in `imageField`.)
+            - filters (array, Array of fields whose values can be applied as filters. See Filters chapter below.)
+            - heading (string, heading of the section, defaults to section name.)
+            - help (array|string Help text for the section. See Help chapter below.)
+            - icon (array|string, path to a svg icon that will be displayed if no image is found)
+            - iconBgColor (string, the background color for an icon.)
+            - imageField (array|string, name of the image field to use.)
+            - imageRatio (float, aspect ratio of the image. Only makes sense for card layout.)
+            - info (string|array, object template to render in addition to the title.)
+            - infoTemplate (array|string, path to a twig template inside the projects templates folder. Will be called with an entries variable.)
+            - layout (string, the layout used to display entries. (list (default)|cardlets|cards|line|table)
+            - limit (int, number of entries to show on one section page. Default to 9999.)
+            - linkToPage (string, the key of a page the heading is linked to. May contain an anchor, e.g. `page1#tab1`.)
             - orderBy (string|array see [docs](https://craftcms.com/docs/4.x/entries.html#orderby)
-            - ownDraftsOnly (bool, if true and scope is defined: show only drafts created by the current user)
-            - query (ElementQuery, define your own query)
-            - scope (string, whether drafts should be shown, drafts|provisional|all, default: only published entries will be included)
-            - search (bool, whether search will be enabled)
-            - section (array|string, Craft section handle)
-            - showIndexButton (bool whether button 'All entries' will be shown)
-            - showNewButton (bool whether button 'All entry' will be shown)
-            - showRefreshButton (bool, whether to show a refresh button for this section)
-            - size (string, the grid colum size of an entry (card, cardlet). tiny|small|medum|large|card)
+            - ownDraftsOnly (bool, if true and scope is defined: show only drafts created by the current user.)
+            - query (ElementQuery, define your own query.)
+            - scope (string, whether drafts should be shown, drafts|provisional|all, default: only published entries will be included.)
+            - search (bool, whether search will be enabled.)
+            - section (array|string, Craft section handle.)
+            - showIndexButton (bool whether button 'All entries' will be shown.)
+            - showNewButton (bool whether button 'New entry' will be shown.)
+            - showRefreshButton (bool, whether to show a refresh button for this section.)
+            - size (string, the grid colum size of an entry (for layouts card, cardlet). tiny|small|medum|large|card)
             - sortByScore (bool, whether search results will be sorted by score. default=false)
             - status (string|array, see [docs](https://craftcms.com/docs/4.x/entries.html#status)
-            - titleObjectTemplate (string, an object template that will be rendered for the title in a layout. Defaults to, well, `{title})
+            - titleObjectTemplate (string, an object template that will be rendered for the title in a layout. Defaults to, well, `{title}`)
 
 A `handle` setting can be applied to every object that helps to identify it in events.
 
@@ -271,7 +277,6 @@ Example:
 
 We use a 'fluid' config using tab/column/section models.
 
-> **Note**
 > All objects are created by the `ContentOverviewService` factory class. In this doc the variable `$doc` holds an instance of this class.  
 
 ```php
@@ -327,6 +332,25 @@ return [
 
 Phpstorms autocompletion can give hints about the available settings and their parameters.
 
+![screenshot](/images/autocomplete.jpg)
+
+### Using custom query
+
+Use 'query' to build individual queries that can't be composed with predefined parameters
+
+Requires headings, disables Add new/List all buttons (can be any section).
+
+```php
+$co->createSection()
+    ->heading('Custom Field')  
+    ->section(['film','person','location'])         
+    ->query(Craft::$app->user->identity->handpickedEntries)  // entries field           
+    ->info('{postDate|datetime("short")}, {workflowStatus}')
+])
+```
+
+If `query` is defined, a `section` param will only be used for permission checks, new/index button, default heading. 
+
 ### Using defaults
 
 You can pass default settings to the `createSection` method in order to avoid repetitions.
@@ -351,6 +375,31 @@ $co->createSection(config: $sectionDefaults)
 
 ```
 
+If you want to have defaults globally available, you can define them in your `config/contentoverview.php` file.
+
+Note that you cannot use fluent config methods with autocomplete here, because the plugin is not yet initialized.
+
+```php
+
+'custom' => [
+    'sectionDefault' => [
+       'imageField' => 'featuredImage',
+       'orderBy' => 'title',
+       'layout' => 'cards',
+       'size' => 'small',
+       'limit' => 6,
+       'search' => true,
+       'info' =>  '{postDate|date("short")}',
+        'actions' => ['slideout']
+    ]
+],
+```
+
+```php
+$co->createSection(config: Plugin::getInstance()->getSettings()->custom['sectionConfig'])
+```
+
+
 You can also use a custom section class, this may be useful if your want to overwrite or add functionality.
 
 ```php
@@ -362,14 +411,6 @@ $co->createSection(NewsSection::class)
     ->heading('Drafts')
     ->scope('drafts')
     
-// Use 'query' to build individual queries that can't be composed with predefined parameters
-// Requires headings, disables Add new/List all buttons (can be any section). 
-$co->createSection()
-    ->heading('Custom Field')           
-    ->query(Craft::$app->user->identity->handpickedEntries)  // entries field           
-    ->info('{postDate|datetime("short")}, {workflowStatus}')
-])
-
 // modules/main/NewsSection.php
 
 <?php
@@ -399,13 +440,15 @@ A custom section config class can also be useful to add custom query params:
 // Config:
 ->topic('sport')
 
+// Section class
+...
 class NewsSection extends Section
 {
     ... defaults as above
-    public ?string $topic = null; // your new setting
+    public mixed $topic = null; // your new setting
 
-    // Setter method for fluent config
-    public function topic(string $topic): self
+    // Setter method for fluent config, accepts either a string or anything that can be passed to `relatedTo`.
+    public function topic(mixed $topic): self
     {
         $this->topic = $topic;
         return $this;
@@ -417,9 +460,11 @@ class NewsSection extends Section
         $query = parent::getQuery($params);
 
         if ($this->topic) {
-            $topicId = Entry::find()->section('topic')->slug($this->topic)->ids();
-            if ($topicId) {
-                $query->andRelatedTo(['targetElement' => $topicId, 'field' => 'topics'] );
+            if (is_string($this->topic)) {
+                $this->topic = Entry::find()->section('topic')->slug($this->topic)->ids();
+            }
+            if ($this->topic) {
+                $query->andRelatedTo(['targetElement' => $this->topic, 'field' => 'topics'] );
             }
         }
 
@@ -442,13 +487,12 @@ return [
             return $co->createTab($entry->title, [
                $co->createColumn(6, [
                    $co->createSection(NewsSection::class)
-                        ->topic($entry->slug)
+                        ->topic($entry)
                ])
             ]);
         })        
 ];
 ```
-
 ![Screenshot](/images/dynamicconfig.jpg)
 
 ### Shortcuts
@@ -482,11 +526,10 @@ $co->createTab('Label')
         $co->createSection(...),
 ```
 
-![screenshot](/images/autocomplete.jpg)
 
 ## Multi Section Setup
 
-The section config usually uses a single section, but can also be set to multiple sections:
+The section config usually uses a single Craft section, but can also be set to multiple Craft sections:
 
 ```php
 ->section(['film','person'])
@@ -519,14 +562,6 @@ The image field is determined in the following sequence of keys:
 Entries can be shown in different layouts.
 
 List and line layouts can show indentations for different levels in a structure.
-
-The image is defined by the `imageField` section config.
-
-You can set a fallback image in yout `config/contentoverview.php` file:
-
-```php
-'fallbackImage' => GlobalSet::find()->handle('siteInfo')->one()->featuredImage->one(),
-```
 
 ### Cards
 
@@ -570,7 +605,7 @@ Horizontal layout without image. The most compact layout.
 
 ![Layout Line](/images/layout_line.jpg)
 
-Do not specify a `imageField` for this layout.
+Do not specify an `imageField` for this layout.
 
 ### Table
 
@@ -624,6 +659,10 @@ method:
   that field.
 * An image asset is defined in the `fallbackImage` plugin settings.
 
+```php
+'fallbackImage' => GlobalSet::find()->handle('siteInfo')->one()->featuredImage->one(),
+```
+
 Event example:
 
 ```php
@@ -651,7 +690,7 @@ Event::on(
 
 If there is no image, an icon is used.
 
-Which icon will be displayed with which background color for an entry is determined in the following order in
+Which icon will be displayed for an entry with which background color is determined in the following order in
 the `Section::getIconData($entry))` method:
 
 * An icon/background color is defined via the `Section::EVENT_DEFINE_ICON` event. See example below.
@@ -821,7 +860,7 @@ Event::on(
 );
 ```
 
-A custom module then can apply filter to the section query in an event handler, e.g.
+A custom module then can apply filter params to the section query in an event handler, e.g.
 
 ```php
 
@@ -861,8 +900,6 @@ below or on top of the search:
 ->filtersPosition('bottom') // top|bottom
 ```
 
-Highly experimental:
-
 Matrix subfields can also be used as filters:
 
 ```php
@@ -891,9 +928,10 @@ where the template root  `_contentoverview` by default points to your project's 
 
 This allows you to overwrite any twig template in case you have special needs.
 
-Templates are included without an `only` parameter, because we know what our templates need, but maybe you need more in
+Templates are included without an `only` parameter, making all variables available to them, because we know what our templates need, but maybe you need more in
 your templates.
-Required params passed to a template are listed in an `@params` comment.
+
+Required params passed to a template should be listed in an `@params` comment (no guarantee).
 
 Generally available variables:
 
@@ -967,7 +1005,6 @@ Your template must live in the `settings.customTemplatePath` folder, by default 
     'page1' => ['label' => 'Site/News', 'url' => 'contentoverview/page1', 'blocks' => [
         'details' => 'blocks/co_page1_guide.twig',      
     ]],
-    'page2' => ['label' => 'In Progress', 'url' => 'contentoverview/page2', 'group' => 'reviewers'],
 ]
 ```
 
@@ -978,7 +1015,7 @@ Available blocks:
 * toolbar
 * footer
 
-The `page` and `settings` variable are availabe in this templates.
+The `page` and `settings` variable are available in these templates.
 
 Example:
 
@@ -1222,7 +1259,7 @@ Managing screenings for a film festival:
 
 ### Modify Query
 
-Custom modules can extend the configuration by adding keys to the `sections` config array and modify the query via an
+Custom modules can extend the configuration by adding keys to the `custom` section config array and modify the query via an
 event:
 
 ```php
@@ -1279,8 +1316,7 @@ For convenience, all event classes have a `user` property containing the current
 reference to their parent object.
 
 For a better overview it is recommended to define all possible objects in your config files and filter out what is not
-needed,
-instead of adding stuff in your event handlers.
+needed, instead of adding stuff in your event handlers.
 
 Examples:
 
@@ -1435,7 +1471,6 @@ Set the `purifierConfig` plugin config if you do not want to use the default pur
 ## Did not make it into final version
 
 * Optionally show actions in dropdown
-* Global section defaults
 * Configurable integrations
 
 ## TODOS:

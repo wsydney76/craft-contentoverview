@@ -433,8 +433,8 @@ class Section extends BaseSection
         $this->query = $query;
 
         // No sections defined where this buttons could link to
-        $this->showNewButton = false;
-        $this->showIndexButton = false;
+        $this->showNewButton = (bool)$this->section;
+        $this->showIndexButton = (bool)$this->section;
         return $this;
     }
 
@@ -537,6 +537,11 @@ class Section extends BaseSection
         }
 
         if ($this instanceof Section) {
+
+            if (!$this->section) {
+                return Craft::t('contentoverview','Untitled Section');
+            }
+
             $sections = $this->_normalizeToArray($this->section);
             $headings = array_map(fn($section) => Craft::$app->sections->getSectionByHandle($section)->name
                 , $sections);
@@ -888,11 +893,6 @@ class Section extends BaseSection
         return $query;
     }
 
-
-    protected function _normalizeToArray($value)
-    {
-        return is_string($value) ? [$value] : $value;
-    }
 
     protected function _getConfigForEntry(string $name, Entry $entry): string
     {

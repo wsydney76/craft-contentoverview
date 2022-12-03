@@ -3,12 +3,13 @@
 namespace wsydney76\contentoverview\models;
 
 use craft\base\Model;
+use function is_string;
 
 class BaseModel extends Model
 {
     public string $handle = '';
     public array $custom = [];
-    public bool $showRefreshButton = false;
+
 
     /**
      * Sets an optional handle for a model.
@@ -36,15 +37,10 @@ class BaseModel extends Model
         return $this;
     }
 
-    /**
-     * Whether to show a refresh button
-     *
-     * @param bool $showRefreshButton
-     * @return $this
-     */
-    public function showRefreshButton(bool $showRefreshButton): self
+    protected function _normalizeToArray($value)
     {
-        $this->showRefreshButton = $showRefreshButton;
-        return $this;
+        return is_string($value) ? [$value] : $value;
     }
+
+
 }

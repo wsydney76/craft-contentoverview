@@ -1,5 +1,27 @@
 # Changelog
 
+## 4.1.0 2022-12-03
+
+Status: Ready for testing.
+
+### Added
+
+* Added a `useImagerX` plugin setting. Defaults to true.
+* Added a `custom` plugin setting that can hold any data you want to use somewhere in your config. Defaults to empty array.
+* Added a `altTemplate` plugin setting that should be used to render a valid `alt` image attribute. Defaults to `{alt}`
+
+### Changed
+
+* Image transforms are now created via the Imager X plugin, if it is available and the `useImagerX` plugin setting is set to `true`.
+* The `group` param in the page settings can now be an array. Users can see the page if they are in one of the groups.
+* Some changes to Readme.
+
+### Fixed
+
+* The `DefineTableColumns` event missed the obligatory `user` attribute, has been added.
+* Fixed a bug where the plugin crashed trying to find a section heading if both `heading` and `section` settings were missing. Displays 'Untitled section' now.
+* Fixed a bug where 'New entry' and 'All entries' buttons were missing if both `query` and `section` config settings are set.
+
 ## 4.0.0 2022-12-02
 
 * Multipage setup: Links can now appear in the main navigation (default) or in the sidebar.

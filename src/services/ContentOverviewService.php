@@ -7,6 +7,7 @@ use craft\base\Component;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefinePagesEvent;
 use wsydney76\contentoverview\models\Action;
+use wsydney76\contentoverview\models\BaseModel;
 use wsydney76\contentoverview\models\Column;
 use wsydney76\contentoverview\models\CustomSection;
 use wsydney76\contentoverview\models\Filter;
@@ -21,7 +22,7 @@ use yii\base\InvalidConfigException;
 use yii\web\ForbiddenHttpException;
 use function collect;
 
-class ContentOverviewService extends Component
+class ContentOverviewService extends BaseModel
 {
 
     public const EVENT_DEFINE_PAGES = 'eventDefinePages';
@@ -177,7 +178,16 @@ class ContentOverviewService extends Component
         $currentUser = Craft::$app->user->identity;
         $pages = collect($pages)
             ->filter(function($page) use ($currentUser) {
-                return $currentUser->admin || !isset($page['group']) || $currentUser->isInGroup($page['group']);
+                if ($currentUser->admin) return true;
+
+                if (isset($page['group'])) {
+                    $groups = $this->_normalizeToArray($page['group']);
+                    foreach ($groups as $group) {
+                        if ($currentUser->isInGroup($group)) return true;
+                    }
+                    return false;
+                }
+                return true;
             });
 
         // Drop group heading pseudo pages if links not displayed in sidebar block

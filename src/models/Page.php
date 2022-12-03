@@ -16,7 +16,7 @@ class Page extends BaseModel
     public string $pageKey;
     public string $label;
     public string $url;
-    public string $group = '';
+    public array|string $group = '';
     public array $blocks = [];
     public string $heading = '';
     public string $icon = '';

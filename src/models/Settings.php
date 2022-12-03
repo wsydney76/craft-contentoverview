@@ -16,6 +16,8 @@ class Settings extends Model
 
     // see read me for doc
 
+    public string $altTemplate = '{alt}';
+    public ?array $custom = null;
     public string $customTemplatePath = '_contentoverview';
     public string $defaultLayout = 'list';
     public string $defaultIcon = '@coicons/newspaper.svg';
@@ -64,6 +66,7 @@ class Settings extends Model
         'line' => null, // no image in line layout
         'table' => ['width' => 60, 'height' => 30, 'format' => 'webp']
     ];
+    public bool $useImagerX = true;
     public string $widgetText = 'Get a quick overview of your content';
 
 

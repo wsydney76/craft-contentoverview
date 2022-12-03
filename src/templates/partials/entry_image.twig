@@ -14,25 +14,15 @@
 
         {% set image = sectionConfig.getImage(entry) %}
 
-        {#{% set image = null %}
-        {% set imageField = sectionConfig.getImageField(entry) %}
-        {% if imageField %}
-            {% set image = entry.getFieldValue(imageField).one  %}
-        {% endif %}
-
-        {% if not image %}
-            {% set imageField = sectionConfig.getFallbackImageField(entry) %}
-            {% if imageField %}
-                {% set image = entry.getFieldValue(imageField).one  %}
-            {% endif %}
-        {% endif %}
-
-        {% if not image and settings.fallbackImage %}
-            {% set image = settings.fallbackImage %}
-        {% endif %}#}
-
         {% if image %}
-            {{ image.img(transform) }}
+            {% set altText = view.renderObjectTemplate(settings.altTemplate, image) %}
+            {% if settings.useImagerX and craft.app.plugins.pluginEnabled('imager-x') %}
+                {% set transformedImage = craft.imager.transformImage(image, transform) %}
+                <img src="{{ transformedImage.url }}" alt="{{ altText }}">
+            {% else %}
+                {{ image.img(transform)|attr({alt: altText}) }}
+            {% endif %}
+
         {% else %}
             {% set icon = iconData.icon ? view.renderObjectTemplate(iconData.icon, entry) : settings.defaultIcon %}
             {{ svg(icon)|attr(settings.iconSize) }}
