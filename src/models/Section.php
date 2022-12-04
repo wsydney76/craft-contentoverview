@@ -622,7 +622,7 @@ class Section extends BaseSection
         }
 
 
-        return $filters;
+        return $this->filterForCurrentUser($filters);
     }
 
     /**
@@ -696,7 +696,7 @@ class Section extends BaseSection
             $actions = $event->actions;
         }
 
-        return $actions;
+        return $this->filterForCurrentUser($actions);
     }
 
     /**

@@ -45,6 +45,8 @@ class Plugin extends \craft\base\Plugin
         if (!Craft::$app->request->isCpRequest) {
             return;
         }
+
+        // Do not crash on login page
         $currentUser = Craft::$app->user->identity;
         if (!$currentUser) {
             return;
@@ -71,8 +73,6 @@ class Plugin extends \craft\base\Plugin
             }
         );
 
-
-
         $showPages = $settings->getUserSetting('showPages');
 
         if ($showPages === 'nav' || $showPages === 'sidebar') {
@@ -81,21 +81,34 @@ class Plugin extends \craft\base\Plugin
                 Cp::EVENT_REGISTER_CP_NAV_ITEMS,
                 function(RegisterCpNavItemsEvent $event) use ($settings, $showPages) {
 
+                    $pages = $this->contentoverview->getPages();
+
+                    // Nav item for top  level navigation
                     $navItem = [
                         'label' => Craft::t('site', $settings->pluginTitle),
                         'url' => 'contentoverview',
                         'fontIcon' => 'field'
                     ];
 
-                    $pages = $this->contentoverview->getPages();
+                    // Do we have a subnav?
                     if ($pages->count() > 1 && $showPages === 'nav') {
-                        // Translate labels
-                        $navItem['subnav'] = $pages->transform(fn($page) => [
-                            'label' => Craft::t('site', $page['label']),
-                            'url' => $page['url'],
-                        ]);
+
+                        $navItem['subnav'] = $pages
+                            // Do not include pages without url (group headings)
+                            ->filter(fn($page) => $page->url)
+
+                            // convert into format that 'subnav' needs.
+                            // Has to include a key that can be used for the 'selectedSubNav' twig variable.
+                            ->mapWithKeys(fn($page) => [
+                                $page->pageKey => [
+                                    // Translate labels
+                                    'label' => Craft::t('site', $page['label']),
+                                    'url' => $page->url,
+                                ]
+                            ]);
                     }
 
+                    // Insert into navItems at second position, after dashboard.
                     array_splice($event->navItems, 1, 0, [
                         $navItem
                     ]);

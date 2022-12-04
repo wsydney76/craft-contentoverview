@@ -3,14 +3,10 @@
 namespace wsydney76\contentoverview\controllers;
 
 use Craft;
-use craft\errors\InvalidElementException;
 use craft\web\Controller;
-use wsydney76\contentoverview\models\Section;
 use wsydney76\contentoverview\Plugin;
+use yii\base\InvalidCallException;
 use yii\base\InvalidConfigException;
-use yii\web\ForbiddenHttpException;
-use function explode;
-use function sleep;
 
 class SectionController extends Controller
 {
@@ -60,7 +56,7 @@ class SectionController extends Controller
         $entryId = Craft::$app->request->getRequiredParam('entryId');
         $entry = Craft::$app->entries->getEntryById($entryId);
         if (!$entry) {
-            throw new InvalidElementException("Invalid entry id $entryId");
+            throw new InvalidCallException("Invalid entry id $entryId");
         }
 
         $template = Plugin::getInstance()->getSettings()->customTemplatePath . '/' . Craft::$app->request->getRequiredParam('template');

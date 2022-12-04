@@ -62,6 +62,6 @@ class Column extends BaseModel
             $sections = $event->sections;
         }
 
-        return $sections;
+        return $this->filterForCurrentUser($sections);
     }
 }

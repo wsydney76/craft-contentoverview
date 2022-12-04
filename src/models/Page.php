@@ -13,15 +13,61 @@ class Page extends BaseModel
 
     public const EVENT_DEFINE_TABS = 'eventDefineTabs';
 
-    public string $pageKey;
-    public string $label;
-    public string $url;
-    public array|string $group = '';
     public array $blocks = [];
+    public array|string $group = '';
     public string $heading = '';
     public string $icon = '';
+    public string $label = 'Untitled Page';
+    public string $pageKey;
+    public ?string $url = null;
+
+    // makes it easier to distinguish pages and sidebar headings
+    public bool $isPageGroup = false;
+    
 
     private array|Collection $_tabs = [];
+    
+    public function blocks(array $blocks): self
+    {
+        $this->blocks = $blocks;
+        return $this;
+    }
+    
+    public function group(array|string $group): self
+    {
+        $this->group = $group;
+        return $this;
+    }
+    
+    public function heading(string $heading): self
+    {
+        $this->heading = $heading;
+        return $this;
+    }
+    
+    public function icon(string $icon): self
+    {
+        $this->icon = $icon;
+        return $this;
+    }
+    
+    public function label(string $label): self
+    {
+        $this->label = $label;
+        return $this;
+    }
+    
+    public function pageKey(string $pageKey): self
+    {
+        $this->pageKey = $pageKey;
+        return $this;
+    }
+    
+    public function url(string $url): self
+    {
+        $this->url = $url;
+        return $this;
+    }
 
     /**
      * Returns an array of Tab models for this page
@@ -52,7 +98,7 @@ class Page extends BaseModel
             $tabs = $event->tabs;
         }
 
-        return $tabs;
+        return $this->filterForCurrentUser($tabs);
     }
 
     /**

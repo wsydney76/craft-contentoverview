@@ -54,7 +54,7 @@ class TableSection extends Section
             $columns = $event->tableColumns;
         }
 
-        return $columns;
+        return $this->filterForCurrentUser($columns);
     }
 
     public function getLayout(): string

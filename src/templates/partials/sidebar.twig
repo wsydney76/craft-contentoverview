@@ -1,18 +1,18 @@
 {# @params settings #}
 
 {# @var settings \wsydney76\contentoverview\models\Settings #}
-{# @var page \wsydney76\contentoverview\models\Page #}
+{# @var currentPage \wsydney76\contentoverview\models\Page #}
 
 
-{% set navPages = craft.contentoverview.service.getPages(true) %}
+{% set navPages = craft.contentoverview.service.getPages() %}
 {% if navPages.count %}
     <nav aria-label="{{ settings.pluginTitle }} {{ 'Pages'|t('contentoverview') }}">
         <ul>
             {% for currentPage in navPages %}
 
-                {% if currentPage.heading %}
+                {% if currentPage.isPageGroup %}
                     <li class="heading">
-                        <span>{{ currentPage.heading|t('site') }}</span>
+                        <span>{{ currentPage.label|t('site') }}</span>
                     </li>
                 {% else %}
                     <li>

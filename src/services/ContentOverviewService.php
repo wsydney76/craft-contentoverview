@@ -3,7 +3,6 @@
 namespace wsydney76\contentoverview\services;
 
 use Craft;
-use craft\base\Component;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefinePagesEvent;
 use wsydney76\contentoverview\models\Action;
@@ -13,6 +12,8 @@ use wsydney76\contentoverview\models\CustomSection;
 use wsydney76\contentoverview\models\Filter;
 use wsydney76\contentoverview\models\Page;
 use wsydney76\contentoverview\models\Section;
+use wsydney76\contentoverview\models\Settings;
+use wsydney76\contentoverview\models\SidebarHeading;
 use wsydney76\contentoverview\models\Tab;
 use wsydney76\contentoverview\models\TableColumn;
 use wsydney76\contentoverview\models\TableSection;
@@ -27,24 +28,30 @@ class ContentOverviewService extends BaseModel
 
     public const EVENT_DEFINE_PAGES = 'eventDefinePages';
 
+    protected ?Collection $_pages = null;
+
     /**
      * @param string $pageKey
      * @param array $pageConfig
      * @return Page
      * @throws \yii\base\InvalidConfigException
      */
-    public function createPage(string $pageKey, array $pageConfig): Page
+    public function createPage(string $pageKey): Page
     {
         return Craft::createObject([
             'class' => Plugin::getInstance()->getSettings()->pageClass,
             'pageKey' => $pageKey,
-            'label' => Craft::t('site', $pageConfig['label'] ?? ''),
-            'heading' => $pageConfig['heading'] ?? '',
-            'url' => $pageConfig['url'] ?? '',
-            'group' => $pageConfig['group'] ?? '',
-            'blocks' => $pageConfig['blocks'] ?? [],
-            'icon' => $pageConfig['icon'] ?? '',
-            'handle' => $pageConfig['handle'] ?? ''
+            'url' => "contentoverview/$pageKey"
+        ]);
+
+    }
+
+    public function createPageGroup(string $pageKey = '')
+    {
+        return Craft::createObject([
+            'class' => Plugin::getInstance()->getSettings()->pageClass,
+            'pageKey' => $pageKey,
+            'isPageGroup' => true
         ]);
     }
 
@@ -160,72 +167,62 @@ class ContentOverviewService extends BaseModel
      *
      * @return Collection
      */
-    public function getPages($isSidebar = false): Collection
+    public function getPages(): Collection
     {
-        $settings = Plugin::getInstance()->getSettings();
-        $pages = $settings->pages;
-        if (!$pages) {
-            // create a single page for use in list widgets
-            $pages = [
-                $settings->defaultPage => [
-                    'label' => $settings->pluginTitle,
-                    'url' => 'contentoverview'
-                ]
-            ];
+
+        if (!$this->_pages) {
+
+            /** @var Settings $settings */
+            $settings = Plugin::getInstance()->getSettings();
+
+            $pages = collect(Craft::$app->config->getConfigFromFile('contentoverview/pages'));
+
+
+            // Create the default page if no pages are configured
+            if ($pages->count() === 0) {
+                $pages->push(
+                    $this->createPage($settings->defaultPage)
+                        ->label($settings->pluginTitle)
+                );
+            }
+
+            // Give custom modules the chance to modify pages
+            if ($this->hasEventHandlers(self::EVENT_DEFINE_PAGES)) {
+                $event = new DefinePagesEvent([
+                    'user' => Craft::$app->user->identity,
+                    'pages' => $pages
+                ]);
+
+                $this->trigger(self::EVENT_DEFINE_PAGES, $event);
+
+                $pages = $event->pages;
+            }
+
+            $this->_pages = $pages;
         }
 
-        // Drop pages if restricted to a user group
-        $currentUser = Craft::$app->user->identity;
-        $pages = collect($pages)
-            ->filter(function($page) use ($currentUser) {
-                if ($currentUser->admin) return true;
+        return $this->filterForCurrentUser($this->_pages);
+    }
 
-                if (isset($page['group'])) {
-                    $groups = $this->_normalizeToArray($page['group']);
-                    foreach ($groups as $group) {
-                        if ($currentUser->isInGroup($group)) return true;
-                    }
-                    return false;
-                }
-                return true;
-            });
+    public function getPageByKey(string $pageKey): Page
+    {
+        $pages = $this->getPages();
 
-        // Drop group heading pseudo pages if links not displayed in sidebar block
-        if (!$isSidebar) {
-            $pages = $pages->filter(function($page) {
-                return !isset($page['heading']);
-            });
+        if ($pageKey === '') {
+            // Get the first page that has a url
+            return $pages->firstWhere(fn(Page $page) => $page->url);
         }
 
-        // Create Page models
-        $pages = $pages->map(fn($page, $key) => $this->createPage($key, $page));
-
-        // Give custom modules the chance to modify pages
-        if ($this->hasEventHandlers(self::EVENT_DEFINE_PAGES)) {
-            $event = new DefinePagesEvent([
-                'user' => Craft::$app->user->identity,
-                'pages' => $pages
-            ]);
-
-            $this->trigger(self::EVENT_DEFINE_PAGES, $event);
-
-            $pages = $event->pages;
-        }
-
-        return $pages;
+        return $pages->firstWhere('pageKey', $pageKey);
     }
 
     public function getSectionByPath(string $sectionPath): Section
     {
         $segments = explode('-', $sectionPath);
 
-        $config = Craft::$app->config->getConfigFromFile("contentoverview/{$segments[0]}");
 
-        if (!$config) {
-            throw new InvalidConfigException("$sectionPath is an invalid path.");
-        }
-
-        $page = Plugin::getInstance()->contentoverview->createPage($segments[0], $config);
+        // We do not need a fully initialized page here, just the getTabs() method.
+        $page = Plugin::getInstance()->contentoverview->createPage($segments[0]);
 
         /** @var Section $section */
         $section = $page->getTabs()[$segments[1]]->getColumns()[$segments[2]]->getSections()[$segments[3]];

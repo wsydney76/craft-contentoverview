@@ -29,10 +29,6 @@ Run `composer require wsydney76/craft-contentoverview`
 
 Run `craft plugin/install contentoverview`
 
-## Permission
-
-Non-admin users need the `Access Content Overview Plugin` permission.
-
 ## Quick Start
 
 Create a file `config/contentoverview/default.php` with this content:
@@ -139,23 +135,24 @@ You can configure multiple pages by adding them to the `config/contenoverview.ph
 return [
     'defaultPage' => 'page1',
     'pages' => [
-        'page1' => ['label' => 'Site/News', 'url' => 'contentoverview/page1'],
-        'page2' => ['label' => 'In Progress', 'url' => 'contentoverview/page2', 'group' => 'reviewers'],
+        'page1' => ['label' => 'Site/News'],
+        'page2' => ['label' => 'In Progress', 'group' => 'reviewers'],
     ]
 ];
 ```
 
 defaultPage: the page that is initially selected. Usually the first one.
 
-pages: an array of page configs in the form
-of [CP Sections Subnav](https://craftcms.com/docs/4.x/extend/cp-section.html#subnavs):
+pages: an array of page configs
 
-`'<pagename>' => ['label' => '<pageheading>', 'url' => 'contentoverview/<pagename>'],`
+* label: Label for nav and page titles
 
-group: this page should only be available for admins/members of this group/one of these groups. 
+* group: this page should only be available for admins/members of this group/one of these groups. 
 Can be a string (one group) or an array of group handles.
 
-blocks: array of templates that will be rendered inside a Control Panel twig block area. See Templates chapter below. 
+* permission: this page should only be available for admins/users with this permission.
+
+* blocks: array of templates that will be rendered inside a Control Panel twig block area. See Templates chapter below. 
 
 
 By default, multiple pages are display as subNav:
@@ -268,12 +265,18 @@ Structure of this file:
             - status (string|array, see [docs](https://craftcms.com/docs/4.x/entries.html#status)
             - titleObjectTemplate (string, an object template that will be rendered for the title in a layout. Defaults to, well, `{title}`)
 
-A `handle` setting can be applied to every object that helps to identify it in events.
+### Common settings
 
-A `custom` array setting can be applied to every object that can contain any data that you want to use in custom
-templates/events.
+The following settings can be applied to every object (page/tab/column/section/filter/action...)
 
-Example:
+* handle (string, a handle that helps to identify the object in events/custom templates.)
+* custom  (array, can contain any data that you want to use in events/custom templates).
+* permission (string, only admins and users with this permission will see this object.)
+* group (string|array, only admins and members of this group/one of these groups will see this object. Will be ignored if the more specific `permission` is set)
+ 
+
+
+### Example
 
 We use a 'fluid' config using tab/column/section models.
 
@@ -1458,9 +1461,9 @@ Response time is highly dependent on your individual config, so here are just a 
 ## Security
 
 The output from object templates or twig templates can potentially contain harmful content, so it is
-run through a [purify](https://craftcms.com/docs/4.x/dev/filters.html#purify) filter.
+run through a [purify](https://craftcms.com/docs/4.x/dev/filters.html#purify) filter. Set the `purifierConfig` plugin config if you do not want to use the default purifier config.
 
-Set the `purifierConfig` plugin config if you do not want to use the default purifier config.
+You can hide objects like actions via permission/group/events etc., however this is just 'visual' and does not protect your app from being hacked. Be sure to implement security measures in your backend.  
 
 ## Known issues
 

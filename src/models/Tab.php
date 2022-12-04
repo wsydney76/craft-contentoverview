@@ -79,7 +79,7 @@ class Tab extends BaseModel
             $columns = $event->columns;
         }
 
-        return $columns;
+        return $this->filterForCurrentUser($columns);
     }
 
 }
