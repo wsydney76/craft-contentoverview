@@ -5,10 +5,10 @@
 
 {% for filter in filters %}
 
-   {% if filter['fieldInstance'] is defined %}
-       {% set fieldInstance = filter.fieldInstance %}
-       {% set label = (filter.label is defined ? filter.label : fieldInstance.name)|t('site') ~ '...' %}
-   {% endif %}
+    {% if filter['fieldInstance'] is defined %}
+        {% set fieldInstance = filter.fieldInstance %}
+        {% set label = (filter.label is defined ? filter.label : fieldInstance.name)|t('site') ~ '...' %}
+    {% endif %}
 
     <div>
         {% switch filter.fieldType %}
@@ -19,7 +19,7 @@
 
         {% endswitch %}
 
-        {{ forms.select({
+        {% set config = {
             name: "#{sectionPath}-filter",
             options: filter.getOptions()
                 .prepend({label: 'Filter by'|t('contentoverview') ~ ': ' ~ filter.label|t('site'), value: ''}),
@@ -30,7 +30,14 @@
                 },
                 onchange: "co_getSectionHtml('#{ sectionPath }')"
             }
-        }) }}
+        } %}
+
+        {% if filter.useSelectize %}
+            {{ forms.selectize(config) }}
+        {% else %}
+            {{ forms.select(config) }}
+        {% endif %}
+
 
     </div>
 {% endfor %}

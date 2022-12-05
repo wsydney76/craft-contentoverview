@@ -34,6 +34,7 @@ class Filter extends BaseModel
     public string $orderBy = '';
     public Collection $options;
     public string $fieldType = '';
+    public bool $useSelectize = false;
 
     protected function normalizeFilter(): void
     {
@@ -155,6 +156,12 @@ class Filter extends BaseModel
     public function orderBy(string $orderBy): self
     {
         $this->orderBy = $orderBy;
+        return $this;
+    }
+
+    public function useSelectize(bool $useSelectize = true): self
+    {
+        $this->useSelectize = $useSelectize;
         return $this;
     }
 

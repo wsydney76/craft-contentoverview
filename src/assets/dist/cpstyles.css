@@ -143,6 +143,9 @@
     margin-bottom: 16px;
 }
 
+.co-filters-container .selectize.select:not(.fullwidth) {
+    width: 12rem;
+}
 
 .co-info .info {
     float: left;
