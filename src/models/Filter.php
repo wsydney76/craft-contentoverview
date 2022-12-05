@@ -14,7 +14,6 @@ use craft\fields\Users;
 use craft\models\MatrixBlockType;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineCustomFilterOptionsEvent;
-use wsydney76\contentoverview\events\DefineFiltersEvent;
 use wsydney76\contentoverview\Plugin;
 use yii\base\InvalidConfigException;
 use function collect;
@@ -36,6 +35,12 @@ class Filter extends BaseModel
     public string $fieldType = '';
     public bool $useSelectize = false;
 
+    /**
+     * Make sure all filter data can be handled in a uniform way.
+     *
+     * @return void
+     * @throws InvalidConfigException
+     */
     protected function normalizeFilter(): void
     {
         // parent::init();
@@ -108,7 +113,6 @@ class Filter extends BaseModel
 
                 $this->fieldType = 'entriesField';
             }
-            // \Craft::dd($this);
         }
 
         if ($this->type === 'custom') {
@@ -117,12 +121,18 @@ class Filter extends BaseModel
 
         if ($this->type === 'status') {
             $this->fieldType = 'status';
-            $this->label = $this->label ?:' Status';
+            $this->label = $this->label ?: ' Status';
             $this->options = collect(Plugin::getInstance()->getSettings()->statusFilterOptions);
         }
     }
 
-    public function getOptions()
+    /**
+     * Get select options
+     *
+     * @return array|Collection
+     * @throws InvalidConfigException
+     */
+    public function getOptions(): array|Collection
     {
         $this->normalizeFilter();
 
@@ -141,31 +151,61 @@ class Filter extends BaseModel
         return $this->options;
     }
 
+    /**
+     * Set label for select / empty option
+     *
+     * @param string $label
+     * @return $this
+     */
     public function label(string $label): self
     {
         $this->label = $label;
         return $this;
     }
 
+    /**
+     * Set options
+     *
+     * @param array{label: string, value: string} $options
+     * @return $this
+     */
     public function options(array $options): self
     {
         $this->options = collect($options);
         return $this;
     }
 
+    /**
+     * How to order options for entries/users field
+     *
+     * @param string $orderBy
+     * @return $this
+     */
     public function orderBy(string $orderBy): self
     {
         $this->orderBy = $orderBy;
         return $this;
     }
 
+    /**
+     * Render filter as selectize input?
+     *
+     * @param bool $useSelectize
+     * @return $this
+     */
     public function useSelectize(bool $useSelectize = true): self
     {
         $this->useSelectize = $useSelectize;
         return $this;
     }
 
-    protected function _getOptionsForEntryField(Field $field)
+    /**
+     * Get all entries for an entries field
+     *
+     * @param Field $field
+     * @return Collection{label: string, value: string}
+     */
+    protected function _getOptionsForEntryField(Field $field): Collection
     {
         if ($field->sources !== '*') {
             $sections = [];
@@ -175,7 +215,7 @@ class Filter extends BaseModel
             }
         }
         return Entry::find()
-            ->section($sections)
+            ->section($sections ?? null)
             ->orderBy($this->orderBy)
             ->collect()
             ->map(fn($entry) => [

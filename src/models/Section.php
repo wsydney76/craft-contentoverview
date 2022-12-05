@@ -208,7 +208,7 @@ class Section extends BaseSection
      * Get icon for entry
      *
      * @param $entry
-     * @return array [icon, iconBgColor]
+     * @return array{string $icon, string $iconBgColor}
      */
     public function getIconData($entry): array
     {
@@ -603,7 +603,7 @@ class Section extends BaseSection
     /**
      * Get filters, set field type as expected by template, set fieldInstance
      *
-     * @return Collection
+     * @return Collection<Filter>
      */
     public function getFilters(): Collection
     {
@@ -628,7 +628,7 @@ class Section extends BaseSection
     /**
      * Get options for custom sort, if defined
      *
-     * @return array
+     * @return Collection
      */
     public function getOrderByOptions(): Collection
     {

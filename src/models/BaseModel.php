@@ -5,8 +5,11 @@ namespace wsydney76\contentoverview\models;
 use Craft;
 use craft\base\Model;
 use Illuminate\Support\Collection;
-use function is_string;
 
+
+/**
+ * Implements common members/functions
+ */
 class BaseModel extends Model
 {
     public string $handle = '';
@@ -41,23 +44,47 @@ class BaseModel extends Model
         return $this;
     }
 
+    /**
+     * User group handle(s) a user has to be member in to view the config object.
+     *
+     * @param string|array<string> $group
+     * @return $this
+     */
     public function group(string|array $group): self
     {
         $this->group = $group;
         return $this;
     }
 
+    /**
+     * Permissions a user has to match to view the config object.
+     *
+     * @param string $permission
+     * @return $this
+     */
     public function permission(string $permission): self
     {
         $this->permission = $permission;
         return $this;
     }
 
+    /**
+     * Make sure the value is an array.
+     *
+     * @param $value
+     * @return string[]
+     */
     protected function _normalizeToArray($value)
     {
         return is_string($value) ? [$value] : $value;
     }
 
+    /**
+     * Filter out config objects a user cannot view.
+     *
+     * @param Collection $objects
+     * @return Collection
+     */
     protected function filterForCurrentUser(Collection $objects)
     {
         $currentUser = Craft::$app->user->identity;
@@ -75,11 +102,12 @@ class BaseModel extends Model
                     return true;
                 }
 
-
+                // Check permission setting, takes precedence over 'group'
                 if ($object->permission) {
                     return ($currentUser->can($object->permission));
                 }
 
+                // Check group
                 if ($object->group) {
                     $groups = $this->_normalizeToArray($object->group);
                     foreach ($groups as $group) {
@@ -90,6 +118,7 @@ class BaseModel extends Model
                     return false;
                 }
 
+                // No restriction
                 return true;
             });
     }

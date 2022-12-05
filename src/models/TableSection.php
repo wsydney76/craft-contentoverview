@@ -22,6 +22,11 @@ class TableSection extends Section
 
     public string $entriesTemplate = 'tablesection_entries.twig';
 
+    /**
+     * Get active table columns
+     *
+     * @return Collection<TableColumn>
+     */
     public function getColumns(): Collection
     {
         $co = Plugin::getInstance()->contentoverview;
@@ -57,11 +62,22 @@ class TableSection extends Section
         return $this->filterForCurrentUser($columns);
     }
 
+
+    /**
+     * The section layout
+     *
+     * @return string
+     */
     public function getLayout(): string
     {
         return 'table';
     }
 
+    /**
+     * The image transform to use for the image column.
+     *
+     * @return array
+     */
     public function getTransform(): array
     {
         return Plugin::getInstance()->getSettings()->transforms['table'];

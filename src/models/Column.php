@@ -24,7 +24,7 @@ class Column extends BaseModel
      */
     public function width(int $width): self
     {
-        if ($width < 1 || $width > 12)  {
+        if ($width < 1 || $width > 12) {
             throw new  InvalidConfigException("$width is not a valid width config.");
         }
         $this->width = $width;
@@ -43,9 +43,16 @@ class Column extends BaseModel
         return $this;
     }
 
-    public function getSections() {
+    /**
+     * Get active sections
+     *
+     * @return Collection<Section>
+     */
+    public function getSections(): Collection
+    {
         $sections = collect($this->sections);
 
+        // Remove sections a user has no view permission
         if (Plugin::getInstance()->getSettings()->hideUnpermittedSections) {
             $sections = $sections
                 ->filter(fn($section) => !$section instanceof Section || $section->getPermittedSections('viewentries'));

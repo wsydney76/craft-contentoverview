@@ -103,6 +103,12 @@ class Action extends BaseModel
         return $this;
     }
 
+    /**
+     * Returns whether is action is active for an entry.
+     *
+     * @param Entry $entry
+     * @return bool
+     */
     public function isActiveForEntry(Entry $entry): bool
     {
         return true;

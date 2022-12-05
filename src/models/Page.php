@@ -72,7 +72,7 @@ class Page extends BaseModel
     /**
      * Returns an array of Tab models for this page
      *
-     * @return Collection
+     * @return Collection<Tab>
      */
     public function getTabs(): Collection
     {

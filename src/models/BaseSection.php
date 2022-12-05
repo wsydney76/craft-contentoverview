@@ -2,6 +2,9 @@
 
 namespace wsydney76\contentoverview\models;
 
+/**
+ * Implements common members/methods for all section types
+ */
 class BaseSection extends BaseModel
 {
 
@@ -18,7 +21,7 @@ class BaseSection extends BaseModel
      *
      * Will be translated in 'site' category
      *
-     * Default: Section name
+     * Default: Section name(s)
      *
      * @param string $heading
      * @return $this

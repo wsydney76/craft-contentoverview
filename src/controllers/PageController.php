@@ -2,18 +2,30 @@
 
 namespace wsydney76\contentoverview\controllers;
 
-use Craft;
 use craft\web\Controller;
-
 use InvalidArgumentException;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use wsydney76\contentoverview\models\Settings;
 use wsydney76\contentoverview\Plugin;
+use yii\base\Exception;
 
 class PageController extends Controller
 {
     public $defaultAction = 'get-page';
 
-    public function actionGetPage(string $pageKey = '')
+    /**
+     * Render a contentover view page by pageKey
+     *
+     * @param string $pageKey empty for default page
+     * @return string The rendered page
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws Exception
+     */
+    public function actionGetPage(string $pageKey = ''): string
     {
         /** @var Settings $settings */
         $settings = Plugin::getInstance()->getSettings();

@@ -63,6 +63,11 @@ class Tab extends BaseModel
         return StringHelper::toKebabCase($this->label);
     }
 
+    /**
+     * Get active columns
+     *
+     * @return Collection<Column>
+     */
     public function getColumns(): Collection
     {
         $columns = collect($this->columns);

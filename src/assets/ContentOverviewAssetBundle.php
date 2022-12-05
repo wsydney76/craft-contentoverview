@@ -2,7 +2,6 @@
 
 namespace wsydney76\contentoverview\assets;
 
-use Craft;
 use craft\web\AssetBundle;
 
 class ContentOverviewAssetBundle extends AssetBundle
@@ -21,6 +20,4 @@ class ContentOverviewAssetBundle extends AssetBundle
 
         parent::init();
     }
-
-
 }

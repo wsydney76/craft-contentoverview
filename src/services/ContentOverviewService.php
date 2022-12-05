@@ -30,11 +30,13 @@ class ContentOverviewService extends BaseModel
 
     protected ?Collection $_pages = null;
 
+
     /**
+     * Create a page model instance
+     *
      * @param string $pageKey
-     * @param array $pageConfig
      * @return Page
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function createPage(string $pageKey): Page
     {
@@ -46,7 +48,15 @@ class ContentOverviewService extends BaseModel
 
     }
 
-    public function createPageGroup(string $pageKey = '')
+    /**
+     * Create a page group (i.e. a heading for the sidebar cp twig block)
+     *
+     *
+     * @param string $pageKey
+     * @return Page
+     * @throws InvalidConfigException
+     */
+    public function createPageGroup(string $pageKey = ''): Page
     {
         return Craft::createObject([
             'class' => Plugin::getInstance()->getSettings()->pageClass,
@@ -131,11 +141,26 @@ class ContentOverviewService extends BaseModel
         return Craft::createObject(WidgetSection::class);
     }
 
+    /**
+     * Create an action model
+     *
+     * @param string|null $className
+     * @return Action
+     * @throws InvalidConfigException
+     */
     public function createAction(string $className = null): Action
     {
         return Craft::createObject($className ?? Plugin::getInstance()->getSettings()->actionClass);
     }
 
+    /**
+     * Create a filter model
+     *
+     * @param string $type
+     * @param string $handle
+     * @return Filter
+     * @throws InvalidConfigException
+     */
     public function createFilter(string $type, string $handle = ''): Filter
     {
         return Craft::createObject([
@@ -145,6 +170,14 @@ class ContentOverviewService extends BaseModel
         ]);
     }
 
+    /**
+     * Create a Table Section model
+     *
+     * @param string $heading
+     * @param array<TableColumn> $columns
+     * @return TableSection
+     * @throws InvalidConfigException
+     */
     public function createTableSection(string $heading, array $columns): TableSection
     {
         return Craft::createObject([
@@ -154,6 +187,13 @@ class ContentOverviewService extends BaseModel
         ]);
     }
 
+    /**
+     * Create a table column model
+     *
+     * @param string $type
+     * @return TableColumn
+     * @throws InvalidConfigException
+     */
     public function createTableColumn(string $type = 'custom'): TableColumn
     {
         return Craft::createObject([
