@@ -1,5 +1,30 @@
 # Changelog
 
+## 5.0.0 2022-12-05
+
+Status: Ready for testing.
+
+### Added
+
+* Added the `ConfigHelper::require` method.
+* Added the `useSelectize` section setting.
+* Added the `permission` and `group` settings to all config objects.
+* Added some missing phpDoc/comments/annotations.
+
+### Changed
+
+* __Breaking Change__: The configuration of sub-pages is moved from the `config/contentoverview.php` file to a dedictated `config/contentoverview/pages.php` file and uses fluent config.
+* Config objects are hidden for users that do not match the `permission` and `group` settings.
+
+### Upgrading from 4.x
+
+If you did not use sub-pages, stop reading, nothing has changed.
+
+* Create a file `config/contentoverview/pages.php` and set up your config as described in the 'Multi Page Setup' chapter in `README.md`. 
+* Setting names and values have not changed.
+* Exception: Omit a url setting, if used previously.
+* Remove the `pages` config setting from `config/contentoverview.php`
+
 ## 4.1.0 2022-12-03
 
 Status: Ready for testing.

@@ -4,7 +4,11 @@ This plugin shows configurable overviews of a site's content.
 
 ## Disclaimer
 
-Second final evaluation/test version (4.1).
+Another final evaluation/test version (5.0).
+
+> On request, we moved the configuration of subpages from general plugin config to a dedictated file with fluent config.
+> 
+> See upgrading from 4.x in the Changelog.
 
 * This plugin was initially developed as a side/training project for internal use only.
 * Added a bunch of customization options when evaluating it in a real-life project.
@@ -96,7 +100,6 @@ Settings in alphabetical order:
 - layoutWidth (array, the grid column width for a layout size. Technically the `minmax` value for a `grid-template-columns` css directive.)
 - linkTarget (string, defaults to '_blank' to open edit screens in a new tab (default).)
 - loadSectionsAsync (bool, Whether to load section html via ajax request. Loads section content when it becomes visible.)
-- pages (array, defines subpages)
 - pluginTitle (string, label for primary navigation, page title. Defaults to 'Content Overview')
 - purifierConfig (string|array The html purifier config used to make output from object templates safe.)
 - replaceDashboard (bool Whether to remove dashboard link and redirect to contentoverview on login.)
@@ -127,18 +130,25 @@ This requires a setup up file named after the `defaultPage` settings.
 
 ### Multi Page Setup
 
-You can configure multiple pages by adding them to the `config/contenoverview.php` file.
+You can configure multiple pages by adding them to the `config/contenoverview/pages.php` file.
 
 ```php
 <?php
 
+use wsydney76\contentoverview\services\ContentOverviewService;
+
+$co = new ContentOverviewService();
+
 return [
-    'defaultPage' => 'page1',
-    'pages' => [
-        'page1' => ['label' => 'Site/News'],
-        'page2' => ['label' => 'In Progress', 'group' => 'reviewers'],
-    ]
-];
+    // the page key, used for building the page url and for identifying the page in ajax requests
+    $co->createPage('page1')  
+        ->label('Site/News'),
+
+    $co->createPage('festival')
+        ->label('Festival')
+        ->blocks(['details' => 'custom/festival_help'])
+        ->group(['festivalAdmins', 'festivalEditors']),
+]
 ```
 
 defaultPage: the page that is initially selected. Usually the first one.
@@ -170,17 +180,15 @@ useful , however it consumes more space.
    'showPages' => 'sidebar',
 ```
 
-Heading rows and icons can be added to the `pages` config in `config/contentoverview.php`:
+Heading rows (page groups) and icons can be added to the config in `config/contentoverview/pages.php`:
 
 ```php
-'heading2' => [
-    'heading' => 'Workflow'
-],
-'page2' => [
-    'label' => 'Needs attention!',
-    'url' => 'contentoverview/page2',
-    'icon' => '@appicons/clock.svg'
-],
+$co->createPageGroup()
+        ->label('Workflow')
+    
+$co->createPage('page2')
+    ->label('Needs attention!')
+    ->icon('@appicons/clock.svg')
 ```
 
 ![Screenshot](/images/sidebar.jpg)
@@ -497,6 +505,38 @@ return [
 ];
 ```
 ![Screenshot](/images/dynamicconfig.jpg)
+
+### Reusing config objects
+
+In case you find yourself duplicating config objects with minor modifications, the `ConfigHelper::require()` method comes to the rescue.
+
+```php
+use wsydney76\contentoverview\helpers\ConfigHelper;
+...
+ 'tabs' => [
+        ConfigHelper::require('tabs/tab_work', ['label' => 'News', 'section' => 'news']),
+        ConfigHelper::require('tabs/tab_work', ['label' => 'Films', 'section' => 'film']),
+        ConfigHelper::require('tabs/tab_work', ['label' => 'People', 'section' => 'person']),
+        ConfigHelper::require('tabs/tab_work', ['label' => 'Locations', 'section' => 'location']),
+    ]
+```
+
+```php
+// tabs/tab_work.php
+
+// A `params` variable is available
+
+// Do not complain about missing variable, enable autocompletion
+/** @var array{label: string, section: string|array} $params */
+
+// Must return its data
+return $co->createTab($params['label'], [
+    ...
+        $section($params['section'])
+    ...
+])
+
+```
 
 ### Shortcuts
 
@@ -913,6 +953,18 @@ Matrix subfields can also be used as filters:
 Specify fields in the form `matrixFieldHandle.blockTypeHandle.subFieldHandle`.
 
 If there is only one block type, you can use `matrixFieldHandle.subFieldHandle`
+
+### Use 'selectize' for filters
+
+Filters by default use a standard `select` input. For longer lists of options you may want to switch to a `selectize` input that allows searching.
+
+```php
+->useSelectize()
+```
+
+![Snapshot](/images/selectize.jpg)
+
+Selectize inputs have a slightly different visual appearance than standard selects, so it is not a very good idea to mix them.
 
 ## Customize
 
@@ -1402,6 +1454,19 @@ A single tab can be shown in a dashboad widget. Available tabs are defined in `w
 
 ![screenshot](/images/widgetsettings.jpg)
 
+## Craft general config
+
+Settings in `config/general.php` that are relevant for this plugin:
+
+* defaultSearchTermOptions: Search queries are executed respecting this setting.
+* postCpLoginRedirect: You can redirect users after login. Be sure that this is a page that is available for all users.
+
+```php
+->postCpLoginRedirect('contentoverview')
+
+->postCpLoginRedirect('contentoverview/page1#news')
+```
+
 ## Translations
 
 Static texts are translated using a `contentoverview` translation category. A german translation file is included.
@@ -1474,6 +1539,8 @@ You can hide objects like actions via permission/group/events etc., however this
 ## Did not make it into final version
 
 * Optionally show actions in dropdown
+* Dynamic pages
+* 'Deep merge' of config objects
 * Configurable integrations
 
 ## TODOS:
@@ -1486,3 +1553,10 @@ You can hide objects like actions via permission/group/events etc., however this
 * Some inline comments are missing...
 * Check accessibility...
 * Check this doc for accuracy and  completeness
+* Run code through code checkers.
+
+## Finally
+
+This plugin gives a lot of different options, trying to hide complexity from devs/users.
+
+However: The simplest way is always the best. KISS!
