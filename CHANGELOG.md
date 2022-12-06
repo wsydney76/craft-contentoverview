@@ -2,6 +2,10 @@
 
 ## 5.0.1 2022-12-06
 
+* Fixed a bug where group/permisssion settings were not applied.
+
+## 5.0.1 2022-12-06
+
 * Fixed a bug where the elementmaps integration loaded a wrong asset bundle.
 
 ## 5.0.0 2022-12-05

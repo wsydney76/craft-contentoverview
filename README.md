@@ -4,7 +4,7 @@ This plugin shows configurable overviews of a site's content.
 
 ## Disclaimer
 
-Another final evaluation/test version (5.0).
+Another final evaluation/test version (5.0.2).
 
 > On request, we moved the configuration of subpages from general plugin config to a dedictated file with fluent config.
 > 
