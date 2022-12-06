@@ -18,16 +18,15 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
 use wsydney76\contentoverview\assets\ContentOverviewAssetBundle;
-use wsydney76\contentoverview\assets\ElementmapPluginAssetBundle;
 use wsydney76\contentoverview\assets\WorkPluginAssetBundle;
 use wsydney76\contentoverview\models\Settings;
 use wsydney76\contentoverview\services\ContentOverviewService;
 use wsydney76\contentoverview\variables\ContentOverviewVariable;
 use wsydney76\contentoverview\widgets\ContentOverviewLinksWidget;
 use wsydney76\contentoverview\widgets\ContentOverviewTabWidget;
+use wsydney76\elementmap\assets\ElementMapBundle;
 use yii\base\Event;
 use function array_splice;
-use function getenv;
 
 /**
  * @property ContentOverviewService $contentoverview
@@ -183,7 +182,7 @@ class Plugin extends \craft\base\Plugin
                     Craft::$app->view->registerAssetBundle(WorkPluginAssetBundle::class);
                 }
                 if (Craft::$app->plugins->isPluginEnabled('elementmap')) {
-                    Craft::$app->view->registerAssetBundle(ElementmapPluginAssetBundle::class);
+                    Craft::$app->view->registerAssetBundle(ElementMapBundle::class);
                 }
             }
         );
