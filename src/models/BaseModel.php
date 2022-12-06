@@ -90,7 +90,7 @@ class BaseModel extends Model
         $currentUser = Craft::$app->user->identity;
 
         // Admins can see everything, or no restriction set
-        if ($currentUser->admin || (!$this->permission && !$this->group)) {
+        if ($currentUser->admin) {
             return $objects;
         }
 

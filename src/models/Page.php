@@ -14,7 +14,6 @@ class Page extends BaseModel
     public const EVENT_DEFINE_TABS = 'eventDefineTabs';
 
     public array $blocks = [];
-    public array|string $group = '';
     public string $heading = '';
     public string $icon = '';
     public string $label = 'Untitled Page';
