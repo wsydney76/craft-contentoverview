@@ -1,5 +1,13 @@
 # Changelog
 
+## 5.1.0 2022-12-07
+
+Make permission handling easier:
+
+* Added a `Can view everything` permission.
+* Added a `extraPermissions` plugin config setting.
+* Added a `Permissions` chapter to README.
+
 ## 5.0.1 2022-12-06
 
 * Fixed a bug where group/permisssion settings were not applied.

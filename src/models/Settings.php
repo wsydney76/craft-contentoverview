@@ -26,6 +26,7 @@ class Settings extends Model
     public bool $enableCreateInSlideoutEditor = true;
     public bool $enableWidgets = true;
     public array $externalCssFiles = [];
+    public array $extraPermissions = [];
     public ?Asset $fallbackImage = null;
     public bool $hideUnpermittedSections = false;
     public array $iconSize = ['width' => '20px', 'height' => '20px'];

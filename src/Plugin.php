@@ -26,6 +26,7 @@ use wsydney76\contentoverview\widgets\ContentOverviewLinksWidget;
 use wsydney76\contentoverview\widgets\ContentOverviewTabWidget;
 use wsydney76\elementmap\assets\ElementMapBundle;
 use yii\base\Event;
+use function array_merge;
 use function array_splice;
 
 /**
@@ -146,15 +147,21 @@ class Plugin extends \craft\base\Plugin
         // Create Permissions
         Event::on(
             UserPermissions::class,
-            UserPermissions::EVENT_REGISTER_PERMISSIONS, function(RegisterUserPermissionsEvent $event) {
+            UserPermissions::EVENT_REGISTER_PERMISSIONS, function(RegisterUserPermissionsEvent $event) use ($settings) {
             $event->permissions['Content Overview'] = [
                 'heading' => 'Content Overview Plugin',
-                'permissions' => [
-                    'accessPlugin-contentoverview' => [
-                        'label' => Craft::t('contentoverview', 'Access Content Overview Plugin'),
+                'permissions' => array_merge(
+                    [
+                        'accessPlugin-contentoverview' => [
+                            'label' => Craft::t('contentoverview', 'Access Content Overview Plugin'),
+                        ]
+                    ],
+                    [
+                        'superUser-contentoverview' => [
+                            'label' => Craft::t('contentoverview', 'Can view everything (all pages, tabs, columns, sections)'),
+                        ]
                     ]
-                ]
-
+                    , $settings->extraPermissions)
             ];
         });
 

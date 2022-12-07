@@ -90,7 +90,7 @@ class BaseModel extends Model
         $currentUser = Craft::$app->user->identity;
 
         // Admins can see everything
-        if ($currentUser->admin) {
+        if ($currentUser->admin || $currentUser->can('superUser-contentoverview')) {
             return $objects;
         }
 
@@ -122,5 +122,6 @@ class BaseModel extends Model
                 return true;
             });
     }
+
 
 }

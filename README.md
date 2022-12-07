@@ -4,7 +4,7 @@ This plugin shows configurable overviews of a site's content.
 
 ## Disclaimer
 
-Another final evaluation/test version (5.0.2).
+Another final evaluation/test version (5.1).
 
 > On request, we moved the configuration of subpages from general plugin config to a dedictated file with fluent config.
 > 
@@ -93,6 +93,7 @@ Settings in alphabetical order:
 - defaultPage (string, page key for the first/only page. Defaults to 'default'.)
 - enableCreateInSlideoutEditor (bool, whether new entries will be created in a slideout editor. Defaults to false on multi-site installs, else true. Experimental)
 - enableSlideoutEditor (bool, whether a slideout editor can be opened for an entry by a double click on the status indicator, or by clicking an icon/image. Experimental)
+- extraPermissions (array, adds permissions)
 - enableWidgets (bool, default true, enable dashboard widgets that display a single tab)
 - fallbackImage (Asset, an image that will be used in a layout if no image is set on an entry)
 - hideUnpermittedSections (bool, Whether to hide sections a user does not have view permission instead of displaying a message. May lead to ugly empty tabs.)
@@ -1466,6 +1467,32 @@ Settings in `config/general.php` that are relevant for this plugin:
 
 ->postCpLoginRedirect('contentoverview/page1#news')
 ```
+
+## Permissions
+
+Admins are not restricted.
+
+Non-admin users need the `Access Content Overview Plugin` permission.
+
+There is a special `Can view everything (all pages, tabs, columns, sections)` permission, that you can assign to groups/users you do not want to be restricted.
+Section specific permissions (viewentries, saveentries..) are still respected.
+
+You can add custom permissions in your `config/contentoverview.php` file:
+
+```php
+'extraPermissions' => [
+      'festivalAdmin' => [
+          'label' => 'Festival Admin'
+      ]
+    ],
+```
+
+```php
+// object config
+->permission('festivalAdmin')
+```
+
+![Screenshot](/images/permissions.jpg)
 
 ## Translations
 
