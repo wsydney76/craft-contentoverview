@@ -3,6 +3,10 @@ export default {
     description: 'A Craft CMS plugin',
     base: '/craft-contentoverview/',
     themeConfig: {
+        logo: '/wsydney76.jpg',
+        socialLinks: [
+            {icon: 'github', link: 'https://github.com/wsydney76/craft-contentoverview'},
+        ],
         sidebar: [
             {
                 text: 'Configuration',
