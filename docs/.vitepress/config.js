@@ -1,7 +1,7 @@
 export default {
     title: 'Content Overview',
     description: 'A Craft CMS plugin',
-    base: '/plugindocs/',
+    base: '/craft-contentoverview/',
     themeConfig: {
         sidebar: [
             {
