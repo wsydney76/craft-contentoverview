@@ -1,7 +1,7 @@
 {
   "name": "wsydney76/craft-contentoverview",
   "description": "Content Overview",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "type": "craft-plugin",
   "keywords": ["craft", "plugin", "cp"],
   "license": "MIT",
@@ -15,7 +15,7 @@
     "email": "wsydney@web.de",
     "issues": "https://github.com/wsydney76/craft-contentoverview/issues?state=open",
     "source": "https://github.com/wsydney76/craft-contentoverview",
-    "docs": "https://github.com/wsydney76/craft-contentoverview/blob/master/README.md"
+    "docs": "https://wsydney76.github.io/craft-contentoverview/"
   },
   "require": {
     "craftcms/cms": "^4.3.0"

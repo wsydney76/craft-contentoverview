@@ -1,14 +1,8 @@
 # Content Overview
 
-This plugin shows configurable overviews of a site's content.
+This Craft CMS plugin shows configurable overviews of a site content.
 
 ## Disclaimer
-
-Another final evaluation/test version (5.1).
-
-> On request, we moved the configuration of subpages from general plugin config to a dedictated file with fluent config.
->
-> See upgrading from 4.x in the Changelog.
 
 * This plugin was initially developed as a side/training project for internal use only.
 * Added a bunch of customization options when evaluating it in a real-life project.
@@ -26,6 +20,10 @@ Another final evaluation/test version (5.1).
 * Supports only entries element type.
 * **We are not able to offer any support.**
 * Feel free to use it/fork it/adopt it/do whatever you want with it.
+
+## Requirements
+
+This plugin requires Craft CMS 4.3 or later.
 
 ## Installation
 
@@ -73,11 +71,12 @@ Replace `news/page` with one or your section handles (a channel/a structure). Re
 Show different sections in different layouts (cards, cardlets, list, line). Add section specific infos and image.
 Search, filtering and pagination is supported.
 
-![screenshot](/images/screenshot1.jpg)
+[![screenshot](/images/screenshot1.jpg)](/craft-contentoverview/images/screenshot1.jpg)
+
 
 Support your workflow and quality management: Show drafts / status / own provisional drafts
 
-![screenshot](/images/screenshot2.jpg)
+[![screenshot](/images/screenshot2.jpg)](/craft-contentoverview/images/screenshot2.jpg)
 
 ## Known issues
 

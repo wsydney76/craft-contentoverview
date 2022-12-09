@@ -8,7 +8,8 @@ You can use a simple string:
 ->help('Help is on the way!')
 ```
 
-or use a custom template
+or use a custom template:
+
 
 ```php
 ->help([
@@ -16,6 +17,10 @@ or use a custom template
     'type' => 'warning' // optional, tip|warning
 ])
 ```
+
+Custom templates live in the folder defined by the `customTemplatePath` plugin setting.
+
+![Screenshot](/images/warning.jpg)
 
 ## Slideout
 
@@ -31,7 +36,3 @@ For more info about the section, you can configure a button that opens a custom 
 ```
 
 A `sectionConfig` variable is available.
-
-![Screenshot](/images/warning.jpg)
-
-Custom templates live in the folder defined by the `customTemplatePath` plugin setting.

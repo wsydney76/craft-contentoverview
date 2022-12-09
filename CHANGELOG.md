@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.5.1 2022-12-09
+
+* Moved docs to GitHub pages.
+
 ## 5.1.0 2022-12-07
 
 Make permission handling easier:

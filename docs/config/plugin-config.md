@@ -50,25 +50,22 @@ The layout that is used by default. list|cardlets|cards|line.
 
 Page key for the first/only page.
 
-## enableCreateInSlideoutEditor 
-bool, whether new entries will be created in a slideout editor. Defaults to false on multi-site installs, else true. Experimental
-
-## enableSlideoutEditor 
-
-* Type: `bool`
-* Default: `true` 
-
-Whether a slideout editor can be opened for an entry by a double click on the status indicator, or by clicking an icon/image. Experimental
-
 ## enableCreateInSlideoutEditor
 
 * Type: `bool`
 * Default: `true`
 
-Whether a slideout editor will be opened to create a new entry. Experimental
+Whether a slideout editor will be opened to create a new entry. Experimental.
 
 Will be forced to `false` in a mult-site setup.
 
+
+## enableSlideoutEditor
+
+* Type: `bool`
+* Default: `true`
+
+Whether a slideout editor can be opened for an entry by a double click on the status indicator, or by clicking an icon/image. Experimental.
 
 ## extraPermissions 
 

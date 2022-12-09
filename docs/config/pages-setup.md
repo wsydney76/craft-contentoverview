@@ -31,29 +31,25 @@ return [
 ]
 ```
 
-### defaultPage
+### Settings
 
-The page that is initially selected. Usually the first one.
-
-### pages
-
-An array of page configs
+Settings for the page object:
 
 #### label
 
-Label for nav and page titles
+* Type: `string`
 
-#### group
+Label for nav and page titles.
 
-This page should only be available for admins/members of this group/one of these groups.
-  
-Can be a string (one group) or an array of group handles.
+#### group/permission
 
-#### permission
+See [Common Settings](./common)
 
-This page should only be available for admins/users with this permission.
+Restrict access to this page.
 
 #### blocks
+
+* Type: `array` 
 
 Array of templates that will be rendered inside a Control Panel twig block area. See [Templates](../customize/templates).
 
