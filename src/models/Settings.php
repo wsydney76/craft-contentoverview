@@ -14,7 +14,7 @@ class Settings extends Model
 
     public const EVENT_DEFINE_USER_SETTING = 'eventDefineUserSetting';
 
-    // see read me for doc
+    // UPDATE DOCS!!!
 
     public string $altTemplate = '{alt}';
     public ?array $custom = null;

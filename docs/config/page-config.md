@@ -25,47 +25,7 @@ Structure of this file:
     - columns[] (array, columns inside the tab container, uses a 12 columns grid)
         - width (int, number of columns occupied, 1-12)
         - sections[] (array, sections displayed inside the column)
-            - actions (array, The actions available to the section. See [Actions](../pagecontent/actions).
-            - allSites (bool, true = display (unique) entries from all sites.)
-            - custom  (array, any custom data, can be used in custom events/classes/templates)
-            - entryType (array|string, entryType handle)
-            - fallbackImageField (array|string, name of an image field to use if there is no image set in `imageField`.)
-            - filters (array, Array of fields whose values can be applied as filters. See [Filters](../pagecontent/filters).)
-            - heading (string, heading of the section, defaults to section name.)
-            - help (array|string Help text for the section. See [Help](../customize/help).)
-            - icon (array|string, path to a svg icon that will be displayed if no image is found)
-            - iconBgColor (string, the background color for an icon.)
-            - imageField (array|string, name of the image field to use.)
-            - imageRatio (float, aspect ratio of the image. Only makes sense for card layout.)
-            - info (string|array, object template to render in addition to the title.)
-            - infoTemplate (array|string, path to a twig template inside the projects templates folder. Will be called with an entries variable.)
-            - layout (string, the layout used to display entries. (list (default)|cardlets|cards|line|table)
-            - limit (int, number of entries to show on one section page. Default to 9999.)
-            - linkToPage (string, the key of a page the heading is linked to. May contain an anchor, e.g. `page1#tab1`.)
-            - orderBy (string|array see [docs](https://craftcms.com/docs/4.x/entries.html#orderby)
-            - ownDraftsOnly (bool, if true and scope is defined: show only drafts created by the current user.)
-            - query (ElementQuery, define your own query.)
-            - scope (string, whether drafts should be shown, drafts|provisional|all, default: only published entries will be included.)
-            - search (bool, whether search will be enabled.)
-            - section (array|string, Craft section handle.)
-            - showIndexButton (bool whether button 'All entries' will be shown.)
-            - showNewButton (bool whether button 'New entry' will be shown.)
-            - showRefreshButton (bool, whether to show a refresh button for this section.)
-            - size (string, the grid colum size of an entry (for layouts card, cardlet). tiny|small|medum|large|card)
-            - sortByScore (bool, whether search results will be sorted by score. default=false)
-            - status (string|array, see [docs](https://craftcms.com/docs/4.x/entries.html#status)
-            - titleObjectTemplate (string, an object template that will be rendered for the title in a layout. Defaults to, well, `{title}`)
-
-## Common settings
-
-The following settings can be applied to every object (page/tab/column/section/filter/action...)
-
-* handle (string, a handle that helps to identify the object in events/custom templates.)
-* custom  (array, can contain any data that you want to use in events/custom templates).
-* permission (string, only admins and users with this permission will see this object.)
-* group (string|array, only admins and members of this group/one of these groups will see this object. Will be ignored if the more specific `permission` is set)
-
-
+            - [See Section Settings](./section-settings)
 
 ## Example
 

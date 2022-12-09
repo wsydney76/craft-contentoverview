@@ -18,8 +18,10 @@ const $config = {
                 collapsible: true,
                 items: [
                     {text: 'Plugin Config', link: './config/plugin-config'},
+                    {text: 'Common Settings', link: './config/common'},
                     {text: 'Pages Setup', link: './config/pages-setup'},
                     {text: 'Page Config', link: './config/page-config'},
+                    {text: 'Section Settings', link: './config/section-settings'},
                     {text: 'Widgets', link: './config/widgets'},
                     {text: 'Craft general config', link: './config/craft'},
                 ]

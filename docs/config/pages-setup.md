@@ -31,23 +31,43 @@ return [
 ]
 ```
 
-defaultPage: the page that is initially selected. Usually the first one.
+### defaultPage
 
-pages: an array of page configs
+The page that is initially selected. Usually the first one.
 
-* label: Label for nav and page titles
+### pages
 
-* group: this page should only be available for admins/members of this group/one of these groups.
-  Can be a string (one group) or an array of group handles.
+An array of page configs
 
-* permission: this page should only be available for admins/users with this permission.
+#### label
 
-* blocks: array of templates that will be rendered inside a Control Panel twig block area. See [Templates](../customize/templates).
+Label for nav and page titles
 
+#### group
 
-By default, multiple pages are display as subNav:
+This page should only be available for admins/members of this group/one of these groups.
+  
+Can be a string (one group) or an array of group handles.
+
+#### permission
+
+This page should only be available for admins/users with this permission.
+
+#### blocks
+
+Array of templates that will be rendered inside a Control Panel twig block area. See [Templates](../customize/templates).
+
+### Show page links
+
+Where links to your subpages appear:
+
+#### Subnav
+
+By default, multiple pages are displayed as subNav:
 
 ![screenshot](/images/nav2.jpg)
+
+#### Sidebar
 
 Alternatively, the pages can be displayed in the sidebar.
 
