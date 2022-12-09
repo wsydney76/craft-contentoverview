@@ -1,10 +1,3 @@
-:root {
-    --vp-c-brand: #1e3a8a;
-    --vp-c-brand-light: #1e40af;
-    --vp-c-text-1: #1e293b;
-    --vp-c-text-2: #475569;
-}
-
 body, html {
     font-size:17px;
 }

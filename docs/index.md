@@ -79,3 +79,33 @@ Support your workflow and quality management: Show drafts / status / own provisi
 
 ![screenshot](/images/screenshot2.jpg)
 
+## Known issues
+
+* Undocumented things from Craft 4.3 core are used: css classes, css variables, scripts, icons... This may break
+  anytime.
+* Invalid config settings/no proper checks in custom modules may crash the Control Panel.
+
+## Did not make it into final version
+
+* Optionally show actions in dropdown
+* Dynamic pages
+* 'Deep merge' of config objects
+* Configurable integrations
+
+## TODOS
+
+* Tests...
+* Improve styles
+* Improve error handling
+* Check permission handling
+* Some translations are missing...
+* Some inline comments are missing...
+* Check accessibility...
+* Check this doc for accuracy and  completeness
+* Run code through code checkers.
+
+## Finally
+
+This plugin gives a lot of different options, trying to hide complexity from devs/users.
+
+However: The simplest way is always the best. KISS!
