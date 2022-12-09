@@ -61,7 +61,7 @@ Heading of the section. The `Section::getHeading()` method will return Crafts se
 
 * Type: `array|string`
 
-Help text for the section. See [Help](../customize/help).
+Help text for the section. See [Help](../pagecontent/help).
 
 ## icon 
 
