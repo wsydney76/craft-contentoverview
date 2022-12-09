@@ -4,7 +4,7 @@ Settings for sections, in alphabetical order:
 
 ```php
 $co->createSection(
-    ->layout('cards'
+    ->layout('cards')
 ```
 
 If no default value is mentioned, the setting will default to `empty` (empty string, empty array, null, depending on the type).
