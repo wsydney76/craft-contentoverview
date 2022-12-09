@@ -6,7 +6,7 @@ Actions can be:
 
 * slideout: predefined, opens the entry in a slideout editor.
 * delete: predefined, deletes the entry (with user confirmation).
-* view: predefined, open the entry url in a new tab (only live entries at the moment).
+* view: predefined, open the entry url in a new tab (experimental for non-live entries).
 * compare: integration, shows a comparison draft <-> current in a slideout. *)
 * relationships : integration, shows the relationships for an entry in a popup. **)
 * A custom javascript function.
@@ -43,6 +43,25 @@ $co->createAction()
 ```
 
 ## Call a JavaScript function
+
+Call a custom JavaScript function.
+
+```php
+$co->createAction()
+    ->label('See version history')
+    ->icon('@templates/_icons/history.svg')
+    ->jsFunction('myApp_publish_release')
+```
+
+Signature:
+
+```js
+function myApp_publish_release(label, elementId, draftId, title, sectionPath, sectionPageNo)
+```
+
+Use sectionPath, sectionPageNo if you want to refresh the section html via `co_getSectionHtml`.
+
+## Call a Controller action
 
 `elementId` and `draftId` params will be posted to the action.
     

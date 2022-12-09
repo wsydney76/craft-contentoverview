@@ -14,4 +14,4 @@ $co->createWidgetSection()
 ```
 
 This just calls the constructor and the `getBodyHtml` method of the widget. The widget is not
-loaded in the context it expects, so it may or may not work properly. (Javascript errors, missing css etc).
+loaded in the context it expects, so it may or may not work properly. (JavaScript errors, missing css etc).
