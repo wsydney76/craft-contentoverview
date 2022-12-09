@@ -13,6 +13,7 @@ Entries can be filtered by a custom field value.
         ->orderBy('lastName, firstName'),
     
     $co->createFilter('field', 'workflowStatus'),
+])
 ```
 
 Currently supported:

@@ -46,7 +46,7 @@ $co->createAction()
 
 `elementId` and `draftId` params will be posted to the action.
     
-Requires that the controller action return ->asSuccess(message) or ->asFailure(message)
+Requires that the controller action returns `->asSuccess(message)` or `->asFailure(message)`
     
 Takes care of displaying cp notice/error, redirect/refreshing the section html.
 

@@ -22,12 +22,21 @@ If no default value is mentioned, the setting will default to `empty` (empty str
 
 Object template used to render the alt attribute of images, defaults to `{alt}`
 
+```php
+'altTemplate' => '{altText}'
+```
+
+
 ## customTemplatePath 
 
 * Type: `string`
 * Default: `_contentoverview` 
 
 Folder for custom templates inside the `templates` project folder.
+
+```php
+'customTemplatePath' => '_mypath'
+```
 
 ## defaultIcon 
 
@@ -36,12 +45,20 @@ Folder for custom templates inside the `templates` project folder.
 
 File path to a svg icon.
 
+```php
+'defaultIcon' => '@templates/icons/default.svg'
+```
+
 ## defaultLayout 
 
 * Type: `string`
 * Default: `list` 
 
 The layout that is used by default. list|cardlets|cards|line.
+
+```php
+'defaultLayout' => 'cardlets'
+```
 
 ## defaultPage 
 
@@ -50,6 +67,10 @@ The layout that is used by default. list|cardlets|cards|line.
 
 Page key for the first/only page.
 
+```php
+'defaultPage' => 'page1'
+```
+
 ## enableCreateInSlideoutEditor
 
 * Type: `bool`
@@ -57,8 +78,11 @@ Page key for the first/only page.
 
 Whether a slideout editor will be opened to create a new entry. Experimental.
 
-Will be forced to `false` in a mult-site setup.
+Will be forced to `false` in a multi-site setup.
 
+```php
+'enableCreateInSlideoutEditor' => false
+```
 
 ## enableSlideoutEditor
 
@@ -67,11 +91,23 @@ Will be forced to `false` in a mult-site setup.
 
 Whether a slideout editor can be opened for an entry by a double click on the status indicator, or by clicking an icon/image. Experimental.
 
+```php
+'enableSlideoutEditor' => false
+```
+
 ## extraPermissions 
 
 * Type: `array` 
 
-Adds permissions. See [Permissions](../misc/permissions)
+Adds permissions. See [Permissions](../misc/permissions).
+
+```php
+'extraPermissions' => [
+  'festivalAdmin' => [
+      'label' => 'Festival Admin'
+  ]
+]
+```
 
 ## enableWidgets 
 
@@ -80,11 +116,21 @@ Adds permissions. See [Permissions](../misc/permissions)
 
 Whether to enable dashboard widgets that display a single tab.
 
+```php
+'enableWidgets' => false
+```
+
 ## fallbackImage 
 
 * Type: `Asset`
 
 An image that will be used in a layout if no image is set on an entry.
+
+```php
+'fallbackImage' => GlobalSet::find()
+    ->handle('siteInfo')->one()
+    ->featuredImage->one(),
+```
 
 ## hideUnpermittedSections 
 
@@ -92,6 +138,10 @@ An image that will be used in a layout if no image is set on an entry.
 * Default: `false` 
 
 Whether to hide sections a user does not have view permission instead of displaying a message. May lead to ugly empty tabs.
+
+```php
+'hideUnpermittedSections' => true
+```
 
 ## layoutSizes 
 
@@ -105,7 +155,14 @@ Whether to hide sections a user does not have view permission instead of display
   ]
   ```
 
-Which size is used by default for a layout
+Which size is used by default for a layout.
+
+```php
+->layoutSizes([
+  'cards' => 'small',
+  'cardlets' => 'medium'
+  ])
+```
 
 ## layoutWidth 
 
@@ -122,7 +179,6 @@ Which size is used by default for a layout
 ]
 ```
 
-
 The grid column width for a layout size. Technically the `minmax` value for a `grid-template-columns` css directive.
 
 ## linkTarget 
@@ -132,12 +188,20 @@ The grid column width for a layout size. Technically the `minmax` value for a `g
 
 The value of a `target` attribute added to the links that open an edit page.
 
+```php
+'linkTarget' => ''
+```
+
 ## loadSectionsAsync 
 
 * Type: `bool`
 * Default: `false` 
 
 Whether to load section html via ajax request. Loads section content when it becomes visible.
+
+```php
+'loadSectionsAsync' => true
+```
 
 ## pluginTitle 
 
@@ -148,13 +212,21 @@ Label for primary navigation, page title.
 
 Has to be translated via the `site` category, as it can be project specific.
 
+```php
+'pluginTitle' => 'Content'
+```
+
 ## purifierConfig 
 
 * Type: `string|array`
 
-The html purifier config used to make output from object templates safe.
+The html purifier config used to make output from object templates safe. See [purify filter docs](https://craftcms.com/docs/4.x/dev/filters.html#purify).
 
 Uses the default config if empty.
+
+```php
+'purifierConfig' => 'yourConfig'
+```
 
 ## replaceDashboard 
 
@@ -163,12 +235,20 @@ Uses the default config if empty.
 
 Whether to remove dashboard link and redirect to contentoverview on login.
 
+```php
+'replaceDashboard' => true
+```
+
 ## showLoadingIndicator 
 
 * Type: `bool`
 * Default: `false` 
 
 Whether to show a loading indicator/overlay while an ajax request is pending.
+
+```php
+'showLoadingIndicator' => true
+```
 
 ## showPages 
 
@@ -180,6 +260,10 @@ Where to show multiple pages:
 * nav: in main navigation
 * sidebar: in sidebar
 * no: not at all
+* 
+```php
+'showPages' => 'sidebar'
+```
 
 ## statusFilterOptions
 
@@ -227,6 +311,10 @@ The `height` will be adjusted if a `imageRatio` setting is used.
 
 Create image transforms with Imager-X plugin, if available.
 
+```php
+'useImagerX' => false
+```
+
 ## widgetText 
 
 * Type: `string`
@@ -235,3 +323,7 @@ Create image transforms with Imager-X plugin, if available.
 Text for dashboard link widget
 
 Has to be translated via the `site` category, as it can be project specific.
+
+```php
+'widgetText' => 'Goto Content Overview page'
+```

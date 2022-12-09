@@ -6,7 +6,7 @@ By default, a link to a single page is added to the navigation sidebar.
 
 ![screenshot](/images/nav1.jpg)
 
-This requires a setup up file named after the `defaultPage` settings.
+This requires a config file named after the [defaultPage](./plugin-config#defaultpage) plugin setting, e.g. `config/contentoverview/default.php`.
 
 ## Multi Page Setup
 
@@ -67,7 +67,7 @@ By default, multiple pages are displayed as subNav:
 
 Alternatively, the pages can be displayed in the sidebar.
 
-Set the `showPage` plugin setting to 'sidebar'.
+Set the [showPages](./plugin-config#showpages) plugin setting to 'sidebar'.
 
 This is more consistent with the rest of the CP and is more convenient when many pages are displayed and grouping is
 useful , however it consumes more space.

@@ -7,15 +7,14 @@ const $config = {
     description: 'Content Overview Craft Plugin',
     base: '/craft-contentoverview/',
     themeConfig: {
-        footer: {
-            message: 'Released under the MIT License.',
-            copyright: 'Copyright © 2019-present Evan You'
-        },
         logo: '/wsydney76.jpg',
         socialLinks: [
             {icon: 'github', link: 'https://github.com/wsydney76/craft-contentoverview'},
         ],
         outline: 'deep',
+        nav: [
+            {text: 'Changelog', link: 'https://github.com/wsydney76/craft-contentoverview/blob/main/CHANGELOG.md'}
+        ],
         sidebar: [
             {
                 text: 'Configuration',
