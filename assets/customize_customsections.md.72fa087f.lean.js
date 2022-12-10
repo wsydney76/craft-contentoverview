@@ -1,1 +1,0 @@
-import{_ as s,c as n,o as a,a as e}from"./app.25a49a75.js";const m=JSON.parse('{"title":"Custom Sections","description":"","frontmatter":{},"headers":[],"relativePath":"customize/customsections.md"}'),o={name:"customize/customsections.md"},t=e("",6),p=[t];function l(c,r,i,D,F,y){return a(),n("div",null,p)}const u=s(o,[["render",l]]);export{m as __pageData,u as default};
