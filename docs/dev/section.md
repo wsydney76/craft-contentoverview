@@ -5,6 +5,8 @@
 This is the model you would most likely override to add your own features.
 
 ```php
+namespace modules\contentoverview\models;
+
 use wsydney76\contentoverview\models\Section;
 
 class MySection extends Section {
@@ -173,7 +175,7 @@ public function getActions(): Collection
 
 Returns a collection of `Action` models to use for this section.
 
-### getOrderOptions
+### getOrderByOptions
 
 ```php
 public function getOrderByOptions(): Collection
@@ -187,7 +189,7 @@ Return options for custom sort.
 public function getEntries(array $params = []): Paginator
 ```
 
-Returns a `Paginator` object that holds the result of the executed query.
+Returns a [Paginator](https://docs.craftcms.com/api/v4/craft-db-paginator.html) object that holds the result of the executed query.
 
 For value of `$params` see `getQuery`.
 

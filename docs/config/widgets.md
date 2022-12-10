@@ -7,9 +7,9 @@ Define them in a special `config/contentoverview/widgets.php` page config file.
 ````php
 <?php
 
-use wsydney76\contentoverview\services\ContentOverviewService;
+use wsydney76\contentoverview\Plugin;
 
-$co = new ContentOverviewService();
+$co = Plugin::getInstance()->contentoverview;
 
 return [
     'tabs' => [

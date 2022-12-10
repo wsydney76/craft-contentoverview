@@ -15,9 +15,9 @@ You can configure multiple pages by adding them to the `config/contenoverview/pa
 ```php
 <?php
 
-use wsydney76\contentoverview\services\ContentOverviewService;
+use wsydney76\contentoverview\Plugin;
 
-$co = new ContentOverviewService();
+$co = Plugin::getInstance()->contentoverview;
 
 return [   
     $co->createPage('page1')  

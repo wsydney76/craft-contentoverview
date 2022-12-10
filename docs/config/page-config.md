@@ -38,9 +38,9 @@ We use a 'fluid' config using tab/column/section models.
 
 <?php
 
-use wsydney76\contentoverview\services\ContentOverviewService;
+use wsydney76\contentoverview\Plugin;
 
-$co = new ContentOverviewService();
+$co = Plugin::getInstance()->contentoverview;
 
 return [
     'tabs' => [       
@@ -54,7 +54,7 @@ return [
 <?php
 /** @var wsydney76\contentoverview\services\ContentOverviewService $co */
 
-use wsydney76\contentoverview\services\ContentOverviewService;
+use wsydney76\contentoverview\Plugin;
 
 return [
     // Params: Column width (in a 12 columns grid), Section config
