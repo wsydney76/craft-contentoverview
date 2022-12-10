@@ -156,75 +156,25 @@ $co->createSection(config: Plugin::getInstance()->getSettings()->custom['section
 
 You can also use a custom section class, this may be useful if your want to overwrite or add functionality.
 
+See [Development -> Section](../dev/section#your-own-defaults) for details.
+
 ```php
-$co->createSection(NewsSection::class)
+$co->createSection(MySection::class)
     ->heading('Pending')
     ->status('pending'),
     
-$co->createSection(NewsSection::class)
+$co->createSection(MySection::class)
     ->heading('Drafts')
     ->scope('drafts')
-    
-// modules/main/NewsSection.php
 
-<?php
-
-namespace modules\main;
-
-use wsydney76\contentoverview\models\Section;
-
-class NewsSection extends Section
-{
-    public array|string $section = 'news';
-    public ?int $limit = 12;
-    public array|string $imageField = 'featuredImage';
-    public string $layout = 'cardlets';
-    public bool $buttons = false;
-    public array|string $info = '{tagline}, {postDate|date("short")}';
-}
-
-];
 ```
 
 ## Extending section config
 
-A custom section config class can also be useful to add custom query params:
+A custom section config class can also be useful to add custom query params. See [Development -> Section](../dev/section#your-own-settings) for details.
 
 ```php
-// Config:
 ->topic('sport')
-
-// Section class
-...
-class NewsSection extends Section
-{
-    ... defaults as above
-    public mixed $topic = null; // your new setting
-
-    // Setter method for fluent config, accepts either a string or anything that can be passed to `relatedTo`.
-    public function topic(mixed $topic): self
-    {
-        $this->topic = $topic;
-        return $this;
-    }
-
-    // Add query param
-    public function getQuery(array $params): ElementQueryInterface
-    {
-        $query = parent::getQuery($params);
-
-        if ($this->topic) {
-            if (is_string($this->topic)) {
-                $this->topic = Entry::find()->section('topic')->slug($this->topic)->ids();
-            }
-            if ($this->topic) {
-                $query->andRelatedTo(['targetElement' => $this->topic, 'field' => 'topics'] );
-            }
-        }
-
-        return $query;
-    }
-}
 ```
 
 ## Dynamic Configuration

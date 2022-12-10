@@ -7,13 +7,16 @@
 
 {% set selectedSubnavItem  = page.pageKey %}
 
-{% set title = settings.pluginTitle|t('site') ~ ': ' ~ page.label|t('site') %}
+{# Do not output two identical headings #}
+
+{% set pluginTitle = settings.pluginTitle|t('site') %}
+{% set pageLabel = page.label|t('site') %}
+{% set title = pluginTitle == pageLabel ? pluginTitle :  pluginTitle ~ ': ' ~ pageLabel %}
 
 {% set pageTabs = page.tabs %}
 
 {# tabs is a cp variable, see https://craftcms.com/docs/4.x/extend/cp-templates.html#adding-tabs #}
 {% set tabs = page.cpTabs %}
-
 
 {% block contextMenu %}
     {% if craft.app.isMultiSite %}

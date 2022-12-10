@@ -2,6 +2,10 @@
 
 This Craft CMS plugin shows configurable overviews of a site content.
 
+::: info Latest version
+5.1.2
+:::
+
 ## Disclaimer
 
 * This plugin was initially developed as a side/training project for internal use only.
@@ -30,6 +34,23 @@ This plugin requires Craft CMS 4.3 or later.
 Run `composer require wsydney76/craft-contentoverview`
 
 Run `craft plugin/install contentoverview`
+
+## Updates
+
+This is no 'official' Craft plugin, so Craft will not detect updates. Check this page for updates.
+
+Make sure your `composer.json` file points to the latest version.
+
+```json
+{
+  "require": {
+    "wsydney76/craft-contentoverview": "^5.0.0"
+  }
+}
+```
+
+Run `composer update`.
+
 
 ## Quick Start
 

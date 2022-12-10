@@ -1,6 +1,11 @@
 # Changelog
 
-## 5.5.1 2022-12-09
+## 5.1.2 2022-12-10
+
+* Fixed a bug where page titles could repeat the same term twice.
+* Docs updates (thanks to Klara).
+
+## 5.1.1 2022-12-09
 
 * Moved docs to GitHub pages.
 

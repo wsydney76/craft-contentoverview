@@ -65,6 +65,13 @@ const $config = {
                     {text: 'Performance', link: '/misc/performance'},
                     {text: 'Security', link: '/misc/security'},
                 ]
+            },
+            {
+                text: 'Development',
+                collapsible: true,
+                items: [
+                    {text: 'Section', link: '/dev/section'}
+                ]
             }
         ]
     }

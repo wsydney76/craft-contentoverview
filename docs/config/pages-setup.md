@@ -19,8 +19,7 @@ use wsydney76\contentoverview\services\ContentOverviewService;
 
 $co = new ContentOverviewService();
 
-return [
-    // the page key, used for building the page url and for identifying the page in ajax requests
+return [   
     $co->createPage('page1')  
         ->label('Site/News'),
 
@@ -33,7 +32,10 @@ return [
 
 ### Settings
 
-Settings for the page object:
+The `createPage` method is called with a `pageKey` parameter, which is used to build the URL of the page (e.g. `/admin/contentoverview/festival`) 
+and internally to identify the page in ajax request.
+
+Other settings for the page object:
 
 #### label
 

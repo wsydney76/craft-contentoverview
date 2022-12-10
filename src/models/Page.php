@@ -113,6 +113,12 @@ class Page extends BaseModel
         ]);
     }
 
+    /**
+     * Get Tab Config by Tab ID
+     *
+     * @param $tabId
+     * @return array
+     */
     public function getTabConfig($tabId)
     {
         $i = 0;
