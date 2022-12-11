@@ -1,6 +1,8 @@
 {# @params sectionConfig, filters, orderByOptions #}
 {# @var sectionConfig \wsydney76\contentoverview\models\Section #}
 
+{% do view.registerAssetBundle('\\yii\\web\\JqueryAsset') %}
+
 {% import '_includes/forms' as forms %}
 
 {% for filter in filters %}
@@ -26,15 +28,21 @@
 
             {# TODO: Reliably detect change events #}
             {{ forms.elementSelect({
+                id: id,
                 name: "#{sectionPath}-elementIds",
                 elementType: filter.elementType,
                 sources: filter.field.sources,
                 selectionLabel: 'Filter by'|t('contentoverview') ~ ': ' ~ filter.getLabel|t('site'), value: '',
                 limit: 1,
-                containerAttributes: {
-                    onchange: "co_getSectionHtml('#{ sectionPath }')"
-                }
+
             }) }}
+
+            {# https://craftcms.stackexchange.com/questions/16853/how-to-watch-for-changes-on-an-element-select-relations-field #}
+            {% js %}
+                elementSelect = $('#{{ id }}').data('elementSelect')
+                elementSelect.on('selectElements', () => co_getSectionHtml('{{ sectionPath }}'))
+                elementSelect.on('removeElements', () => co_getSectionHtml('{{ sectionPath }}'))
+            {% endjs %}
 
         {% elseif filter.useSelectize %}
             {{ forms.selectize(config) }}
@@ -45,3 +53,4 @@
 
     </div>
 {% endfor %}
+

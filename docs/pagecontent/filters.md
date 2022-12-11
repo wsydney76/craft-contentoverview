@@ -190,7 +190,7 @@ Entries/users field filters only.
 Use Crafts element select modal to select elements.
 
 ::: warning
-This is highly experimental. Seems to work, but triggers to many, redundant events.
+Experimental. This will not trigger any events or filter class methods.
 :::
 
 ![Snapshot](/images/elementselect.jpg)
