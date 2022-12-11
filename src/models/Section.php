@@ -19,6 +19,7 @@ use wsydney76\contentoverview\events\ModifyContentOverviewQueryEvent;
 use wsydney76\contentoverview\Plugin;
 use yii\base\InvalidConfigException;
 use function array_map;
+use function array_unique;
 use function collect;
 use function explode;
 use function implode;
@@ -724,6 +725,7 @@ class Section extends BaseSection
         $q = $params['q'] ?? '';
         $filters = $params['filters'] ?? [];
         $orderBy = $params['orderBy'] ?? '';
+        $elementIds = $params['elementIds'] ?? [];
 
         $requestedSite = Cp::requestedSite();
 
@@ -742,6 +744,13 @@ class Section extends BaseSection
 
         if ($orderBy) {
             $query->orderBy($orderBy);
+        }
+
+        if ($elementIds) {
+            $elementIds = array_unique($elementIds);
+            foreach ($elementIds as $elementId) {
+                $query->andRelatedTo(['targetElement' => $elementId]);
+            }
         }
 
         if ($filters) {

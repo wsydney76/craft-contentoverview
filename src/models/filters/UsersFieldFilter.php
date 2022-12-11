@@ -9,6 +9,7 @@ class UsersFieldFilter extends BaseRelationFieldFilter
 {
     public string $filterType = 'usersField';
     public array|string|null $userGroups = null;
+    public string $elementType = User::class;
 
     /**
      * @return Collection

@@ -92,12 +92,12 @@ Replace `news/page` with one or your section handles (a channel/a structure). Re
 Show different sections in different layouts (cards, cardlets, list, line). Add section specific infos and image.
 Search, filtering and pagination is supported.
 
-[![screenshot](/images/screenshot1.jpg)](/craft-contentoverview/images/screenshot1.jpg)
+[![screenshot](/screenshot1.jpg)](/craft-contentoverview/screenshot1.jpg)
 
 
 Support your workflow and quality management: Show drafts / status / own provisional drafts
 
-[![screenshot](/images/screenshot2.jpg)](/craft-contentoverview/images/screenshot2.jpg)
+[![screenshot](/screenshot2.jpg)](/craft-contentoverview/screenshot2.jpg)
 
 ## Known issues
 

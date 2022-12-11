@@ -82,8 +82,9 @@ Replace `news/page` with one or your section handles (a channel/a structure). Re
 Show different sections in different layouts (cards, cardlets, list, line). Add section specific infos and image.
 Search, filtering and pagination is supported.
 
-![screenshot](/images/screenshot1.jpg)
+
+![screenshot](/docs/public/screenshot1.jpg)
 
 Support your workflow and quality management: Show drafts / status / own provisional drafts
 
-![screenshot](/images/screenshot2.jpg)
+![screenshot](/docs/public/screenshot2.jpg)

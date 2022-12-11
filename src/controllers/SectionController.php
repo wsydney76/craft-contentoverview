@@ -38,6 +38,7 @@ class SectionController extends Controller
         $q = Craft::$app->request->getBodyParam('q');
         $filters = Craft::$app->request->getBodyParam('filters');
         $orderBy = Craft::$app->request->getBodyParam('orderBy');
+        $elementIds = Craft::$app->request->getBodyParam('elementIds');
 
         // Get section config
         $section = Plugin::getInstance()->contentoverview->getSectionByPath($sectionPath);
@@ -47,7 +48,8 @@ class SectionController extends Controller
             'sectionPageNo' => $sectionPageNo,
             'q' => $q,
             'filters' => $filters,
-            'orderBy' => $orderBy
+            'orderBy' => $orderBy,
+            'elementIds' => $elementIds
         ]);
 
         // Render html

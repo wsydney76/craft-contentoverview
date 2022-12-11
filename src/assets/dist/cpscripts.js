@@ -11,6 +11,7 @@ function co_getSectionHtml(sectionPath, sectionPageNo = 1, isRefresh = true) {
         sectionPageNo: sectionPageNo,
         q: co_getSearchValue(sectionPath),
         filters: co_getFilters(sectionPath),
+        elementIds: co_getElementIds(sectionPath),
         orderBy: co_getOrderBy(sectionPath)
     }
     var spinnerElement = document.getElementById(sectionPath + '-spinner')
@@ -138,6 +139,15 @@ function co_getFilters(sectionPath) {
 
 }
 
+function co_getElementIds(sectionPath) {
+    elementIds = []
+    co_getElementIdsElements(sectionPath).forEach(element => {
+        elementIds.push(element.value)
+    })
+
+    return elementIds;
+}
+
 /**
  * Creates a new entry and opens it in slideout
  *
@@ -238,6 +248,10 @@ function co_getOrderByInput(sectionPath) {
 
 function co_getFilterElements(sectionPath) {
     return document.getElementsByName(sectionPath + '-filter')
+}
+
+function co_getElementIdsElements(sectionPath) {
+    return document.getElementsByName(sectionPath + '-elementIds[]')
 }
 
 function co_registerSectionObserver(sectionPath) {
