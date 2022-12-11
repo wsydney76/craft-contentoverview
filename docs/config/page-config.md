@@ -21,7 +21,7 @@ displays entries from one Craft section.)
 Structure of this file:
 
 - tabs[] (array, tabs of the page)
-    - label (string, tab label. Will not be visible if there is onyl one tab.)
+    - label (string, tab label. Will not be visible if there is only one tab.)
     - columns[] (array, columns inside the tab container, uses a 12 columns grid)
         - width (int, number of columns occupied, 1-12)
         - sections[] (array, sections displayed inside the column)

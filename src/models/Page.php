@@ -32,12 +32,6 @@ class Page extends BaseModel
         return $this;
     }
     
-    public function group(array|string $group): self
-    {
-        $this->group = $group;
-        return $this;
-    }
-    
     public function heading(string $heading): self
     {
         $this->heading = $heading;

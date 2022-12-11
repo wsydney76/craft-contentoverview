@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+* Added the `createFieldFilter`, `createStatusFilter`, `createCustomFilter` factory methods.
+* Added support for `CustomFilter` classes.
+* Deprecated the `createFilter($type)` method.
+
+
 ## 5.1.2 2022-12-10
 
 * Fixed a bug where page titles could repeat the same term twice.

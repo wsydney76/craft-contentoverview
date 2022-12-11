@@ -3,7 +3,7 @@
 This Craft CMS plugin shows configurable overviews of a site content.
 
 ::: info Latest version
-5.1.2
+Latest tagged version: 5.1.2. Unreleased, but non-breaking changes for filter features.
 :::
 
 ## Disclaimer
@@ -39,7 +39,7 @@ Run `craft plugin/install contentoverview`
 
 This is no 'official' Craft plugin, so Craft will not detect updates. Check this page for updates.
 
-Make sure your `composer.json` file points to the latest version.
+Make sure your `composer.json` file points to the latest version or `dev-main` for unreleased updates.
 
 ```json
 {

@@ -747,46 +747,15 @@ class Section extends BaseSection
         if ($filters) {
             foreach ($filters as $filter) {
                 if ($filter['value']) {
-                    switch ($filter['type']) {
-                        case 'entriesField':
-                        case 'usersField':
-                        {
-                            $query->andRelatedTo([
-                                'element' => $filter['value'],
-                                'field' => $filter['handle']
-                            ]);
-                            break;
-                        }
-                        case 'optionsField':
-                        {
-                            $field = Craft::$app->fields->getFieldByHandle($filter['handle']);
-                            $columnName = ElementHelper::fieldColumnFromField($field);
 
-                            $query->andWhere([$columnName => $filter['value']]);
-                            break;
-                        }
+                    $this->_modifyQueryForFilter($filter, $query);
 
-                        case 'custom':
-                        {
-
-                            if ($this->hasEventHandlers(self::EVENT_FILTER_CONTENTOVERVIEW_QUERY)) {
-                                $this->trigger(self::EVENT_FILTER_CONTENTOVERVIEW_QUERY, new FilterContentOverviewQueryEvent([
-                                    'query' => $query,
-                                    'handle' => $filter['handle'],
-                                    'value' => $filter['value']
-                                ]));
-                            }
-                            break;
-                        }
-                        case 'status':
-                        {
-                            // format key:value<,key:value>...
-                            foreach (explode(',', $filter['value']) as $filterValue) {
-                                $segments = explode(':', $filterValue);
-                                $key = $segments[0];
-                                $this->$key = $segments[1];
-                            }
-                        }
+                    if ($this->hasEventHandlers(self::EVENT_FILTER_CONTENTOVERVIEW_QUERY)) {
+                        $this->trigger(self::EVENT_FILTER_CONTENTOVERVIEW_QUERY, new FilterContentOverviewQueryEvent([
+                            'query' => $query,
+                            'handle' => $filter['handle'],
+                            'value' => $filter['value']
+                        ]));
                     }
                 }
             }
@@ -893,6 +862,17 @@ class Section extends BaseSection
         return $query;
     }
 
+
+    protected function _modifyQueryForFilter(array $filter, ElementQueryInterface $query): void
+    {
+        $filterModel = $this->getFilterByHandle($filter['handle']);
+        $filterModel->modifyQuery($this, $filter, $query);
+    }
+
+    public function getFilterByHandle(string $handle): Filter
+    {
+        return $this->getFilters()->firstWhere('handle', $handle);
+    }
 
     protected function _getConfigForEntry(string $name, Entry $entry): string
     {

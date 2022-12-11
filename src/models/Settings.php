@@ -6,6 +6,12 @@ use Craft;
 use craft\base\Model;
 use craft\elements\Asset;
 use wsydney76\contentoverview\events\DefineUserSettingEvent;
+use wsydney76\contentoverview\models\filters\CustomFilter;
+use wsydney76\contentoverview\models\filters\EntriesFieldFilter;
+use wsydney76\contentoverview\models\filters\MatrixFieldFilter;
+use wsydney76\contentoverview\models\filters\OptionsFilter;
+use wsydney76\contentoverview\models\filters\StatusFilter;
+use wsydney76\contentoverview\models\filters\UsersFieldFilter;
 use wsydney76\contentoverview\services\ContentOverviewService;
 
 
@@ -78,6 +84,12 @@ class Settings extends Model
     public string $sectionClass = Section::class;
     public string $actionClass = Action::class;
     public string $filterClass = Filter::class;
+    public string $statusFilterClass = StatusFilter::class;
+    public string $usersFieldFilterClass = UsersFieldFilter::class;
+    public string $entriesFieldFilterClass = EntriesFieldFilter::class;
+    public string $matrixFieldFilterClass = MatrixFieldFilter::class;
+    public string $optionsFieldFilterClass = OptionsFilter::class;
+    public string $customFilterClass = CustomFilter::class;
     public string $tableSectionClass = TableSection::class;
     public string $tableColumnClass = TableColumn::class;
 

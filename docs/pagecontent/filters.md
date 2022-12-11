@@ -1,18 +1,23 @@
 # Filters
 
-## By Field
+::: info
+Using filters has changed in V 5.2. The [old methods](./filters_51) are deprecated, but should still work.
+:::
+
+## Field Filters
 
 Entries can be filtered by a custom field value.
 
 ```php
 ->filters([
-    $co->createFilter('field', 'topics'),
+    $co->createFieldFilter('topics'),
 
-    $co->createFilter('field', 'assignedTo')       
+    $co->createFieldFilter('assignedTo')       
         ->label('Responsible')
         ->orderBy('lastName, firstName'),
     
-    $co->createFilter('field', 'workflowStatus'),
+    $co->createFieldFilter('workflowStatus')
+     
 ])
 ```
 
@@ -24,6 +29,16 @@ Currently supported:
 
 ![Screenshot](/images/search3.jpg)
 
+Matrix subfields can also be used as filters:
+
+```php
+ $co->createFieldFilter('streaming.streamingProvider')->orderBy('title')
+ $co->createFieldFilter('streaming.digitalMedium.streamingProvider')->orderBy('title')                        
+```
+
+Specify fields in the form `matrixFieldHandle.blockTypeHandle.subFieldHandle`.
+
+If there is only one block type, you can use `matrixFieldHandle.subFieldHandle`
 
 ## Status filter
 
@@ -39,93 +54,120 @@ Options are defined in the `statusFilterOptions` plugin setting.
 
 ## Custom filters
 
-Additionally custom filters can be defined:
+Additional custom filters can be defined via a custom filter class:
 
 ```php
-->filters([
-    $co->createFilter('custom', 'criticalreviews') // pseudo field handle to identify this filter in event handlers
-        ->label('Critical Reviews')
-        ->options([
-            ['label' => 'Overdue', 'value' => 'overdue'],
-            ['label' => 'Next week', 'value' => 'nextweek'],
-        ])
+ $co->createCustomFilter(CriticalReviewsFilter::class)
+    ->label('Critical Reviews')
+    ->handle('criticalreviews')
+    ->options([
+        ['label' => 'Overdue', 'value' => 'overdue'],
+        ['label' => 'Next week', 'value' => 'nextweek'],
     ])
-])
 ```
 
 ![Screenshot](/images/customfilter.jpg)
 
-Options can be set dynamically via an event:
+### Filter class example.
 
 ```php
-use wsydney76\contentoverview\events\DefineCustomFilterOptionsEvent;
-use wsydney76\contentoverview\models\Filter;
-Event::on(
-    Filter::class,
-    Filter::EVENT_DEFINE_CUSTOM_FILTER_OPTIONS,
-    function(DefineCustomFilterOptionsEvent $event) {
-        if ($event->filter->handle === 'criticalreviews') {
-            $event->filter->options->prepend([
-                'label' => 'A new option',
-                'value' => 'aNewOption'
-            ]) ;
-        }
-    }
-);
-```
+<?php
 
-A custom module then can apply filter params to the section query in an event handler, e.g.
+namespace modules\contentoverview\filters;
 
-```php
-
-use wsydney76\contentoverview\events\FilterContentOverviewQueryEvent;
+use craft\elements\db\ElementQueryInterface;
+use wsydney76\contentoverview\models\filters\CustomFilter;
 use wsydney76\contentoverview\models\Section;
 
-...
-
-Event::on(
-    Section::class,
-    Section::EVENT_FILTER_CONTENTOVERVIEW_QUERY,
-    function(FilterContentOverviewQueryEvent $event) {
-        if ($event->handle === 'criticalreviews') {
-            switch ($event->value) {
-                case 'overdue':
-                {
-                    $event->query
-                        ->workflowStatus('inReview')
-                        ->dueDate('< now');
-                    break;
-                }
-                case 'nextweek':
-                {
-                   // 
-                }
+class CriticalReviewsFilter extends CustomFilter
+{
+    public function modifyQuery(Section $sectionConfig, array $filter, ElementQueryInterface $query)
+    {
+        switch ($filter['value']) {
+            case 'overdue':
+            {
+                $query
+                    ->workflowStatus('inReview')
+                    ->dueDate('< now');
+                break;
+            }
+            case 'nextweek':
+            {
+                // ...               
             }
         }
-          
     }
-    );
+
+}
 ```
 
-Multiple filters can take up a lot of space if used together with search, so you can push them
-below or on top of the search:
+Specify the `modifyQuery` function and update the `$query` parameter.
+
+The `$filter` parameter will contain `handle` and `value`:
 
 ```php
-->filtersPosition('bottom') // top|bottom
+[
+    'handle' => 'criticalreviews'
+    'value' => 'overdue'
+]
 ```
 
-Matrix subfields can also be used as filters:
+If additional parameters are fix, you can hardcode them in your class:
 
 ```php
- $co->createFilter('field', 'streaming.streamingProvider')->orderBy('title')
- $co->createFilter('field', 'streaming.digitalMedium.streamingProvider')->orderBy('title')                        
+$co->createCustomFilter(CriticalReviewsFilter::class);
 ```
 
-Specify fields in the form `matrixFieldHandle.blockTypeHandle.subFieldHandle`.
+```php
+public string $handle = 'criticalreviews';
+public string $label = 'Critical Reviews';
+public array|Collection $options = [
+    ['label' => 'Overdue', 'value' => 'overdue'],
+    ['label' => 'Next week', 'value' => 'nextweek'],
+];
+```
 
-If there is only one block type, you can use `matrixFieldHandle.subFieldHandle`
+Options and the executed query can also be handled via [events](../customize/events#support-custom-filters).
 
-## Use 'selectize' for filters
+## Filter settings
+
+### handle
+
+* Type: `string`
+
+A unique handle. The field handle for field filters is set by `createFieldFilter($handle)`
+
+```php
+->handle('criticalreviews')
+```
+
+### label
+
+* Type: `string`
+
+The label used for the select box. Defaults to field name for field filters.
+
+```php
+->label('Critical Reviews')
+```
+
+### options
+
+The options used for the select box. Only relevant for custom filters.
+
+* Type: `array|Collection`
+
+```php
+->options([
+        ['label' => 'Overdue', 'value' => 'overdue'],
+        ['label' => 'Next week', 'value' => 'nextweek'],
+    ])
+```
+
+### useSelectize
+
+* Type: `bool`
+* Default: `false`
 
 Filters by default use a standard `select` input. For longer lists of options you may want to switch to a `selectize` input that allows searching.
 
@@ -136,3 +178,28 @@ Filters by default use a standard `select` input. For longer lists of options yo
 ![Snapshot](/images/selectize.jpg)
 
 Selectize inputs have a slightly different visual appearance than standard selects, so it is not a very good idea to mix them.
+
+### userGroups
+
+* Type: `string|array`
+
+Users field filters only. The user group(s) from which the user options will be selected.
+
+```php
+->userGroups(['contentEditors', 'festivalAdmin'])
+```
+
+::: info
+This is a workaround, because the configured sources of the user field are currently not respected.
+::: 
+
+
+## Filter position
+
+Multiple filters can take up a lot of space if used together with search, so you can push them
+below or on top of the search in your section config:
+
+```php
+// Section config
+->filtersPosition('bottom') // top|bottom
+```

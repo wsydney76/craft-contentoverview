@@ -26,11 +26,6 @@ Event::on(
 );
 ```
 
-## Support Custom Filters
-
-The `Section::EVENT_FILTER_CONTENTOVERVIEW_QUERY` and `Section::EVENT_DEFINE_CUSTOM_FILTER_OPTIONS` events
-are described in the [Filters](../pagecontent/filters) chapter.
-
 ## Modify Collections
 
 Every collection of models in the chain Pages -> Tabs -> Columns -> Sections -> Actions/Filters/TableColumns can be
@@ -92,6 +87,61 @@ Event::on(
 );
 ```
 
+## Support Custom Filters
+
+Options can be set dynamically via an event:
+
+```php
+use wsydney76\contentoverview\events\DefineCustomFilterOptionsEvent;
+use wsydney76\contentoverview\models\Filter;
+Event::on(
+    Filter::class,
+    Filter::EVENT_DEFINE_CUSTOM_FILTER_OPTIONS,
+    function(DefineCustomFilterOptionsEvent $event) {
+        if ($event->filter->handle === 'criticalreviews') {
+            $event->filter->options->prepend([
+                'label' => 'A new option',
+                'value' => 'aNewOption'
+            ]) ;
+        }
+    }
+);
+```
+
+A custom module can apply filter params to the section query in an event handler, e.g.
+
+```php
+
+use wsydney76\contentoverview\events\FilterContentOverviewQueryEvent;
+use wsydney76\contentoverview\models\Section;
+
+...
+
+Event::on(
+    Section::class,
+    Section::EVENT_FILTER_CONTENTOVERVIEW_QUERY,
+    function(FilterContentOverviewQueryEvent $event) {
+        if ($event->handle === 'criticalreviews') {
+            switch ($event->value) {
+                case 'overdue':
+                {
+                    $event->query
+                        ->workflowStatus('inReview')
+                        ->dueDate('< now');
+                    break;
+                }
+                case 'nextweek':
+                {
+                   // 
+                }
+            }
+        }
+          
+    }
+    );
+```
+
+
 ## Modify Settings for Current User
 
 Sometimes it makes sense to modify plugin settings for the current user, based on their role or preferences.
@@ -126,6 +176,56 @@ Event::on(
 );
 ```
 
-## Define images/icons.
+## Define images
 
-See [Images and Icons](../pagecontent/images) for how to use `Section::EVENT_DEFINE_IMAGE`, `Section::EVENT_DEFINE_ICON` events.
+Event example:
+
+```php
+use wsydney76\contentoverview\models\Section;
+use wsydney76\contentoverview\events\DefineImageEvent;
+...
+Event::on(
+    Section::class,
+    Section::EVENT_DEFINE_IMAGE,
+    function(DefineImageEvent $event) {
+        /** @var Entry $entry */
+        $entry = $event->entry;
+        if ($entry->section->handle === 'film') {
+            // TODO: improve performance, load/cache fallback images in advance
+            $event->image = $entry->featuredImage->one() ??
+                $entry->series->one()->featuredImage->one() ??
+                GlobalSet::find()->handle('siteInfo')->one()->featuredImage->one() ??
+                null;
+        }
+    }
+);
+```
+
+## Define Icons
+
+Event example:
+
+```php
+// Section config
+->icon('@appicons/newspaper.svg')
+->iconBgColor('var(--blue-400')
+```
+
+```php
+// Custom module
+use wsydney76\contentoverview\models\Section;
+use wsydney76\contentoverview\events\DefineIconEvent;
+...
+Event::on(
+    Section::class,
+    Section::EVENT_DEFINE_ICON,
+    function(DefineIconEvent $event) {
+        if ($event->entry->type->handle === 'privacy') {
+            $event->icon = '@appicons/bullhorn.svg';
+            $event->iconBgColor = 'var(--red-400)';
+        }
+    }
+);
+```
+![Screenshot](/images/icons.jpg)
+

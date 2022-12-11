@@ -13,6 +13,9 @@ This could be your directory structure in your projects root:
 ```
 ├─ modules
 │  ├─ contentoverview
+│  │  ├─ filters
+│  │  │  └─ MyCustomFilter.php
+│  │  │  └─ ... more classes ...
 │  │  ├─ models
 │  │  │  └─ MySection.php
 │  │  │  └─ ... more classes ...
@@ -21,7 +24,8 @@ This could be your directory structure in your projects root:
 │  └─ ContentOverviewModule.php
 ```
 
-* models: The directory that contains your custom classes.
+* filters: The directory that contains your custom filter classes.
+* models: The directory that contains your custom model classes.
 * ContentOverviewModule.php: The main module class where you can place your event listeners.
 
 ## Custom classes
@@ -48,11 +52,17 @@ public string $columnClass = Column::class;
 public string $sectionClass = Section::class;
 public string $actionClass = Action::class;
 public string $filterClass = Filter::class;
+public string $statusFilterClass = StatusFilter::class;
+public string $usersFieldFilterClass = UsersFieldFilter::class;
+public string $entriesFieldFilterClass = EntriesFieldFilter::class;
+public string $matrixFieldFilterClass = MatrixFieldFilter::class;
+public string $optionsFieldFilterClass = OptionsFilter::class;
+public string $customFilterClass = CustomFilter::class;
 public string $tableSectionClass = TableSection::class;
 public string $tableColumnClass = TableColumn::class;
 ```
 
-Additionally, some 'ContentOverviewService' methods like `createSection`, `createAction` allow you to pass in a class name as parameter
+Additionally, some 'ContentOverviewService' methods like `createSection`, `createAction`, `createCustomFilter` allow you to pass in a class name as parameter
 
 
 ## Listening to events

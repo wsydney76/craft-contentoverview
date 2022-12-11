@@ -3,6 +3,10 @@
 namespace wsydney76\contentoverview\services;
 
 use Craft;
+use craft\fields\BaseOptionsField;
+use craft\fields\Entries;
+use craft\fields\Matrix;
+use craft\fields\Users;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefinePagesEvent;
 use wsydney76\contentoverview\models\Action;
@@ -10,10 +14,11 @@ use wsydney76\contentoverview\models\BaseModel;
 use wsydney76\contentoverview\models\Column;
 use wsydney76\contentoverview\models\CustomSection;
 use wsydney76\contentoverview\models\Filter;
+use wsydney76\contentoverview\models\filters\BaseFieldFilter;
+use wsydney76\contentoverview\models\filters\CustomFilter;
 use wsydney76\contentoverview\models\Page;
 use wsydney76\contentoverview\models\Section;
 use wsydney76\contentoverview\models\Settings;
-use wsydney76\contentoverview\models\SidebarHeading;
 use wsydney76\contentoverview\models\Tab;
 use wsydney76\contentoverview\models\TableColumn;
 use wsydney76\contentoverview\models\TableSection;
@@ -22,6 +27,7 @@ use wsydney76\contentoverview\Plugin;
 use yii\base\InvalidConfigException;
 use yii\web\ForbiddenHttpException;
 use function collect;
+use function explode;
 
 class ContentOverviewService extends BaseModel
 {
@@ -45,7 +51,6 @@ class ContentOverviewService extends BaseModel
             'pageKey' => $pageKey,
             'url' => "contentoverview/$pageKey"
         ]);
-
     }
 
     /**
@@ -163,11 +168,82 @@ class ContentOverviewService extends BaseModel
      */
     public function createFilter(string $type, string $handle = ''): Filter
     {
+        switch ($type) {
+            case 'status':
+            {
+                return $this->createStatusFilter();
+            }
+
+            case 'custom':
+            {
+                $class = $this->createCustomFilter(Plugin::getInstance()->getSettings()->customFilterClass);
+                $class->handle($handle);
+                return $class;
+            }
+
+            default:
+            {
+                return $this->createFieldFilter($handle);
+            }
+        }
+
+    }
+
+    public function createStatusFilter()
+    {
         return Craft::createObject([
-            'class' => Plugin::getInstance()->getSettings()->filterClass,
-            'type' => $type,
-            'handle' => $handle
+            'class' => Plugin::getInstance()->getSettings()->statusFilterClass,
+            'handle' => 'status'
         ]);
+    }
+
+    public function createCustomFilter(string $className): CustomFilter {
+        return Craft::createObject([
+            'class' => $className,
+        ]);
+    }
+
+    public function createFieldFilter(string $handle): BaseFieldFilter {
+        $segments = explode('.', $handle);
+        $fieldHandle = $segments[0];
+
+        $field = Craft::$app->fields->getFieldByHandle($fieldHandle);
+
+        if (!$field) {
+            throw new InvalidConfigException("Invalid field handle $fieldHandle");
+        }
+
+        if ($field instanceof Users) {
+            return Craft::createObject([
+                'class' => Plugin::getInstance()->getSettings()->usersFieldFilterClass,
+                'handle' => $handle,
+                'field' => $field
+            ]);
+        }
+
+        if ($field instanceof Entries) {
+            return Craft::createObject([
+                'class' => Plugin::getInstance()->getSettings()->entriesFieldFilterClass,
+                'handle' => $handle,
+                'field' => $field
+            ]);
+        }
+
+        if ($field instanceof Matrix) {
+            return Craft::createObject([
+                'class' => Plugin::getInstance()->getSettings()->matrixFieldFilterClass,
+                'handle' => $handle,
+                'field' => $field
+            ]);
+        }
+
+        if ($field instanceof BaseOptionsField) {
+            return Craft::createObject([
+                'class' => Plugin::getInstance()->getSettings()->optionsFieldFilterClass,
+                'handle' => $handle,
+                'field' => $field
+            ]);
+        }
     }
 
     /**
