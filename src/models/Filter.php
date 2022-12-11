@@ -18,6 +18,7 @@ class Filter extends BaseModel
     public array|Collection $options;
     public string $filterType = '';
     public bool $useSelectize = false;
+    public bool $useElementSelect = false;
 
     /**
      * Set label for select / empty option
@@ -40,6 +41,12 @@ class Filter extends BaseModel
     public function useSelectize(bool $useSelectize = true): self
     {
         $this->useSelectize = $useSelectize;
+        return $this;
+    }
+
+    public function useElementSelect(bool $useElementSelect = true): self
+    {
+        $this->useElementSelect = $useElementSelect;
         return $this;
     }
 

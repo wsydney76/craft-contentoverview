@@ -45,7 +45,7 @@ If there is only one block type, you can use `matrixFieldHandle.subFieldHandle`
 Filter by workflow/entry status.
 
 ```php
-$co->createFilter('status')->label('Workflow')
+$co->createStatusFilter()->label('Workflow')
 ```
 
 ![Screenshot](/images/statusfilter.jpg)
@@ -171,6 +171,7 @@ The options used for the select box. Only relevant for custom filters.
 
 Filters by default use a standard `select` input. For longer lists of options you may want to switch to a `selectize` input that allows searching.
 
+
 ```php
 ->useSelectize()
 ```
@@ -178,6 +179,21 @@ Filters by default use a standard `select` input. For longer lists of options yo
 ![Snapshot](/images/selectize.jpg)
 
 Selectize inputs have a slightly different visual appearance than standard selects, so it is not a very good idea to mix them.
+
+### useElementSelect
+
+* Type: `bool`
+* Default: `false`
+
+Entries/users field filters only.
+
+Use Crafts element select modal to select elements.
+
+::: warning
+This is highly experimental. Seems to work, but triggers to many, redundant events.
+:::
+
+![Snapshot](/images/elementselect.jpg)
 
 ### userGroups
 

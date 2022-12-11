@@ -19,7 +19,24 @@
             }
         } %}
 
-        {% if filter.useSelectize %}
+
+        {% if filter.useElementSelect %}
+
+            {% set id = config.name ~ '-elementSelect-' ~ filter.handle %}
+
+            {# TODO: Reliably detect change events #}
+            {{ forms.elementSelect({
+                name: "#{sectionPath}-elementIds",
+                elementType: filter.elementType,
+                sources: filter.field.sources,
+                selectionLabel: 'Filter by'|t('contentoverview') ~ ': ' ~ filter.getLabel|t('site'), value: '',
+                limit: 1,
+                containerAttributes: {
+                    onchange: "co_getSectionHtml('#{ sectionPath }')"
+                }
+            }) }}
+
+        {% elseif filter.useSelectize %}
             {{ forms.selectize(config) }}
         {% else %}
             {{ forms.select(config) }}
