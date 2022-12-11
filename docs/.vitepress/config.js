@@ -50,7 +50,6 @@ const $config = {
                     {text: 'Custom Sections', link: '/customize/customsections'},
                     {text: 'Widget Sections', link: '/customize/widgetsections'},
                     {text: 'Twig Blocks', link: '/customize/twigblocks'},
-                    {text: 'Overwrite classes', link: '/customize/overwriteclasses'},
                     {text: 'Example', link: '/customize/customizationexample'},
                     {text: 'Events', link: '/customize/events'},
                 ]
