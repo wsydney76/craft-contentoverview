@@ -1,1 +1,0 @@
-import{_ as s,c as a,o as n,a as l}from"./app.91c9cf30.js";const i=JSON.parse('{"title":"Overwrite Classes","description":"","frontmatter":{},"headers":[],"relativePath":"customize/overwriteclasses.md"}'),o={name:"customize/overwriteclasses.md"},p=l("",5),e=[p];function t(c,r,C,y,D,F){return n(),a("div",null,e)}const d=s(o,[["render",t]]);export{i as __pageData,d as default};
