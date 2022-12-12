@@ -17,6 +17,8 @@ use function explode;
 class BaseRelationFieldFilter extends BaseFieldFilter
 {
     public string $orderBy = '';
+    public int $selectLimit = 1;
+    public string $multiSelectOperator = 'or';
 
     /**
      * How to order options for entries/users field
@@ -30,7 +32,31 @@ class BaseRelationFieldFilter extends BaseFieldFilter
         return $this;
     }
 
+    /**
+     * Set limit for element selects
+     *
+     * @param int $selectLimit
+     * @return $this
+     */
+    public function selectLimit(int $selectLimit): self
+    {
+        $this->selectLimit = $selectLimit;
+        return $this;
+    }
 
+
+    /**
+     * Sets operator (and|or) if multiple elements are selected
+     *
+     * @param string $multiSelectOperator
+     * @return $this
+     */
+    public function multiSelectOperator(string $multiSelectOperator): self
+    {
+        $this->multiSelectOperator = $multiSelectOperator;
+        return $this;
+    }
+    
     /**
      * Query for related element
      *
@@ -41,10 +67,29 @@ class BaseRelationFieldFilter extends BaseFieldFilter
      */
     public function modifyQuery(Section $sectionConfig, array $filter, ElementQueryInterface $query)
     {
-        $query->andRelatedTo([
-            'element' => $filter['value'],
-            'field' => $this->field->handle
-        ]);
+        $query->andRelatedTo($this->_getRelatedToParams($filter['value'], $this->field->handle));
+
+    }
+
+    protected function _getRelatedToParams(string $filterValue, string $fieldHandle): array
+    {
+        $values = collect(explode(',', $filterValue));
+
+        if ($values->count() == 1) {
+            return [
+                'element' => $filterValue,
+                'field' => $fieldHandle
+            ];
+        } else {
+            $params = $values->map(fn ($value) =>
+            [
+                'element' => $value,
+                'field' => $fieldHandle
+            ]
+            )->prepend($this->multiSelectOperator);
+
+            return $params->toArray();
+        }
     }
 
     /**

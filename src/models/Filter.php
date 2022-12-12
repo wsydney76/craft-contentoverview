@@ -19,7 +19,7 @@ class Filter extends BaseModel
     public string $filterType = '';
     public bool $useSelectize = false;
     public bool $useElementSelect = false;
-    public int $selectLimit = 1;
+    
 
     /**
      * Set label for select / empty option
@@ -57,17 +57,7 @@ class Filter extends BaseModel
         return $this;
     }
 
-    /**
-     * Set limit for element selects
-     *
-     * @param int $selectLimit
-     * @return $this
-     */
-    public function selectLimit(int $selectLimit): self
-    {
-        $this->selectLimit = $selectLimit;
-        return $this;
-    }
+    
 
     /**
      * Set label for filter
