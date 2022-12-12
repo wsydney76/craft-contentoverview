@@ -19,6 +19,7 @@ class BaseRelationFieldFilter extends BaseFieldFilter
     public string $orderBy = '';
     public int $selectLimit = 1;
     public string $multiSelectOperator = 'or';
+    public string $direction = 'both';
 
     /**
      * How to order options for entries/users field
@@ -56,7 +57,19 @@ class BaseRelationFieldFilter extends BaseFieldFilter
         $this->multiSelectOperator = $multiSelectOperator;
         return $this;
     }
-    
+
+    /**
+     * Sets direction of relationships in|out|both
+     *
+     * @param string $direction
+     * @return $this
+     */
+    public function direction(string $direction): self
+    {
+        $this->direction = $direction;
+        return $this;
+    }
+
     /**
      * Query for related element
      *
@@ -68,28 +81,32 @@ class BaseRelationFieldFilter extends BaseFieldFilter
     public function modifyQuery(Section $sectionConfig, array $filter, ElementQueryInterface $query)
     {
         $query->andRelatedTo($this->_getRelatedToParams($filter['value'], $this->field->handle));
-
     }
 
     protected function _getRelatedToParams(string $filterValue, string $fieldHandle): array
     {
         $values = collect(explode(',', $filterValue));
 
-        if ($values->count() == 1) {
+        $directionParam = match ($this->direction) {
+            'in' => 'targetElement',
+            'out' => 'sourceElement',
+            default => 'element'
+        };
+
+        if ($values->count() === 1) {
             return [
-                'element' => $filterValue,
+                $directionParam => $filterValue,
                 'field' => $fieldHandle
             ];
-        } else {
-            $params = $values->map(fn ($value) =>
-            [
-                'element' => $value,
-                'field' => $fieldHandle
-            ]
-            )->prepend($this->multiSelectOperator);
-
-            return $params->toArray();
         }
+
+        $params = $values->map(fn($value) => [
+            $directionParam => $value,
+            'field' => $fieldHandle
+        ]
+        )->prepend($this->multiSelectOperator);
+
+        return $params->toArray();
     }
 
     /**

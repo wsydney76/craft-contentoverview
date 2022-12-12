@@ -4,9 +4,9 @@
 
 Rework of filters.
 
-* Added the `createFieldFilter`, `createStatusFilter`, `createCustomFilter` factory methods.
+* Added the `createFieldFilter`, `createStatusFilter`, `createCustomFilter`, `createElementSelectFilter` factory methods.
 * Added support for `CustomFilter` classes.
-* Added the `useElementSelect` and `selectLimit` filter settings.
+* Added the `useElementSelect`, `selectLimit`, `multiSelectOperator`, `direction` filter settings.
 * Deprecated the `createFilter($type)` method.
 
 ## 5.1.2 2022-12-10

@@ -14,7 +14,8 @@ Entries can be filtered by a custom field value.
 
     $co->createFieldFilter('assignedTo')       
         ->label('Responsible')
-        ->orderBy('lastName, firstName'),
+        ->orderBy('lastName, firstName')
+        ->userSelectize(),
     
     $co->createFieldFilter('workflowStatus')
      
@@ -29,6 +30,16 @@ Currently supported:
 
 ![Screenshot](/images/search3.jpg)
 
+For entries fields you can specify the direction of the relationship:
+
+```php
+->direction('out')
+```
+
+* both (default): all relationships
+* in: Incoming relationships, from the point of view of the selected element.
+* out: Outgoing relationships, from the point of view of the selected element.
+
 Matrix subfields can also be used as filters:
 
 ```php
@@ -41,6 +52,41 @@ Specify fields in the form `matrixFieldHandle.blockTypeHandle.subFieldHandle`.
 If there is only one block type, you can use `matrixFieldHandle.subFieldHandle`
 
 You can use the `useSelectize` or `useElementSelect` settings (see below) for a better user experience.
+
+### Using element select modals (experimental)
+
+Instead of using a select box you can use Crafts element select modals to pick your filter element.
+
+```php
+$co->createFieldFilter('assignedTo')
+    ->useElementSelect(),
+```
+
+Allow selection of multiple elements:
+
+```php
+$co->createFieldFilter('topics')
+    ->useElementSelect()
+    ->multiSelectOperator('and')    
+    ->selectLimit(10),
+```
+
+* The operator `or` (default) will find entries that have a relation to at least one selected element. 
+* The operator `and`  will find entries that have relations to all selected elements.
+
+
+![Snapshot](/images/elementselect.jpg)
+
+There is also a shortcut for this:
+
+```php
+$co->createElementSelectFilter('topics'),
+
+// handle, direction, select multiple elements, operator
+$co->createElementSelectFilter('cast.persons', 'in', true, 'and')
+
+$co->createElementSelectFilter('assignedTo', multipleSelect: true, operator: 'and'),
+```
 
 ## Status filter
 
@@ -200,20 +246,37 @@ Experimental. Uses a lot of undocumented stuff, will not trigger all events or f
 * Type: `int`
 * Default: `1`
 
-Limit of elements that can be selected in an element select. If multiple elements are selected, this will result in an `OR` condition.
-
-### Example for using element selects
-
 ```php
-$co->createFieldFilter('assignedTo')
-    ->useElementSelect()
-    ->selectLimit(10),
-$co->createFieldFilter('topics')
-    ->useElementSelect()
-    ->selectLimit(10),
+->selectLimit(5)
 ```
 
-![Snapshot](/images/elementselect.jpg)
+Limit of elements that can be selected in an element select. If multiple elements are selected, this will result in an `OR` condition.
+
+### multiSelectOperator
+
+* Type: `string`
+* Default: `or` 
+
+```php
+->multiSelectOperator('and')
+```
+
+Operator if multiple filter elements are selected.
+
+### direction
+
+* Type: `string`
+* Default: `both` 
+
+```php
+->direction('in')
+```
+
+Direction used for the `relatedTo` query param.
+
+* both (default): all relationships
+* in: Incoming relationships, from the point of view of the selected element.
+* out: Outgoing relationships, from the point of view of the selected element.
 
 ### userGroups
 

@@ -15,6 +15,7 @@ use wsydney76\contentoverview\models\Column;
 use wsydney76\contentoverview\models\CustomSection;
 use wsydney76\contentoverview\models\Filter;
 use wsydney76\contentoverview\models\filters\BaseFieldFilter;
+use wsydney76\contentoverview\models\filters\BaseRelationFieldFilter;
 use wsydney76\contentoverview\models\filters\CustomFilter;
 use wsydney76\contentoverview\models\Page;
 use wsydney76\contentoverview\models\Section;
@@ -203,7 +204,7 @@ class ContentOverviewService extends BaseModel
         ]);
     }
 
-    public function createFieldFilter(string $handle): BaseFieldFilter {
+    public function createFieldFilter(string $handle): ?BaseFieldFilter {
         $segments = explode('.', $handle);
         $fieldHandle = $segments[0];
 
@@ -244,6 +245,18 @@ class ContentOverviewService extends BaseModel
                 'field' => $field
             ]);
         }
+
+        // should never go here
+        return null;
+    }
+
+    public function createElementSelectFilter(string $handle, string $direction = 'both', bool $multipleSelect = false, string $operator = 'or'): BaseRelationFieldFilter
+    {
+        return $this->createFieldFilter($handle)
+            ->useElementSelect()
+            ->selectLimit($multipleSelect ? 99 : 1)
+            ->multiSelectOperator($operator)
+            ->direction($direction);
     }
 
     /**
