@@ -40,6 +40,8 @@ Specify fields in the form `matrixFieldHandle.blockTypeHandle.subFieldHandle`.
 
 If there is only one block type, you can use `matrixFieldHandle.subFieldHandle`
 
+You can use the `useSelectize` or `useElementSelect` settings (see below) for a better user experience.
+
 ## Status filter
 
 Filter by workflow/entry status.
@@ -190,8 +192,26 @@ Entries/users field filters only.
 Use Crafts element select modal to select elements.
 
 ::: warning
-Experimental. This will not trigger any events or filter class methods.
+Experimental. Uses a lot of undocumented stuff, will not trigger all events or filter class methods.
 :::
+
+### selectLimit
+
+* Type: `int`
+* Default: `1`
+
+Limit of elements that can be selected in an element select. If multiple elements are selected, this will result in an `OR` condition.
+
+### Example for using element selects
+
+```php
+$co->createFieldFilter('assignedTo')
+    ->useElementSelect()
+    ->selectLimit(10),
+$co->createFieldFilter('topics')
+    ->useElementSelect()
+    ->selectLimit(10),
+```
 
 ![Snapshot](/images/elementselect.jpg)
 
@@ -199,7 +219,7 @@ Experimental. This will not trigger any events or filter class methods.
 
 * Type: `string|array`
 
-Users field filters only. The user group(s) from which the user options will be selected.
+Users field filters only, if `useElementSelect` is not set. The user group(s) from which the user options will be selected.
 
 ```php
 ->userGroups(['contentEditors', 'festivalAdmin'])

@@ -19,6 +19,7 @@ class Filter extends BaseModel
     public string $filterType = '';
     public bool $useSelectize = false;
     public bool $useElementSelect = false;
+    public int $selectLimit = 1;
 
     /**
      * Set label for select / empty option
@@ -44,17 +45,46 @@ class Filter extends BaseModel
         return $this;
     }
 
+    /**
+     * Render filter as Craft element select modal
+     *
+     * @param bool $useElementSelect
+     * @return $this
+     */
     public function useElementSelect(bool $useElementSelect = true): self
     {
         $this->useElementSelect = $useElementSelect;
         return $this;
     }
 
+    /**
+     * Set limit for element selects
+     *
+     * @param int $selectLimit
+     * @return $this
+     */
+    public function selectLimit(int $selectLimit): self
+    {
+        $this->selectLimit = $selectLimit;
+        return $this;
+    }
+
+    /**
+     * Set label for filter
+     *
+     * @return string
+     */
     public function getLabel(): string
     {
         return $this->label;
     }
 
+    /**
+     * Set options for custom filter
+     *
+     * @param array $options
+     * @return $this
+     */
     public function options(array $options): self
     {
         $this->options = collect($options);
@@ -88,6 +118,15 @@ class Filter extends BaseModel
         return $this->options;
     }
 
+
+    /**
+     * Modify query for filter, has to be implemented in sub classes
+     *
+     * @param Section $sectionConfig
+     * @param array $filter
+     * @param ElementQueryInterface $query
+     * @return void
+     */
     public function modifyQuery(Section $sectionConfig, array $filter, ElementQueryInterface $query)
     {
         // Implement this!

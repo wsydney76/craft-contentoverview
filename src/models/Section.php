@@ -725,7 +725,6 @@ class Section extends BaseSection
         $q = $params['q'] ?? '';
         $filters = $params['filters'] ?? [];
         $orderBy = $params['orderBy'] ?? '';
-        $elementIds = $params['elementIds'] ?? [];
 
         $requestedSite = Cp::requestedSite();
 
@@ -744,13 +743,6 @@ class Section extends BaseSection
 
         if ($orderBy) {
             $query->orderBy($orderBy);
-        }
-
-        if ($elementIds) {
-            $elementIds = array_unique($elementIds);
-            foreach ($elementIds as $elementId) {
-                $query->andRelatedTo(['targetElement' => $elementId]);
-            }
         }
 
         if ($filters) {

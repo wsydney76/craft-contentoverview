@@ -4,6 +4,7 @@ namespace wsydney76\contentoverview\models\filters;
 
 use craft\base\Field;
 use craft\elements\db\ElementQueryInterface;
+use craft\elements\Entry;
 use craft\models\MatrixBlockType;
 use wsydney76\contentoverview\models\Section;
 use yii\base\InvalidConfigException;
@@ -15,6 +16,8 @@ class MatrixFieldFilter extends BaseRelationFieldFilter
 {
     public string $filterType = 'entriesField';
     public string $relatedToParam = '';
+    public string $elementType = Entry::class;
+    public Field $subField;
 
 
     public function init(): void
@@ -38,19 +41,22 @@ class MatrixFieldFilter extends BaseRelationFieldFilter
         }
 
 
-        /** @var Field $field */
-        $field = collect($blockType->getCustomFields())->firstWhere('handle', $subFieldHandle);
-        if (!$field) {
+        $this->subField = collect($blockType->getCustomFields())->firstWhere('handle', $subFieldHandle);
+        if (!$this->subField) {
             throw new InvalidConfigException("Invalid subField handle $subFieldHandle");
         }
 
         // return field handle in the form relatedTo expects
         $this->relatedToParam = "{$segments[0]}.{$subFieldHandle}";
 
-        $this->options = $this->_getOptionsForEntryField($field);
+        $this->options = $this->_getOptionsForEntryField($this->subField);
 
         // return parent::getOptions();
 
+    }
+
+    public function getSources() {
+        return $this->subField->sources;
     }
 
     public function modifyQuery(Section $sectionConfig, array $filter, ElementQueryInterface $query)

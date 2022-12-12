@@ -1,53 +1,66 @@
 {# @params sectionConfig, filters, orderByOptions #}
 {# @var sectionConfig \wsydney76\contentoverview\models\Section #}
 
-{% do view.registerAssetBundle('\\yii\\web\\JqueryAsset') %}
-
 {% import '_includes/forms' as forms %}
 
 {% for filter in filters %}
 
     <div>
 
-        {% set config = {
-            name: "#{sectionPath}-filter",
-            options: filter.getOptions()
-                .prepend({label: 'Filter by'|t('contentoverview') ~ ': ' ~ filter.getLabel|t('site'), value: ''}),
-            inputAttributes: {
-                data: {
-                    'handle': filter.handle
-                },
-                onchange: "co_getSectionHtml('#{ sectionPath }')"
-            }
-        } %}
-
+        {% set name = "#{sectionPath}-filter" %}
 
         {% if filter.useElementSelect %}
 
-            {% set id = config.name ~ '-elementSelect-' ~ filter.handle %}
+            {% set elementSelectId = (name ~ '-elementSelect-' ~ filter.handle)|id %}
+            {% set filterInputId = (name ~ '-elementInput-' ~ filter.handle)|id %}
 
-            {# TODO: Reliably detect change events #}
+
+            {# Hidden input that lets us handle an elementSelect like a select input  #}
+            {# Value is set via JavaScript #}
+            {{ forms.hidden({
+                id: filterInputId,
+                name: name,
+                inputAttributes: {
+                    data: {
+                        'handle': filter.handle
+                    }
+                }
+            }) }}
+            
             {{ forms.elementSelect({
-                id: id,
-                name: "#{sectionPath}-elementIds",
+                id: elementSelectId,
+                name: "#{sectionPath}-elementIds-#{filter.handle}",
                 elementType: filter.elementType,
-                sources: filter.field.sources,
+                sources: filter.getSources(),
                 selectionLabel: 'Filter by'|t('contentoverview') ~ ': ' ~ filter.getLabel|t('site'), value: '',
-                limit: 1,
+                limit: filter.selectLimit,
 
             }) }}
 
-            {# https://craftcms.stackexchange.com/questions/16853/how-to-watch-for-changes-on-an-element-select-relations-field #}
+            {# Listen for change events, update our hidden input and refresh section html #}
             {% js %}
-                elementSelect = $('#{{ id }}').data('elementSelect')
-                elementSelect.on('selectElements', () => co_getSectionHtml('{{ sectionPath }}'))
-                elementSelect.on('removeElements', () => co_getSectionHtml('{{ sectionPath }}'))
+            co_registerElementSelect('{{ elementSelectId }}', '{{ filterInputId }}', '{{ sectionPath }}')
             {% endjs %}
 
-        {% elseif filter.useSelectize %}
-            {{ forms.selectize(config) }}
         {% else %}
-            {{ forms.select(config) }}
+
+            {% set config = {
+                name: name,
+                options: filter.getOptions()
+                    .prepend({label: 'Filter by'|t('contentoverview') ~ ': ' ~ filter.getLabel|t('site'), value: ''}),
+                inputAttributes: {
+                    data: {
+                        'handle': filter.handle
+                    },
+                    onchange: "co_getSectionHtml('#{ sectionPath }')"
+                }
+            } %}
+
+            {% if filter.useSelectize %}
+                {{ forms.selectize(config) }}
+            {% else %}
+                {{ forms.select(config) }}
+            {% endif %}
         {% endif %}
 
 

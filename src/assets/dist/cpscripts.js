@@ -11,7 +11,6 @@ function co_getSectionHtml(sectionPath, sectionPageNo = 1, isRefresh = true) {
         sectionPageNo: sectionPageNo,
         q: co_getSearchValue(sectionPath),
         filters: co_getFilters(sectionPath),
-        elementIds: co_getElementIds(sectionPath),
         orderBy: co_getOrderBy(sectionPath)
     }
     var spinnerElement = document.getElementById(sectionPath + '-spinner')
@@ -139,15 +138,6 @@ function co_getFilters(sectionPath) {
 
 }
 
-function co_getElementIds(sectionPath) {
-    elementIds = []
-    co_getElementIdsElements(sectionPath).forEach(element => {
-        elementIds.push(element.value)
-    })
-
-    return elementIds;
-}
-
 /**
  * Creates a new entry and opens it in slideout
  *
@@ -250,10 +240,6 @@ function co_getFilterElements(sectionPath) {
     return document.getElementsByName(sectionPath + '-filter')
 }
 
-function co_getElementIdsElements(sectionPath) {
-    return document.getElementsByName(sectionPath + '-elementIds[]')
-}
-
 function co_registerSectionObserver(sectionPath) {
     co_respondToVisibility(document.getElementById(sectionPath), visible => {
         console.log('Loading section  ' + sectionPath)
@@ -293,6 +279,7 @@ function co_compare(draftId, siteId, isProvisionalDraft) {
         })
 }
 
+// from elementmap plugin
 function co_relationships(ajaxBaseUrl, draftId, element) {
     $.get(ajaxBaseUrl + '&draftId=' + draftId )
         .done(function(data) {
@@ -306,6 +293,7 @@ function co_relationships(ajaxBaseUrl, draftId, element) {
         });
 }
 
+// Show action response in popup
 function co_openPopup(action, data = {}, element) {
     Craft.sendActionRequest('POST', action, {data})
         .then((response) => {
@@ -321,6 +309,7 @@ function co_openPopup(action, data = {}, element) {
         })
 }
 
+// Show action response in slideout
 function co_openSlideout(action, data = {}) {
     Craft.sendActionRequest('POST', action, {data})
         .then((response) => {
@@ -333,4 +322,28 @@ function co_openSlideout(action, data = {}) {
             console.log(error.response)
             Craft.cp.displayError(error.response.data.error)
         })
+}
+
+// Handle changes for element select
+function co_registerElementSelect(elementSelectId, filterInputId, sectionPath) {
+    // https://craftcms.stackexchange.com/questions/16853/how-to-watch-for-changes-on-an-element-select-relations-field
+
+    elementSelect = $('#' + elementSelectId).data('elementSelect')
+
+    elementSelect.on('selectElements', (e) => co_onElementSelectChange(e.target.$elements, filterInputId, sectionPath))
+    elementSelect.on('removeElements', (e) => co_onElementSelectChange(e.target.$elements, filterInputId, sectionPath))
+}
+
+// Trigger refresh for element select changes
+function co_onElementSelectChange(elements, filterInputId, sectionPath) {
+    input = document.getElementById(filterInputId)
+
+    values = [];
+    for(i = 0; i < elements.length; i++) {
+        values.push(elements[i].dataset['id'])
+    }
+
+    input.value = values.toString()
+    // input.value = elements.length === 0 ? '' : elements[0].dataset['id']
+    co_getSectionHtml(sectionPath)
 }

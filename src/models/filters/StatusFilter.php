@@ -12,16 +12,36 @@ class StatusFilter extends Filter
 {
     public string $filterType = 'status';
 
+
+    /**
+     * Set options from plugin config
+     *
+     * @return void
+     */
     public function init(): void
     {
         $this->options = collect(Plugin::getInstance()->getSettings()->statusFilterOptions);
     }
 
+    /**
+     * Return label, default = 'Status'
+     *
+     * @return string
+     */
     public function getLabel(): string
     {
         return $this->label ?: ' Status';
     }
 
+
+    /**
+     * Modify sectionConfig settings, that will then be respected when building the query
+     *
+     * @param Section $sectionConfig
+     * @param array $filter
+     * @param ElementQueryInterface $query
+     * @return void
+     */
     public function modifyQuery(Section $sectionConfig, array $filter, ElementQueryInterface $query)
     {
         // format key:value<,key:value>...

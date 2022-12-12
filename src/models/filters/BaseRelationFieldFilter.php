@@ -10,6 +10,10 @@ use Illuminate\Support\Collection;
 use wsydney76\contentoverview\models\Section;
 use function explode;
 
+
+/**
+ * The base class for relation fields
+ */
 class BaseRelationFieldFilter extends BaseFieldFilter
 {
     public string $orderBy = '';
@@ -27,12 +31,30 @@ class BaseRelationFieldFilter extends BaseFieldFilter
     }
 
 
+    /**
+     * Query for related element
+     *
+     * @param Section $sectionConfig
+     * @param array $filter
+     * @param ElementQueryInterface $query
+     * @return void
+     */
     public function modifyQuery(Section $sectionConfig, array $filter, ElementQueryInterface $query)
     {
         $query->andRelatedTo([
             'element' => $filter['value'],
             'field' => $this->field->handle
         ]);
+    }
+
+    /**
+     * Return field sources for element selects
+     *
+     * @return mixed
+     */
+    public function getSources()
+    {
+        return $this->field->sources;
     }
 
     /**
