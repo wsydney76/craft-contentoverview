@@ -34,7 +34,7 @@
                 sources: filter.getSources(),
                 selectionLabel: 'Filter by'|t('contentoverview') ~ ': ' ~ filter.getLabel|t('site'), value: '',
                 limit: filter.selectLimit,
-
+                single: filter.selectLimit == 1
             }) }}
 
             {# Listen for change events, update our hidden input and refresh section html #}
