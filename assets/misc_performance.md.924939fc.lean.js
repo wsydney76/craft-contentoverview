@@ -1,0 +1,1 @@
+import{_ as e,c as a,o as i,a as t}from"./app.10bb4439.js";const p=JSON.parse('{"title":"Performance","description":"","frontmatter":{},"headers":[],"relativePath":"misc/performance.md"}'),o={name:"misc/performance.md"},n=t("",3),l=[n];function r(s,d,c,h,f,u){return i(),a("div",null,l)}const g=e(o,[["render",r]]);export{p as __pageData,g as default};
