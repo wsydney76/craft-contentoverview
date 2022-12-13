@@ -3,17 +3,10 @@
 {# @var entry \craft\elements\Entry #}
 {# @var sectionConfig \wsydney76\contentoverview\models\Section #}
 
-{% set info = sectionConfig.getInfo(entry) %}
+{% set infoContent = sectionConfig.getInfoContent(entry) %}
 
-{% if info %}
-    <div>
-        {{ view.renderObjectTemplate(info, entry)|raw|purify(settings.purifierConfig) }}
-    </div>
-{% endif %}
-
-{% set template = sectionConfig.getInfoTemplate(entry) %}
-{% if template %}
-    <div>
-        {{ view.renderTemplate(template, {entry}, 'site')|raw|purify(settings.purifierConfig) }}
+{% if infoContent %}
+    <div class="co-info-content">
+        {{ infoContent|raw|purify(settings.purifierConfig) }}
     </div>
 {% endif %}

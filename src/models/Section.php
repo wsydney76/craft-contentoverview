@@ -9,6 +9,7 @@ use craft\elements\db\ElementQueryInterface;
 use craft\elements\Entry;
 use craft\helpers\Cp;
 use craft\helpers\ElementHelper;
+use craft\web\View;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineActionsEvent;
 use wsydney76\contentoverview\events\DefineFiltersEvent;
@@ -331,6 +332,39 @@ class Section extends BaseSection
     }
 
     /**
+     * Returns Info content from info or infoTemplate settings
+     *
+     * @param Entry $entry
+     * @return string
+     * @throws \Throwable
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\Exception
+     */
+    public function getInfoContent(Entry $entry): string
+    {
+
+        $info = $this->getInfo($entry);
+
+        if ($info) {
+            return Craft::$app->view->renderObjectTemplate($info, $entry);
+        }
+
+        $infoTemplate = $this->getInfoTemplate($entry);
+        if ($infoTemplate) {
+            return Craft::$app->view->renderTemplate(
+                Plugin::getInstance()->getSettings()->customTemplatePath . '/' . $infoTemplate,
+                [
+                    'entry' => $entry,
+                    'sectionConfig' => $this
+                ]);
+        }
+
+        return '';
+    }
+
+    /**
      * Layout in which the entries will be displayd
      *
      * One of list|cardlets|cards|line
@@ -540,7 +574,7 @@ class Section extends BaseSection
         if ($this instanceof Section) {
 
             if (!$this->section) {
-                return Craft::t('contentoverview','Untitled Section');
+                return Craft::t('contentoverview', 'Untitled Section');
             }
 
             $sections = $this->_normalizeToArray($this->section);

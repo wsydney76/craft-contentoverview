@@ -147,6 +147,11 @@
     width: 12rem;
 }
 
+.co-filters-container .btn.dashed {
+    background-color: #dfe5ec;
+    border-style: none;
+}
+
 .co-info .info {
     float: left;
     margin-right: 4px;
