@@ -350,7 +350,7 @@ class Section extends BaseSection
         $infoTemplate = $this->getInfoTemplate($entry);
         if ($infoTemplate) {
             return Craft::$app->view->renderTemplate(
-                Plugin::getInstance()->getSettings()->customTemplatePath . '/' . $infoTemplate,
+                '_contentoverview/' . $infoTemplate,
                 [
                     'entry' => $entry,
                     'sectionConfig' => $this

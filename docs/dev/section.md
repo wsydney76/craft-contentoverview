@@ -115,6 +115,19 @@ public function getQuery(array $params): ElementQueryInterface
 }
 ```
 
+## Eager loading
+
+In case you refer to related elements in your `info`/`infoTemplate` templates, you can add eager loading like this:
+
+```php
+public function getQuery(array $params): ElementQueryInterface
+{
+    return parent::getQuery($params)
+        ->andWith('topics')
+        ->andWith('assignedTo');
+}
+```
+
 ## Methods
 
 There are a number of settings that you should not access directly, but call/override a getter method that will apply their own rules/defaults/fallbacks.
@@ -221,5 +234,12 @@ public function getImage(Entry $entry): ?Asset
 
 Gets the image asset element to use for an entry.
 
+### getInfoContent
+
+```php
+public function getInfoContent(Entry $entry): string
+```
+
+Gets the info content.
 
 

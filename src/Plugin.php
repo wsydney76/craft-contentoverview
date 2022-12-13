@@ -69,7 +69,7 @@ class Plugin extends \craft\base\Plugin
             View::class,
             View::EVENT_REGISTER_CP_TEMPLATE_ROOTS,
             function(RegisterTemplateRootsEvent $event) {
-                $event->roots['_contentoverview'] = App::parseEnv("@templates/{$this->getSettings()->customTemplatePath}");
+                $event->roots['_contentoverview'] = App::parseEnv($this->getSettings()->customTemplateRoot);
             }
         );
 

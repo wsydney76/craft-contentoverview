@@ -7,6 +7,7 @@ use craft\fields\BaseOptionsField;
 use craft\fields\Entries;
 use craft\fields\Matrix;
 use craft\fields\Users;
+use craft\helpers\App;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefinePagesEvent;
 use wsydney76\contentoverview\models\Action;
@@ -29,6 +30,7 @@ use yii\base\InvalidConfigException;
 use yii\web\ForbiddenHttpException;
 use function collect;
 use function explode;
+use function file_exists;
 
 class ContentOverviewService extends BaseModel
 {
@@ -187,7 +189,6 @@ class ContentOverviewService extends BaseModel
                 return $this->createFieldFilter($handle);
             }
         }
-
     }
 
     public function createStatusFilter()
@@ -198,13 +199,15 @@ class ContentOverviewService extends BaseModel
         ]);
     }
 
-    public function createCustomFilter(string $className): CustomFilter {
+    public function createCustomFilter(string $className): CustomFilter
+    {
         return Craft::createObject([
             'class' => $className,
         ]);
     }
 
-    public function createFieldFilter(string $handle): ?BaseFieldFilter {
+    public function createFieldFilter(string $handle): ?BaseFieldFilter
+    {
         $segments = explode('.', $handle);
         $fieldHandle = $segments[0];
 
@@ -304,7 +307,7 @@ class ContentOverviewService extends BaseModel
             /** @var Settings $settings */
             $settings = Plugin::getInstance()->getSettings();
 
-            $pages = collect(Craft::$app->config->getConfigFromFile('contentoverview/pages'));
+            $pages = collect($this->getConfigFromFile('pages'));
 
 
             // Create the default page if no pages are configured
@@ -361,6 +364,16 @@ class ContentOverviewService extends BaseModel
         }
 
         return $section;
+    }
+
+    public function getConfigFromFile($file): array
+    {
+        $path = App::parseEnv(Plugin::getInstance()->getSettings()->configPath) . '/' . $file . '.php';
+        if (!file_exists($path)) {
+            return [];
+        }
+
+        return require $path;
     }
 
 }

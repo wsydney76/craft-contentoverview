@@ -9,6 +9,12 @@ Rework of filters.
 * Added the `useElementSelect`, `selectLimit`, `multiSelectOperator`, `direction` filter settings.
 * Deprecated the `createFilter($type)` method.
 
+* Added the `Section::getInfoContent` method.
+
+### Breaking change
+
+Improved consistency: The `infoTemplate` section settings now takes the `customTemplatePath` plugin setting into account.
+
 ## 5.1.2 2022-12-10
 
 * Fixed a bug where page titles could repeat the same term twice.

@@ -168,7 +168,7 @@ See [Multi Section Setup](./page-config#multi-section-setup).
 
 * Type: `string|array`
 
-Path to a twig template inside the projects templates folder. Will be called with an entries variable.
+Path to a twig template inside the [custom template root](./plugin-config#customtemplateroot). Will be called with `entry` and `sectionConfig` variable.
 
 See [Multi Section Setup](./page-config#multi-section-setup).
 

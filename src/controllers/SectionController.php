@@ -90,7 +90,7 @@ class SectionController extends Controller
             throw new InvalidCallException("Invalid entry id $entryId");
         }
 
-        $template = Plugin::getInstance()->getSettings()->customTemplatePath . '/' . Craft::$app->request->getRequiredParam('template');
+        $template =  '_contentoverview/' . Craft::$app->request->getRequiredParam('template');
 
         return $this->renderTemplate($template, [
             'sectionConfig' => $sectionConfig,
@@ -114,7 +114,7 @@ class SectionController extends Controller
             throw new InvalidConfigException("Invalid section path $sectionPath");
         }
 
-        $template = Plugin::getInstance()->getSettings()->customTemplatePath . '/' . Craft::$app->request->getRequiredParam('template');
+        $template = '_contentoverview/' . Craft::$app->request->getRequiredParam('template');
 
         return $this->renderTemplate($template, [
             'sectionConfig' => $sectionConfig

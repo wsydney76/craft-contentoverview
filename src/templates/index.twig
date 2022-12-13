@@ -41,24 +41,24 @@
     {% endif %}
 
     {% if page.blocks['sidebar'] is defined %}
-        {% include settings.customTemplatePath ~ '/' ~ page.blocks['sidebar'] ignore missing %}
+        {% include '_contentoverview/' ~ page.blocks['sidebar'] ignore missing %}
     {% endif %}
 {% endblock %}
 
 {% block details %}
     {% if page.blocks['details'] is defined %}
-        {% include settings.customTemplatePath ~ '/' ~ page.blocks['details'] ignore missing %}
+        {% include '_contentoverview/' ~ page.blocks['details'] ignore missing %}
     {% endif %}
 {% endblock %}
 
 {% block toolbar %}
     {% if page.blocks['toolbar'] is defined %}
-        {% include settings.customTemplatePath ~ '/' ~ page.blocks['toolbar'] ignore missing %}
+        {% include '_contentoverview/' ~ page.blocks['toolbar'] ignore missing %}
     {% endif %}
 {% endblock %}
 
 {% block footer %}
     {% if page.blocks['footer'] is defined %}
-        {% include settings.customTemplatePath ~ '/' ~ page.blocks['footer'] ignore missing %}
+        {% include '_contentoverview/' ~ page.blocks['footer'] ignore missing %}
     {% endif %}
 {% endblock %}

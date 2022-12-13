@@ -72,6 +72,7 @@ const $config = {
                     {text: 'Custom Module', link: '/dev/module'},
                     {text: 'Section', link: '/dev/section'},
                     {text: 'Filter', link: '/dev/filter'},
+                    {text: 'Action', link: '/dev/action'},
                     {text: 'Service', link: '/dev/service'},
                 ]
             }

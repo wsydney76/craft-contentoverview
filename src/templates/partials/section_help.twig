@@ -8,7 +8,7 @@
             {% else %}
                 {% set text = help.text is defined ?
                     help.text|t('site') :
-                    include("#{settings.customTemplatePath}/#{help.template}") %}
+                    include("_contentoverview/#{help.template}") %}
 
                 {% set text = text|raw|purify(settings.purifierConfig) %}
 

@@ -1,5 +1,22 @@
 # Events
 
+A lot of customization can be done either via [event listeners](./dev/module#listening-to-events), or by adding [custom classes](./dev/module#custom-classes).
+
+Just go with your personal preference.
+
+Event listeners 
+* are a bit verbose. 
+* you can keep them all in one file.
+* there is no need to touch the config files.
+* are not threatened by breaking changes in the base classes.
+
+Custom classes 
+* must be configured
+* look a bit cleaner
+* can benefit from inheritance (specific section -> base section holding your defaults)
+* it can be a bit tricky to avoid duplicate code (hello, multiple inheritance..) 
+* can break if base classes are updated (type changes)
+
 ## Modify Query
 
 Custom modules can extend the configuration by adding keys to the `custom` section config array and modify the query via an

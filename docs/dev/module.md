@@ -114,3 +114,27 @@ return [
     ],
 ];
 ```
+
+## Moving your config directory to your module
+
+The pages configuration by default lives in `config/contentoverview`.
+
+To keep things together, you may want to move it into your modules' folder:
+
+```php
+// config/contentoverview.php
+'configPath' => '@root/modules/contentoverview/config',
+```
+
+## Moving your templates directory to your module
+
+Custom templates by default live in `templates/_contentoverview`. 
+
+To keep things together, you may want to move them into your modules' folder:
+
+```php
+// config/contentoverview.php
+'customTemplateRoot' => '@root/modules/contentoverview/templates',
+```
+
+

@@ -71,7 +71,7 @@ class Page extends BaseModel
     {
         // Do not read a file multiple times. (TODO: really needed?)
         if (!$this->_tabs) {
-            $config = Craft::$app->config->getConfigFromFile("contentoverview/$this->pageKey");
+            $config = Plugin::getInstance()->contentoverview->getConfigFromFile("$this->pageKey");
             if ($config) {
                 $this->_tabs = $this->_getTabsFromConfig($config);
             }

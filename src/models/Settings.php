@@ -23,8 +23,9 @@ class Settings extends Model
     // UPDATE DOCS!!!
 
     public string $altTemplate = '{alt}';
+    public string $configPath = '@config/contentoverview';
     public ?array $custom = null;
-    public string $customTemplatePath = '_contentoverview';
+    public string $customTemplateRoot = '@templates/_contentoverview';
     public string $defaultLayout = 'list';
     public string $defaultIcon = '@coicons/newspaper.svg';
     public string $defaultPage = 'default';
