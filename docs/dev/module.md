@@ -137,4 +137,18 @@ To keep things together, you may want to move them into your modules' folder:
 'customTemplateRoot' => '@root/modules/contentoverview/templates',
 ```
 
+## Using an alias
 
+If your module is bootstrapped, you can define an alias, that will stay alive if file paths change:
+
+```php
+// In your main modules init method
+$this->setAliases([
+    '@co' => $this->getBasePath()
+]);
+
+// In your config file:
+
+'configPath' => '@co/config',
+'customTemplateRoot' => '@co/templates',
+```

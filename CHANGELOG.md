@@ -13,7 +13,8 @@ Rework of filters.
 
 ### Breaking change
 
-Improved consistency: The `infoTemplate` section settings now takes the `customTemplatePath` plugin setting into account.
+* Improved consistency: The `infoTemplate` section settings now takes the `customTemplatePath` plugin setting into account.
+* Renamed the `customTemplatePath` plugin setting to `customTemplateRoot`. Now contains a full (aliased) path to the templates root folder. 
 
 ## 5.1.2 2022-12-10
 

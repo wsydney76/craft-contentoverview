@@ -27,15 +27,17 @@ Object template used to render the alt attribute of images, defaults to `{alt}`
 ```
 
 
-## customTemplatePath 
+## customTemplateRoot 
 
 * Type: `string`
-* Default: `_contentoverview` 
+* Default: `@templates/_contentoverview` 
 
-Folder for custom templates inside the `templates` project folder.
+Root folder for custom templates. By default `templates/_contentoverview`, unless you configured your templates to live elsewhere.
+
+Can contain an alias.
 
 ```php
-'customTemplatePath' => '_mypath'
+'customTemplatePath' => '@templates/_mypath'
 ```
 
 ## defaultIcon 

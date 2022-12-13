@@ -1,6 +1,6 @@
 # Events
 
-A lot of customization can be done either via [event listeners](./dev/module#listening-to-events), or by adding [custom classes](./dev/module#custom-classes).
+A lot of customization can be done either via [event listeners](../dev/module#listening-to-events), or by adding [custom classes](../dev/module#custom-classes).
 
 Just go with your personal preference.
 
