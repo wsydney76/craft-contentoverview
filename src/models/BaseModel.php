@@ -16,6 +16,8 @@ class BaseModel extends Model
     public array $custom = [];
     public string|array $group = '';
     public string $permission = '';
+    public bool $loadSectionsAsync = false;
+
 
 
     /**
@@ -67,6 +69,19 @@ class BaseModel extends Model
         $this->permission = $permission;
         return $this;
     }
+
+    /**
+     * Whether to load section html via ajax request. Loads section/all contained sections content when it becomes visible.
+     *
+     * @param bool $loadSectionsAsync
+     * @return $this
+     */
+    public function loadSectionsAsync(bool $loadSectionsAsync = true): self
+    {
+        $this->loadSectionsAsync = $loadSectionsAsync;
+        return $this;
+    }
+
 
     /**
      * Make sure the value is an array.

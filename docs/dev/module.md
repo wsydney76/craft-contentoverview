@@ -64,6 +64,9 @@ public string $tableColumnClass = TableColumn::class;
 
 Additionally, some 'ContentOverviewService' methods like `createSection`, `createAction`, `createCustomFilter` allow you to pass in a class name as parameter
 
+::: tip
+If you see a `Failed to instantiate component or class` error message, run `composer dump-autoload -a`. Or check for typos...
+:::
 
 ## Listening to events
 
@@ -143,9 +146,7 @@ If your module is bootstrapped, you can define an alias, that will stay alive if
 
 ```php
 // In your main modules init method
-$this->setAliases([
-    '@co' => $this->getBasePath()
-]);
+Craft::setAlias('@co', $this->getBasePath());
 
 // In your config file:
 

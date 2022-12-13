@@ -39,8 +39,20 @@ Only admins and users with this permission will see this object.
 
 * Type: `string|array`
 
-Only admins and members of this group/one of these groups will see this object. Will be ignored if the more specific `permission` is set
+Only admins and members of this group/one of these groups will see this object. Will be ignored if the more specific `permission` is set.
 
 ```php
 ->group('festivalEditors')
 ```
+
+## loadSectionsAsync
+
+```php
+->loadSectionsAsync()
+```
+
+Whether to load section html via ajax request. 
+
+If applied on page or tab level, all contained sections will be loaded asynchronous.
+
+Can also be enabled [globally](./plugin-config#loadsectionsasync).

@@ -10,7 +10,7 @@
 {% set sectionPageNo = sectionPageNo ?? 1 %}
 {% set permittedSections = sectionConfig.getPermittedSections('viewentries') %}
 
-{% set loadAsync = settings.loadSectionsAsync %}
+{% set loadAsync = sectionConfig.loadSectionsAsync or tab.loadSectionsAsync or page.loadSectionsAsync or settings.loadSectionsAsync %}
 
 {% embed 'contentoverview/embeds/section.twig' with {
     heading: sectionConfig.getHeading()|t('site'),
