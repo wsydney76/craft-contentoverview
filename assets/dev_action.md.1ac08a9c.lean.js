@@ -1,0 +1,1 @@
+import{_ as s,c as n,o as a,a as l}from"./app.b2454dbc.js";const i=JSON.parse('{"title":"Custom Action Classes","description":"","frontmatter":{},"headers":[],"relativePath":"dev/action.md"}'),p={name:"dev/action.md"},o=l("",6),e=[o];function t(c,r,D,y,C,F){return a(),n("div",null,e)}const d=s(p,[["render",t]]);export{i as __pageData,d as default};

@@ -1,0 +1,1 @@
+import{_ as e,c as a,o as i,a as t}from"./app.b2454dbc.js";const u=JSON.parse('{"title":"Performance","description":"","frontmatter":{},"headers":[],"relativePath":"misc/performance.md"}'),n={name:"misc/performance.md"},o=t("",3),l=[o];function s(r,c,d,f,h,m){return i(),a("div",null,l)}const p=e(n,[["render",s]]);export{u as __pageData,p as default};
