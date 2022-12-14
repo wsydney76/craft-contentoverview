@@ -4,9 +4,8 @@ namespace wsydney76\contentoverview\console\controllers;
 
 use craft\console\Controller;
 use craft\helpers\App;
-use craft\helpers\Console;
+use craft\helpers\FileHelper;
 use Exception;
-use modules\main\helpers\FileHelper;
 use yii\console\ExitCode;
 use yii\helpers\BaseConsole;
 use function is_dir;
@@ -121,8 +120,6 @@ class CreateController extends Controller
 
             if ($dir) {
                 $this->ensureDirectoryExists("{$this->destDir}/{$dir}");
-            } else {
-                $this->ensureDirectoryExists($this->destDir);
             }
 
             $destFile = $this->destDir . "/$dir/$className.php";
