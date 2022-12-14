@@ -1,0 +1,23 @@
+<?php
+
+namespace modules\contentoverview\models;
+
+use craft\elements\db\ElementQueryInterface;
+use wsydney76\contentoverview\models\Section;
+
+class $CLASSNAME$ extends Section {
+
+//    Your defaults go here
+
+//    public ?int $limit = 12;
+//    public array|string $imageField = 'featuredImage';
+//    public ?string $layout = 'cardlets';
+
+//    public function getQuery(array $params): ElementQueryInterface
+//    {
+//        return parent::getQuery($params)
+//            // your query adjustments here
+//            ;
+//    }
+
+}

@@ -5,7 +5,7 @@ If you want to listen to events or bring up your own classes, you set up a custo
 ::: tip
 It is completely up to you how you organize your code. However, we recommend building a dedicated custom module named `contentoverview`.
 
-This is also the convention followed in this docs.
+This is also the convention followed in this docs and by scaffolding commands.
 :::
 
 This could be your directory structure in your projects root:
@@ -13,20 +13,18 @@ This could be your directory structure in your projects root:
 ```
 ├─ modules
 │  ├─ contentoverview
-│  │  ├─ filters
-│  │  │  └─ MyCustomFilter.php
-│  │  │  └─ ... more classes ...
 │  │  ├─ models
 │  │  │  └─ MySection.php
+│  │  │  └─ MyFilter.php
+│  │  │  └─ MyAction.php
 │  │  │  └─ ... more classes ...
 │  │  ├─ services
 │  │  │  └─ MyServices.php
-│  └─ ContentOverviewModule.php
+│  │  ├─ Module.php
 ```
 
-* filters: The directory that contains your custom filter classes.
 * models: The directory that contains your custom model classes.
-* ContentOverviewModule.php: The main module class where you can place your event listeners.
+* Module.php: The main module class where you can place your event listeners.
 
 ## Custom classes
 
@@ -70,50 +68,45 @@ If you see a `Failed to instantiate component or class` error message, run `comp
 
 ## Listening to events
 
-In order to enable your module to listen to events, you have to create a main module class and make Craft load it on every request.
+In order to enable your module to listen to events, you have to create a main module class and make Craft load (boostrap) it on every request.
 
-Create a file  `modules/contentoverview/ContentOverviewModule.php` and enter this content:
+Create a file  `modules/contentoverview/Module.php` and enter this content:
 
 ```php
 <?php
 
 namespace modules\contentoverview;
 
-use Craft;
-use yii\base\Module;
+use wsydney76\contentoverview\module\ContentOverviewBaseModule;
 
-class ContentOverviewModule extends Module
+class Module extends ContentOverviewBaseModule
 {
-    public function init()
+    protected function attachEventHandlers(): void
     {
-        // There is nothing to do here if it is not a Control Panel request, or if we are on the login page.
-        if (!Craft::$app->request->getIsCpRequest() || Craft::$app->request->getIsLoginRequest()) {
-            return;
-        }
-        
-        // Your event listeners go here....
-        
+        // Your event handlers here
     }
 }
 ```
 
-Edit your `config/app.php` file:
+::: tip
+Runing `php craft contentoverview/create/module` will create this file for you.
+:::
+
+### Bootstrap the module
+
+In order to bootstrap your module (= load it on every request), edit your `config/app.php` file:
 
 ```php
-
-use modules\contentoverview\ContentOverviewModule;
-
-...
 
 return [
     // ...
     'modules' => [
         // ...
-        'contentoverview' => ContentOverviewModule::class
+        'co' => \modules\contentoverview\Module::class
     ],
     'bootstrap' => [
         // ...
-        'contentoverview',
+        'co',
     ],
 ];
 ```
@@ -126,30 +119,17 @@ To keep things together, you may want to move it into your modules' folder:
 
 ```php
 // config/contentoverview.php
-'configPath' => '@root/modules/contentoverview/config',
+'configPath' => '@comodule/config',
 ```
 
 ## Moving your templates directory to your module
 
-Custom templates by default live in `templates/_contentoverview`. 
+Custom templates by default live in `templates/_contentoverview`.
 
 To keep things together, you may want to move them into your modules' folder:
 
 ```php
 // config/contentoverview.php
-'customTemplateRoot' => '@root/modules/contentoverview/templates',
+'customTemplateRoot' => '@comodule/templates',
 ```
 
-## Using an alias
-
-If your module is bootstrapped, you can define an alias, that will stay alive if file paths change:
-
-```php
-// In your main modules init method
-Craft::setAlias('@co', $this->getBasePath());
-
-// In your config file:
-
-'configPath' => '@co/config',
-'customTemplateRoot' => '@co/templates',
-```

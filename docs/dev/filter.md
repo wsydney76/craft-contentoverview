@@ -2,6 +2,11 @@
 
 Custom filter classes implement [Custom Filters](../pagecontent/filters#custom-filters).
 
+::: tip
+Runing `php craft contentoverview/create/filter` will create a file as a starting point for you.
+:::
+
+
 Inject your class via the `createCustomFilter` factory method:
 
 ```php

@@ -1,0 +1,13 @@
+<?php
+
+namespace modules\contentoverview;
+
+use wsydney76\contentoverview\module\ContentOverviewBaseModule;
+
+class Module extends ContentOverviewBaseModule
+{
+    protected function attachEventHandlers(): void
+    {
+        // Your event handlers here
+    }
+}

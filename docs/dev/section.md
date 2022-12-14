@@ -13,6 +13,10 @@ class MySection extends Section {
 ...
 }
 ```
+::: tip
+Runing `php craft contentoverview/create/section` will create a file as a starting point for you.
+:::
+
 
 ## Inject your class
 

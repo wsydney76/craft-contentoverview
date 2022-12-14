@@ -1,0 +1,31 @@
+<?php
+
+namespace modules\contentoverview\filters;
+
+use craft\elements\db\ElementQueryInterface;
+use Illuminate\Support\Collection;
+use wsydney76\contentoverview\models\filters\CustomFilter;
+use wsydney76\contentoverview\models\Section;
+
+class $CLASSNAME$ extends CustomFilter
+{
+    public string $handle = 'YOURHANDLE';
+    public string $label = 'YOURLABEL';
+    public array|Collection $options = [
+        ['label' => 'OPTIONLABEL', 'value' => 'OPTIONVALUE'],
+        // ...
+    ];
+
+    public function modifyQuery(Section $sectionConfig, array $filter, ElementQueryInterface $query)
+    {
+        switch ($filter['value']) {
+            case 'OPTIONVALUE':
+            {
+                // $query
+                //  -> your query adjustments here ;
+                break;
+            }
+        }
+    }
+
+}

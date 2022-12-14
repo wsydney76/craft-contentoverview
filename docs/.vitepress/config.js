@@ -70,6 +70,7 @@ const $config = {
                 collapsible: true,
                 items: [
                     {text: 'Custom Module', link: '/dev/module'},
+                    {text: 'Scaffolding', link: '/dev/scaffolding'},
                     {text: 'Section', link: '/dev/section'},
                     {text: 'Filter', link: '/dev/filter'},
                     {text: 'Action', link: '/dev/action'},

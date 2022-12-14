@@ -10,6 +10,7 @@ Rework of filters.
 * Deprecated the `createFilter($type)` method.
 
 * Added the `Section::getInfoContent` method.
+* Added scaffolding commands.
 
 ### Breaking change
 

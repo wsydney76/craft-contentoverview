@@ -1,0 +1,22 @@
+<?php
+
+namespace modules\contentoverview\models;
+
+use craft\elements\Entry;
+use wsydney76\contentoverview\models\Action;
+
+class $CLASSNAME$ extends Action
+{
+    public string $label = 'ACTIONLABEL';
+    public string $icon = '@appicons/wand.svg';
+
+    // your action here
+
+    public string $handle = 'ACTIONHANDLE';
+
+    public function isActiveForEntry(Entry $entry): bool
+    {
+        // your logic here;
+        return true;
+    }
+}

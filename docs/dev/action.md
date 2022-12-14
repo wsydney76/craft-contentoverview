@@ -30,3 +30,7 @@ class PublishAction extends Action
     }
 }
 ```
+
+::: tip
+Runing `php craft contentoverview/create/action` will create a file as a starting point for you.
+:::

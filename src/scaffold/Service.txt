@@ -1,0 +1,10 @@
+<?php
+
+namespace modules\contentoverview\services;
+
+use wsydney76\contentoverview\services\ContentOverviewService;
+
+class $CLASSNAME$ extends ContentOverviewService
+{
+
+}

@@ -23,6 +23,10 @@ class MyService extends ContentOverviewService
 }
 ```
 
+::: tip
+Runing `php craft contentoverview/create/service` will create a file as a starting point for you.
+:::
+
 Your class gets registered as the `contentoverview` component and is now available in your config files:
 
 ```php
