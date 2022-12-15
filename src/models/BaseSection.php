@@ -8,6 +8,8 @@ namespace wsydney76\contentoverview\models;
 class BaseSection extends BaseModel
 {
 
+    // ATTENTION! If types are changed here, be sure to update the section scaffold template!
+
     public ?string $heading = '';
     public array|string $help = '';
     public ?string $linkToPage = '';

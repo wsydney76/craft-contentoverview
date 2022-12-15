@@ -11,6 +11,11 @@ Rework of filters.
 
 * Added the `Section::getInfoContent` method.
 * Added scaffolding commands.
+* Added the `ownProvisional` value to the `scope` section setting.
+
+* Added the `ContentOverviewBaseModule` class as a base class for a custom module.
+
+* Bumped minimum Craft version to 4.3.5
 
 ### Breaking change
 

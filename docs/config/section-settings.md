@@ -253,6 +253,7 @@ Whether drafts should be shown.
 
 * drafts: Show 'regular' drafts
 * provisional: Show 'provisional' drafts
+* ownProvisional: Show own 'provisional' drafts
 * all: Show all drafts and all 'published' entries
 
 If empty, only 'published' entries will be included.

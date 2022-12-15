@@ -9,8 +9,7 @@ use wsydney76\contentoverview\models\Section;
 
 class $CLASSNAME$ extends CustomFilter
 {
-    public string $handle = 'YOURHANDLE';
-    public string $label = 'YOURLABEL';
+$PROPERTIES$
     public array|Collection $options = [
         ['label' => 'OPTIONLABEL', 'value' => 'OPTIONVALUE'],
         // ...

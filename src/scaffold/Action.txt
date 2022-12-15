@@ -7,12 +7,8 @@ use wsydney76\contentoverview\models\Action;
 
 class $CLASSNAME$ extends Action
 {
-    public string $label = 'ACTIONLABEL';
-    public string $icon = '@appicons/wand.svg';
 
-    // your action here
-
-    public string $handle = 'ACTIONHANDLE';
+$PROPERTIES$
 
     public function isActiveForEntry(Entry $entry): bool
     {

@@ -18,7 +18,7 @@
     "docs": "https://wsydney76.github.io/craft-contentoverview/"
   },
   "require": {
-    "craftcms/cms": "^4.3.0"
+    "craftcms/cms": "^4.3.5"
   },
   "autoload": {
     "psr-4": {

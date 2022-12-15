@@ -4,12 +4,15 @@ namespace wsydney76\contentoverview\console\controllers;
 
 use craft\console\Controller;
 use craft\helpers\App;
+use craft\helpers\Console;
 use craft\helpers\FileHelper;
 use Exception;
 use yii\console\ExitCode;
 use yii\helpers\BaseConsole;
+use function implode;
 use function is_dir;
 use function is_file;
+use function sprintf;
 use const PHP_EOL;
 
 class CreateController extends Controller
@@ -38,7 +41,7 @@ class CreateController extends Controller
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
-        $this->stdout('https://wsydney76.github.io/craft-contentoverview/dev/module.html' . PHP_EOL);
+        Console::output('https://wsydney76.github.io/craft-contentoverview/dev/module.html');
 
         return ExitCode::OK;
     }
@@ -50,11 +53,60 @@ class CreateController extends Controller
             $this->sourceDir . '/Section.txt',
             'models',
             $className,
-            'Class name for section [e.g. NewsSection]')) {
+            'Class name for section [e.g. NewsSection]',
+            [
+                'info' => 'Enter section settings.',
+                'docs' => 'https://wsydney76.github.io/craft-contentoverview/config/section-settings.html',
+                'default' => '// Your defaults go here',
+                'items' => [
+                    [
+                        'prompt' => 'Section handle',
+                        'template' => 'public array|string $section = \'%s\';'
+                    ],
+                    [
+                        'prompt' => 'Heading',
+                        'template' => 'public ?string $heading = \'%s\';'
+                    ],
+                    [
+                        'prompt' => 'Limit',
+                        'template' => 'public ?int $limit = %s;'
+                    ],
+                    [
+                        'prompt' => 'Order By (e.g. title)',
+                        'template' => 'public array|string $orderBy = \'%s\';'
+                    ],
+                    [
+                        'prompt' => 'Image Field (fieldHandle)',
+                        'template' => 'public array|string $imageField = \'%s\';'
+                    ],
+                    [
+                        'prompt' => 'Layout [list,cards,cardlets,line]',
+                        'template' => 'public ?string $layout = \'%s\';',
+                    ],
+                    [
+                        'prompt' => 'Size [tiny,small,medium,large]',
+                        'template' => 'public ?string $size = \'%s\';',
+                    ],
+                    [
+                        'prompt' => 'Show drafts [drafts,provisional,ownProvisional,all]',
+                        'template' => 'public ?string $scope = \'%s\';',
+                    ],
+                    [
+                        'prompt' => 'Status [live,disabled,pending,expired]',
+                        'template' => 'public ?string $status = \'%s\';',
+                    ],
+                    [
+                        'prompt' => 'Enable Search [true,false]',
+                        'template' => 'public bool $search = %s;',
+                    ],
+                ]
+            ]
+        )) {
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
-        $this->stdout('https://wsydney76.github.io/craft-contentoverview/dev/section.html' . PHP_EOL);
+        console::output('https://wsydney76.github.io/craft-contentoverview/dev/section.html');
+        console::output("\$co->createSection({$className}::class)");
 
         return ExitCode::OK;
     }
@@ -66,11 +118,26 @@ class CreateController extends Controller
             $this->sourceDir . '/Filter.txt',
             'models',
             $className,
-            'Class name for filter [e.g. CriticalReviewsFilter]')) {
+            'Class name for filter [e.g. CriticalReviewsFilter]',
+            [
+                'info' => 'Enter filter settings.',
+                'docs' => 'https://wsydney76.github.io/craft-contentoverview/pagecontent/filters.html#custom-filters',
+                'default' => '// Your defaults go here',
+                'items' => [
+                    [
+                        'prompt' => 'Handle',
+                        'template' => 'public string $handle = \'%s\';'
+                    ],
+                    [
+                        'prompt' => 'Label',
+                        'template' => 'public string $label = \'%s\';'
+                    ],
+                ]
+            ])) {
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
-        $this->stdout('https://wsydney76.github.io/craft-contentoverview/dev/filter.html' . PHP_EOL);
+        console::output('https://wsydney76.github.io/craft-contentoverview/dev/filter.html');
 
         return ExitCode::OK;
     }
@@ -82,11 +149,52 @@ class CreateController extends Controller
             $this->sourceDir . '/Action.txt',
             'models',
             $className,
-            'Class name for action [e.g. PublishAction]')) {
+            'Class name for action [e.g. PublishAction]',
+            [
+                'info' => 'Enter action settings.',
+                'docs' => 'https://wsydney76.github.io/craft-contentoverview/dev/action.html',
+                'default' => '// Your defaults go here',
+                'items' => [
+                    [
+                        'prompt' => 'Handle',
+                        'template' => 'public string $handle = \'%s\';'
+                    ],
+                    [
+                        'prompt' => 'Label',
+                        'template' => 'public string $label = \'%s\';'
+                    ],
+                    [
+                        'prompt' => 'Icon (path to a svg file)',
+                        'template' => 'public string $icon = \'%s\';'
+                    ],
+                    [
+                        'info' => 'Enter just one of the following actions!'
+                    ],
+                    [
+                        'prompt' => 'Controller action',
+                        'template' => 'public string $cpAction = \'%s\';',
+                        'breakIfSet' => true
+                    ],
+                    [
+                        'prompt' => 'JavaScript Function',
+                        'template' => 'public string $jsFunction = \'%s\';',
+                        'breakIfSet' => true
+                    ],
+                    [
+                        'prompt' => 'Popup Template (template path inside your root)',
+                        'template' => 'public string $popupTemplate = \'%s\';',
+                        'breakIfSet' => true
+                    ],
+                    [
+                        'prompt' => 'Slideout Template (template path inside your root)',
+                        'template' => 'public string $slideoutTemplate = \'%s\';'
+                    ],
+                ]
+            ])) {
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
-        $this->stdout('https://wsydney76.github.io/craft-contentoverview/dev/action.html' . PHP_EOL);
+        console::output('https://wsydney76.github.io/craft-contentoverview/dev/action.html');
 
         return ExitCode::OK;
     }
@@ -102,12 +210,12 @@ class CreateController extends Controller
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
-        $this->stdout('https://wsydney76.github.io/craft-contentoverview/dev/service.html' . PHP_EOL);
+        console::output('https://wsydney76.github.io/craft-contentoverview/dev/service.html');
 
         return ExitCode::OK;
     }
 
-    protected function createFile($sourceFile, $dir, $className, $prompt = 'ClassName'): bool
+    protected function createFile($sourceFile, $dir, $className, $prompt = 'ClassName', $propertiesConfig = []): bool
     {
         if (!$className) {
             $className = $this->prompt("{$prompt}:");
@@ -124,26 +232,28 @@ class CreateController extends Controller
 
             $destFile = $this->destDir . "/$dir/$className.php";
             if (is_file($destFile)) {
-                $this->stdout("File $destFile already exists." . PHP_EOL);
+                console::error("File $destFile already exists.");
                 return false;
             }
             file_put_contents($destFile, str_replace(
                 [
-                    '$CLASSNAME$'
+                    '$CLASSNAME$',
+                    '$PROPERTIES$'
                 ],
                 [
-                    $className
+                    $className,
+                    $this->getPropertiesFromConfig($propertiesConfig)
                 ],
                 file_get_contents($sourceFile)
             ));
         } catch (Exception $e) {
-            $this->stderr('Could not create file. Error message:' . PHP_EOL, BaseConsole::FG_RED);
-            $this->stderr($e->getMessage() . PHP_EOL);
+            console::error('Could not create file. Error message:');
+            console::error($e->getMessage());
             return false;
         }
 
-        $this->stdout("File $destFile created." . PHP_EOL, BaseConsole::FG_GREEN);
-        $this->stdout('Refer to docs on how to activate your new class.' . PHP_EOL);
+        console::output("File $destFile created.");
+        console::output('Refer to docs on how to activate your new class.');
 
         return true;
     }
@@ -152,7 +262,50 @@ class CreateController extends Controller
     {
         if (!is_dir($dir)) {
             FileHelper::createDirectory($dir);
-            $this->stdout("Module directory $dir created." . PHP_EOL);
+            console::output("Directory $dir created.");
         }
+    }
+
+    protected function getPropertiesFromConfig($config)
+    {
+        if (!$config) {
+            return '';
+        }
+
+        $properties = [];
+
+        if (isset($config['info'])) {
+            console::output($config['info']);
+        }
+
+        if (isset($config['docs'])) {
+            console::output('See docs for details: '. $config['docs']);
+        }
+
+        console::output('Press ENTER to use the default value.');
+        console::output('Please note that your input is not validated.');
+
+        foreach ($config['items'] as $item) {
+
+            if (isset($item['info'])) {
+                Console::output($item['info']);
+                continue;
+            }
+
+            $value = $this->prompt($item['prompt'] . ': ');
+
+            if ($value) {
+                $properties[] = '    ' . sprintf($item['template'], $value);
+                if (isset($item['breakIfSet'])) {
+                    break;
+                }
+            }
+        }
+
+        if (!$properties && isset($config['default']))  {
+            return $config['default'];
+        }
+
+        return implode(PHP_EOL, $properties);
     }
 }

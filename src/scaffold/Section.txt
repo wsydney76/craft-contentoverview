@@ -7,11 +7,7 @@ use wsydney76\contentoverview\models\Section;
 
 class $CLASSNAME$ extends Section {
 
-//    Your defaults go here
-
-//    public ?int $limit = 12;
-//    public array|string $imageField = 'featuredImage';
-//    public ?string $layout = 'cardlets';
+$PROPERTIES$
 
 //    public function getQuery(array $params): ElementQueryInterface
 //    {
