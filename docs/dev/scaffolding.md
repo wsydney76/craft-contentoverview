@@ -18,7 +18,7 @@ php craft contentoverview/create/service
 
 You will be prompted for a class name if it is not provided as a parameter.
 
-Additionally, depending on the type of class, some you will be prompted for some settings. Press the ENTER key to continue with the default settings.
+Additionally, depending on the type of class, you will be prompted for some settings. Press the ENTER key to continue with the default settings.
 
 ```shell{1,6-12,14}
 php craft contentoverview/create/section MySection
