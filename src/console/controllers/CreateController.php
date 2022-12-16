@@ -7,16 +7,26 @@ use craft\helpers\App;
 use craft\helpers\Console;
 use craft\helpers\FileHelper;
 use Exception;
+use ReflectionClass;
+use ReflectionNamedType;
+use ReflectionProperty;
+use ReflectionUnionType;
+use wsydney76\contentoverview\models\Action;
+use wsydney76\contentoverview\models\Filter;
+use wsydney76\contentoverview\models\Section;
 use yii\console\ExitCode;
-use yii\helpers\BaseConsole;
 use function implode;
 use function is_dir;
 use function is_file;
-use function sprintf;
+use function is_string;
+use function str_contains;
+use function str_replace;
+use function var_dump;
 use const PHP_EOL;
 
 class CreateController extends Controller
 {
+
     protected string $sourceDir = '@wsydney76/contentoverview/scaffold';
     protected string $destDir = '@root/modules/contentoverview';
 
@@ -58,47 +68,22 @@ class CreateController extends Controller
                 'info' => 'Enter section settings.',
                 'docs' => 'https://wsydney76.github.io/craft-contentoverview/config/section-settings.html',
                 'default' => '// Your defaults go here',
+                'class' => new Section(),
                 'items' => [
-                    [
-                        'prompt' => 'Section handle',
-                        'template' => 'public array|string $section = \'%s\';'
+                    'section' => [
+                        'prompt' => 'Section. Separate multiple section with comma (e.g. news,page)',
+                        'splitToArray' => true
                     ],
-                    [
-                        'prompt' => 'Heading',
-                        'template' => 'public ?string $heading = \'%s\';'
-                    ],
-                    [
-                        'prompt' => 'Limit',
-                        'template' => 'public ?int $limit = %s;'
-                    ],
-                    [
-                        'prompt' => 'Order By (e.g. title)',
-                        'template' => 'public array|string $orderBy = \'%s\';'
-                    ],
-                    [
-                        'prompt' => 'Image Field (fieldHandle)',
-                        'template' => 'public array|string $imageField = \'%s\';'
-                    ],
-                    [
-                        'prompt' => 'Layout [list,cards,cardlets,line]',
-                        'template' => 'public ?string $layout = \'%s\';',
-                    ],
-                    [
-                        'prompt' => 'Size [tiny,small,medium,large]',
-                        'template' => 'public ?string $size = \'%s\';',
-                    ],
-                    [
-                        'prompt' => 'Show drafts [drafts,provisional,ownProvisional,all]',
-                        'template' => 'public ?string $scope = \'%s\';',
-                    ],
-                    [
-                        'prompt' => 'Status [live,disabled,pending,expired]',
-                        'template' => 'public ?string $status = \'%s\';',
-                    ],
-                    [
-                        'prompt' => 'Enable Search [true,false]',
-                        'template' => 'public bool $search = %s;',
-                    ],
+                    'heading' => 'Heading',
+                    'limit' => 'Limit',
+                    'orderBy' => 'Order By (e.g. title)',
+                    'imageField' => 'Image Field (fieldHandle)',
+                    'layout' => 'Layout [list,cards,cardlets,line]',
+                    'size' => 'Size [tiny,small,medium,large]',
+                    'scope' => 'Show drafts [drafts,provisional,ownProvisional,all]',
+                    'status' => 'Status [live,disabled,pending,expired]',
+                    'search' => 'Enable Search [true,false]',
+
                 ]
             ]
         )) {
@@ -123,15 +108,10 @@ class CreateController extends Controller
                 'info' => 'Enter filter settings.',
                 'docs' => 'https://wsydney76.github.io/craft-contentoverview/pagecontent/filters.html#custom-filters',
                 'default' => '// Your defaults go here',
+                'class' => new Filter(),
                 'items' => [
-                    [
-                        'prompt' => 'Handle',
-                        'template' => 'public string $handle = \'%s\';'
-                    ],
-                    [
-                        'prompt' => 'Label',
-                        'template' => 'public string $label = \'%s\';'
-                    ],
+                    'handle' => 'Handle',
+                    'label' => 'Label'
                 ]
             ])) {
             return ExitCode::UNSPECIFIED_ERROR;
@@ -154,41 +134,26 @@ class CreateController extends Controller
                 'info' => 'Enter action settings.',
                 'docs' => 'https://wsydney76.github.io/craft-contentoverview/dev/action.html',
                 'default' => '// Your defaults go here',
+                'class' => new Action(),
                 'items' => [
-                    [
-                        'prompt' => 'Handle',
-                        'template' => 'public string $handle = \'%s\';'
-                    ],
-                    [
-                        'prompt' => 'Label',
-                        'template' => 'public string $label = \'%s\';'
-                    ],
-                    [
-                        'prompt' => 'Icon (path to a svg file)',
-                        'template' => 'public string $icon = \'%s\';'
-                    ],
-                    [
-                        'info' => 'Enter just one of the following actions!'
-                    ],
-                    [
+                    'handle' => 'Handle',
+                    'label' => 'Label',
+                    'icon' => 'Icon (path to a svg file)',
+                    'info' => 'Enter just one of the following actions!',
+
+                    'cpAction' => [
                         'prompt' => 'Controller action',
-                        'template' => 'public string $cpAction = \'%s\';',
                         'breakIfSet' => true
                     ],
-                    [
+                    'jsFunction' => [
                         'prompt' => 'JavaScript Function',
-                        'template' => 'public string $jsFunction = \'%s\';',
                         'breakIfSet' => true
                     ],
-                    [
+                    'popupTemplate' => [
                         'prompt' => 'Popup Template (template path inside your root)',
-                        'template' => 'public string $popupTemplate = \'%s\';',
                         'breakIfSet' => true
                     ],
-                    [
-                        'prompt' => 'Slideout Template (template path inside your root)',
-                        'template' => 'public string $slideoutTemplate = \'%s\';'
-                    ],
+                    'slideoutTemplate' => 'Slideout Template (template path inside your root)',
                 ]
             ])) {
             return ExitCode::UNSPECIFIED_ERROR;
@@ -279,33 +244,93 @@ class CreateController extends Controller
         }
 
         if (isset($config['docs'])) {
-            console::output('See docs for details: '. $config['docs']);
+            console::output('See docs for details: ' . $config['docs']);
         }
 
         console::output('Press ENTER to use the default value.');
         console::output('Please note that your input is not validated.');
 
-        foreach ($config['items'] as $item) {
+        $reflection = new ReflectionClass($config['class']);
 
-            if (isset($item['info'])) {
-                Console::output($item['info']);
+
+        foreach ($config['items'] as $key => $item) {
+
+            if ($key === 'info') {
+                Console::output($item);
                 continue;
             }
 
-            $value = $this->prompt($item['prompt'] . ': ');
+            if (is_string($item)) {
+                $item = ['prompt' => $item];
+            }
 
-            if ($value) {
-                $properties[] = '    ' . sprintf($item['template'], $value);
-                if (isset($item['breakIfSet'])) {
-                    break;
-                }
+            $property = $this->getPropertyString($reflection->getProperty($key), $key, $item);
+            if ($property) {
+                $properties[] = $property;
+            }
+
+
+            if (isset($item['breakIfSet'])) {
+                break;
             }
         }
 
-        if (!$properties && isset($config['default']))  {
+        if (!$properties && isset($config['default'])) {
             return $config['default'];
         }
 
         return implode(PHP_EOL, $properties);
+    }
+
+    protected function getPropertyString(ReflectionProperty $property, string $key, array $item): string
+    {
+
+        $value = $this->prompt($item['prompt'] . ': ');
+
+        if (!$value) {
+            return '';
+        }
+
+        $out = '    public ';
+
+        $propertyType = $property->getType();
+
+        if ($propertyType instanceof ReflectionNamedType) {
+            if ($propertyType->allowsNull()) {
+                $out .= '?';
+            }
+            $out .= $propertyType->getName() . ' $' . $key . ' = ';
+
+            $out .= match ($propertyType->getName()) {
+                'string' => $this->getQuotedString($value),
+                default => $value
+            };;
+
+            $out .= ';';
+        } else if ($propertyType instanceof ReflectionUnionType) {
+            $types = [];
+            foreach ($propertyType->getTypes() as $unionType) {
+                $types[] = $unionType->getName();
+            }
+            $out .= implode('|', $types) . ' $' . $key . ' = ';
+
+            if (isset($item['splitToArray']) && str_contains($value, ',')) {
+                $arrayOut = [];
+                foreach (explode(',', $value) as $string) {
+                    $arrayOut[] = $this->getQuotedString($string);
+                }
+
+                $out .= '[' . implode(',', $arrayOut) . '];';
+            } else {
+                $out .= $this->getQuotedString($value) . ';';
+            }
+        }
+
+        return $out;
+    }
+
+    protected function getQuotedString(string $value)
+    {
+        return "'" . str_replace("'", "\\'", $value) . "'";
     }
 }

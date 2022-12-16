@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\contentoverview\filters;
+namespace modules\contentoverview\models;
 
 use craft\elements\db\ElementQueryInterface;
 use Illuminate\Support\Collection;
