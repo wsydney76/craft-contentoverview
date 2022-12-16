@@ -1,0 +1,15 @@
+<?php
+
+return [
+    // 'replaceDashboard' => false,
+    // 'configPath' => '@comodule/config',
+    // 'customTemplateRoot' => '@comodule/templates',
+    // 'enableSlideoutEditor' => true,
+    // 'enableCreateInSlideoutEditor' => true,
+    // 'loadSectionsAsync' => false,
+    // 'showPages' => 'sidebar',
+    // 'altTemplate' => '{altText}',
+    // 'custom' => [
+    //    'key' => 'value'
+    //  ]
+];

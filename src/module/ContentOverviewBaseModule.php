@@ -10,6 +10,8 @@ class ContentOverviewBaseModule extends Module
     public function init()
     {
         Craft::setAlias('@modules/contentoverview', $this->getBasePath());
+        Craft::setAlias('@comodule', $this->getBasePath());
+
 
         if (!$this->isActive()) {
             return;
@@ -17,9 +19,7 @@ class ContentOverviewBaseModule extends Module
 
         parent::init();
 
-        $this->setAliases([
-            '@comodule' => $this->getBasePath()
-        ]);
+
 
         // Defer most setup tasks until Craft is fully initialized
         Craft::$app->onInit(function() {

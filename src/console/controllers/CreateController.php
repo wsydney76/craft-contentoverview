@@ -9,26 +9,26 @@ use craft\helpers\FileHelper;
 use Exception;
 use ReflectionClass;
 use ReflectionNamedType;
-use ReflectionProperty;
 use ReflectionUnionType;
 use wsydney76\contentoverview\models\Action;
 use wsydney76\contentoverview\models\Filter;
 use wsydney76\contentoverview\models\Section;
+use wsydney76\contentoverview\Plugin;
 use yii\console\ExitCode;
-use function implode;
-use function is_dir;
-use function is_file;
-use function is_string;
-use function str_contains;
-use function str_replace;
-use function var_dump;
-use const PHP_EOL;
+
 
 class CreateController extends Controller
 {
 
     protected string $sourceDir = '@wsydney76/contentoverview/scaffold';
     protected string $destDir = '@root/modules/contentoverview';
+
+    public bool $trace = false;
+
+    public function options($actionID): array
+    {
+        return ['trace'];
+    }
 
     public function beforeAction($action): bool
     {
@@ -44,11 +44,8 @@ class CreateController extends Controller
     public function actionModule(): int
     {
 
-        if (!$this->createFile(
-            $this->sourceDir . '/Module.txt',
-            '',
-            'Module')) {
-            return ExitCode::UNSPECIFIED_ERROR;
+        if (!$this->copyFile('Module.txt', $this->destDir, 'Module.php')) {
+            return false;
         }
 
         Console::output('https://wsydney76.github.io/craft-contentoverview/dev/module.html');
@@ -56,10 +53,53 @@ class CreateController extends Controller
         return ExitCode::OK;
     }
 
+    public function actionPluginConfig(): int
+    {
+
+        if (!$this->copyFile('contentoverview.txt', App::parseEnv('@config'), 'contentoverview.php')) {
+            return false;
+        }
+
+        Console::output('https://wsydney76.github.io/craft-contentoverview/config/plugin-config.html');
+
+        return ExitCode::OK;
+    }
+
+    public function actionPages(): int
+    {
+        $configPath = Plugin::getInstance()->getSettings()->configPath;
+
+        if (!$this->copyFile('pages.txt', App::parseEnv($configPath), 'pages.php')) {
+            return false;
+        }
+
+        Console::output('https://wsydney76.github.io/craft-contentoverview/config/pages-setup.html');
+
+        return ExitCode::OK;
+    }
+
+    public function actionPage(): int
+    {
+        $configPath = Plugin::getInstance()->getSettings()->configPath;
+
+        $pageKey = $this->prompt('Page Key: (lower letters, numbers and hyphen only. Starts with letter):', [
+            'required' => true,
+            'pattern' => '/^[a-z][a-z0-9-]*$/'
+        ]);
+
+        if (!$this->copyFile('page.txt', App::parseEnv($configPath), "{$pageKey}.php")) {
+            return false;
+        }
+
+        Console::output('https://wsydney76.github.io/craft-contentoverview/config/page-config.html');
+
+        return ExitCode::OK;
+    }
+
     public function actionSection($className = ''): int
     {
 
-        if (!$this->createFile(
+        if (!$this->createClassFile(
             $this->sourceDir . '/Section.txt',
             'models',
             $className,
@@ -71,20 +111,38 @@ class CreateController extends Controller
                 'class' => new Section(),
                 'items' => [
                     'section' => [
-                        'prompt' => 'Section',
-                        'splitToArray' => true
+                        'prompt' => 'Section handle(s)',
+                        'splitToArray' => true,
+                        'required' => true
                     ],
                     'heading' => 'Heading',
                     'limit' => 'Limit',
                     'orderBy' => 'Order By (e.g. title)',
                     'imageField' => 'Image Field (fieldHandle)',
-                    'layout' => 'Layout [list,cards,cardlets,line]',
-                    'size' => 'Size [tiny,small,medium,large]',
-                    'info' => 'Info object template, e.g. {postDate|date("short")}',
-                    'scope' => 'Show drafts [drafts,provisional,ownProvisional,all]',
-                    'status' => 'Status [live,disabled,pending,expired]',
-                    'search' => 'Enable Search [true,false]',
-
+                    'layout' => [
+                        'prompt' => 'Layout',
+                        'values' => 'list,cards,cardlets,line'
+                    ],
+                    'size' => [
+                        'prompt' => 'Size',
+                        'values' => 'tiny,small,medium,large'
+                    ],
+                    'info' => [
+                        'prompt' => 'Info object template',
+                        'default' => '{postDate|date("short")}'
+                    ],
+                    'scope' => [
+                        'prompt' => 'Show drafts',
+                        'values' => 'drafts,provisional,ownProvisional,all'
+                    ],
+                    'status' => [
+                        'prompt' => 'Status',
+                        'values' => 'live,disabled,pending,expired'
+                    ],
+                    'search' => [
+                        'prompt' => 'Enable search',
+                        'values' => 'true,false'
+                    ],
                 ]
             ]
         )) {
@@ -100,7 +158,7 @@ class CreateController extends Controller
     public function actionFilter($className = ''): int
     {
 
-        if (!$this->createFile(
+        if (!$this->createClassFile(
             $this->sourceDir . '/Filter.txt',
             'models',
             $className,
@@ -126,7 +184,7 @@ class CreateController extends Controller
     public function actionAction($className = ''): int
     {
 
-        if (!$this->createFile(
+        if (!$this->createClassFile(
             $this->sourceDir . '/Action.txt',
             'models',
             $className,
@@ -168,7 +226,7 @@ class CreateController extends Controller
     public function actionService($className = ''): int
     {
 
-        if (!$this->createFile(
+        if (!$this->createClassFile(
             $this->sourceDir . '/Service.txt',
             'services',
             $className,
@@ -181,13 +239,32 @@ class CreateController extends Controller
         return ExitCode::OK;
     }
 
-    protected function createFile($sourceFile, $dir, $className, $prompt = 'ClassName', $propertiesConfig = []): bool
+    private function copyFile(string $sourceFileName, string $destDir, string $destFileName)
+    {
+        $destPath = $destDir . '/' . $destFileName;
+        if (is_file($destPath)) {
+            console::error("File $destFileName already exists.");
+            return false;
+        }
+
+        try {
+            $this->ensureDirectoryExists($destDir);
+            copy($this->sourceDir . '/' . $sourceFileName, $destPath);
+        } catch (Exception $e) {
+            $this->exceptionError($e);
+            return false;
+        }
+
+        console::output("File $destPath created.");
+        console::output("See docs for usage.");
+
+        return true;
+    }
+
+    protected function createClassFile($sourcePath, $dir, $className, $prompt = 'ClassName', $propertiesConfig = []): bool
     {
         if (!$className) {
-            $className = $this->prompt("{$prompt}:");
-            if (!$className) {
-                return false;
-            }
+            $className = $this->prompt("{$prompt}:", ['required' => true]);
         }
 
         try {
@@ -196,12 +273,14 @@ class CreateController extends Controller
                 $this->ensureDirectoryExists("{$this->destDir}/{$dir}");
             }
 
-            $destFile = $this->destDir . "/$dir/$className.php";
-            if (is_file($destFile)) {
-                console::error("File $destFile already exists.");
+            $destPath = $this->destDir . "/$dir/$className.php";
+
+            if (is_file($destPath)) {
+                console::error("File $destPath already exists.");
                 return false;
             }
-            file_put_contents($destFile, str_replace(
+
+            file_put_contents($destPath, str_replace(
                 [
                     '$CLASSNAME$',
                     '$PROPERTIES$'
@@ -210,18 +289,28 @@ class CreateController extends Controller
                     $className,
                     $this->getPropertiesFromConfig($propertiesConfig)
                 ],
-                file_get_contents($sourceFile)
+                file_get_contents($sourcePath)
             ));
         } catch (Exception $e) {
-            console::error('Could not create file. Error message:');
-            console::error($e->getMessage());
+            $this->exceptionError($e);
             return false;
         }
 
-        console::output("File $destFile created.");
+        console::output("File $destPath created.");
         console::output('Refer to docs on how to activate your new class.');
 
         return true;
+    }
+
+    protected function exeptionError(Exception $e)
+    {
+        console::error('Could not create file. Error message:');
+        console::error($e->getMessage());
+        if ($this->trace) {
+            console::error($e->getTraceAsString());
+        } else {
+            console::error('add --trace=1 to see the source of the error');
+        }
     }
 
     protected function ensureDirectoryExists($dir)
@@ -238,8 +327,6 @@ class CreateController extends Controller
             return '';
         }
 
-        $properties = [];
-
         if (isset($config['info'])) {
             console::output($config['info']);
         }
@@ -248,9 +335,11 @@ class CreateController extends Controller
             console::output('See docs for details: ' . $config['docs']);
         }
 
-        console::output('Press ENTER to use the default value.');
+        console::output('Press ENTER to use the default value, CTRL+c to cancel.');
         console::output('Please note that your input is not validated.');
 
+
+        $properties = [];
         $reflection = new ReflectionClass($config['class']);
 
 
@@ -265,14 +354,12 @@ class CreateController extends Controller
                 $item = ['prompt' => $item];
             }
 
-            $property = $this->getPropertyString($reflection->getProperty($key), $key, $item);
+            $property = $this->getPropertyString($reflection, $key, $item);
             if ($property) {
                 $properties[] = $property;
-            }
-
-
-            if (isset($item['breakIfSet'])) {
-                break;
+                if (isset($item['breakIfSet'])) {
+                    break;
+                }
             }
         }
 
@@ -283,22 +370,47 @@ class CreateController extends Controller
         return implode(PHP_EOL, $properties);
     }
 
-    protected function getPropertyString(ReflectionProperty $property, string $key, array $item): ?string
+    protected function getPropertyString(ReflectionClass $reflection, string $key, array $item): ?string
     {
 
         $splitToArray = isset($item['splitToArray']) && $item['splitToArray'];
 
-        $value = $this->prompt($item['prompt'] . ($splitToArray ? '. Separate multiple answers with comma (a,b)' : '') . ': ');
+        $options = $item['options'] ?? [];
+
+        if (isset($item['required'])) {
+            $options['required'] = $item['required'];
+        }
+
+        if (isset($item['default'])) {
+            $options['default'] = $item['default'];
+        }
+
+        if (isset($item['values'])) {
+            $item['prompt'] = sprintf('%s [%s]', $item['prompt'], $item['values']);
+            $options['validator'] = function($value, &$error) use ($item) {
+                if (!in_array($value, explode(',', $item['values']), true)) {
+                    $error = 'Invalid input.';
+                    return false;
+                }
+                return true;
+            };
+        }
+
+        if ($splitToArray) {
+            $item['prompt'] = sprintf('%s [%s]', $item['prompt'], 'Separate multiple answers with comma (a,b)');
+        }
+
+        $value = $this->prompt($item['prompt'] . ': ', $options);
 
         if (!$value) {
             return null;
         }
 
-
-        $propertyType = $property->getType();
-
+        $property = $reflection->getProperty($key);
         $nullable = '';
         $type = 'mixed';
+
+        $propertyType = $property->getType();
 
         if ($propertyType instanceof ReflectionNamedType) {
             if ($propertyType->allowsNull()) {
@@ -329,7 +441,15 @@ class CreateController extends Controller
 
     protected function getQuotedString(string $value)
     {
-        return "'" . trim(str_replace("'", "\\'", $value)) . "'";
+        if (str_starts_with($value, "'") && str_ends_with($value, "'")) {
+            return $value;
+        }
+
+        if (str_starts_with($value, '"') && str_ends_with($value, '"')) {
+            return $value;
+        }
+
+        return sprintf("'%s'", trim(str_replace("'", "\\'", $value)));
     }
 
     protected function getArrayString(string $value): string

@@ -1,0 +1,26 @@
+<?php
+
+use wsydney76\contentoverview\Plugin;
+
+$co = Plugin::getInstance()->contentoverview;
+
+return [
+    'tabs' => [
+        $co->createTab('Site', [
+            $co->createColumn(8, [
+                $co->createSection()
+                    ->section('news')
+                    ->layout('cards')
+                    ->imageField('featuredImage')
+                    ->size('small')
+                    ->info('{author.name}, {postDate|date("short")}')
+                    ->limit(12)
+            ]),
+            $co->createColumn(4, [
+                $co->createSection()
+                    ->section('page')
+            ])
+        ]),
+
+    ]
+];

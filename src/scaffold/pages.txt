@@ -1,0 +1,25 @@
+<?php
+
+use wsydney76\contentoverview\Plugin;
+
+$co = Plugin::getInstance()->contentoverview;
+
+return [
+
+
+    $co->createPage('YOURPAGEKEY')
+        ->label('YOURPAGELABEL'),
+
+    // more pages.
+
+
+    // $co->createPageGroup()
+    //    ->label('Workflow'),
+
+    // $co->createPage('page2')
+    //    ->label('Needs attention!')
+    //    ->icon('@appicons/clock.svg')
+    //    ->handle('workpage'),
+    //    ->group('editors')
+
+];
