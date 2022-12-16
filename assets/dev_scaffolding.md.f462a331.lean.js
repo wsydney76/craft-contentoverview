@@ -1,1 +1,0 @@
-import{_ as s,c as n,o as a,a as e}from"./app.b2454dbc.js";const D=JSON.parse('{"title":"Scaffolding","description":"","frontmatter":{},"headers":[],"relativePath":"dev/scaffolding.md"}'),l={name:"dev/scaffolding.md"},t=e("",10),o=[t];function p(c,i,r,d,C,A){return a(),n("div",null,o)}const h=s(l,[["render",p]]);export{D as __pageData,h as default};
