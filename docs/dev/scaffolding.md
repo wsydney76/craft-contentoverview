@@ -1,5 +1,23 @@
 # Scaffolding
 
+## Configuration files
+
+There are a couple of CLI commands you can use to create a starting point for configuration files.
+
+```
+php craft contentoverview/create/<type> 
+```
+
+Currently implemented:
+
+```
+php craft contentoverview/create/plugin-config
+php craft contentoverview/create/pages
+php craft contentoverview/create/page
+```
+
+## Custom classes
+
 There are a couple of CLI commands you can use to create a starting point for custom classes.
 
 ```
@@ -42,11 +60,21 @@ $co->createSection(MySection::class)
 
 ```
 
-::: warning
-Any inputs are not validated. So be sure to enter valid input.
+::: tip
+If you are not sure which values to use, just enter a placeholder and then edit the file.
 :::
 
+::: warning
+Any inputs are not validated. So be sure to enter valid input or check the file.
+:::
+
+::: warning
+These commands assume that your module lives in `modules/contentoverview`.
+:::
 
 ::: tip
 Use `ddev craft ...` if you are using DDEV.
 :::
+
+
+## 

@@ -2,6 +2,10 @@
 
 Create a file `contentoverview.php` in your config folder. See [docs](https://craftcms.com/docs/4.x/extend/plugin-settings.html#overriding-setting-values).
 
+::: tip
+Runing `php craft contentoverview/create/plugin-config` will create this file as a starting point for you.
+:::
+
 ```php
 <?php
 

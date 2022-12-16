@@ -84,6 +84,11 @@ return [
 
 ```
 
+::: tip
+Runing `php craft contentoverview/create/page` will create a file as a starting point for you.
+:::
+
+
 Phpstorms autocompletion can give hints about the available settings and their parameters.
 
 ![screenshot](/images/autocomplete.jpg)

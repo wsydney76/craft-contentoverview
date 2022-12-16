@@ -30,6 +30,11 @@ return [
 ]
 ```
 
+::: tip
+Runing `php craft contentoverview/create/pages` will create this file as a starting point for you.
+:::
+
+
 ### Settings
 
 The `createPage` method is called with a `pageKey` parameter, which is used to build the URL of the page (e.g. `/admin/contentoverview/festival`) 
