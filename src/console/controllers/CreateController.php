@@ -71,7 +71,7 @@ class CreateController extends Controller
                 'class' => new Section(),
                 'items' => [
                     'section' => [
-                        'prompt' => 'Section. Separate multiple section with comma (e.g. news,page)',
+                        'prompt' => 'Section',
                         'splitToArray' => true
                     ],
                     'heading' => 'Heading',
@@ -80,6 +80,7 @@ class CreateController extends Controller
                     'imageField' => 'Image Field (fieldHandle)',
                     'layout' => 'Layout [list,cards,cardlets,line]',
                     'size' => 'Size [tiny,small,medium,large]',
+                    'info' => 'Info object template, e.g. {postDate|date("short")}',
                     'scope' => 'Show drafts [drafts,provisional,ownProvisional,all]',
                     'status' => 'Status [live,disabled,pending,expired]',
                     'search' => 'Enable Search [true,false]',
@@ -139,7 +140,7 @@ class CreateController extends Controller
                     'handle' => 'Handle',
                     'label' => 'Label',
                     'icon' => 'Icon (path to a svg file)',
-                    'info' => 'Enter just one of the following actions!',
+                    'infoText' => 'Enter just one of the following actions!',
 
                     'cpAction' => [
                         'prompt' => 'Controller action',
@@ -255,7 +256,7 @@ class CreateController extends Controller
 
         foreach ($config['items'] as $key => $item) {
 
-            if ($key === 'info') {
+            if ($key === 'infoText') {
                 Console::output($item);
                 continue;
             }
@@ -282,55 +283,62 @@ class CreateController extends Controller
         return implode(PHP_EOL, $properties);
     }
 
-    protected function getPropertyString(ReflectionProperty $property, string $key, array $item): string
+    protected function getPropertyString(ReflectionProperty $property, string $key, array $item): ?string
     {
 
-        $value = $this->prompt($item['prompt'] . ': ');
+        $splitToArray = isset($item['splitToArray']) && $item['splitToArray'];
+
+        $value = $this->prompt($item['prompt'] . ($splitToArray ? '. Separate multiple answers with comma (a,b)' : '') . ': ');
 
         if (!$value) {
-            return '';
+            return null;
         }
 
-        $out = '    public ';
 
         $propertyType = $property->getType();
 
+        $nullable = '';
+        $type = 'mixed';
+
         if ($propertyType instanceof ReflectionNamedType) {
             if ($propertyType->allowsNull()) {
-                $out .= '?';
+                $nullable = '?';
             }
-            $out .= $propertyType->getName() . ' $' . $key . ' = ';
+            $type = $propertyType->getName();
 
-            $out .= match ($propertyType->getName()) {
+            $value = match ($propertyType->getName()) {
                 'string' => $this->getQuotedString($value),
                 default => $value
             };;
-
-            $out .= ';';
         } else if ($propertyType instanceof ReflectionUnionType) {
             $types = [];
             foreach ($propertyType->getTypes() as $unionType) {
                 $types[] = $unionType->getName();
             }
-            $out .= implode('|', $types) . ' $' . $key . ' = ';
+            $type = implode('|', $types);
 
-            if (isset($item['splitToArray']) && str_contains($value, ',')) {
-                $arrayOut = [];
-                foreach (explode(',', $value) as $string) {
-                    $arrayOut[] = $this->getQuotedString($string);
-                }
-
-                $out .= '[' . implode(',', $arrayOut) . '];';
+            if ($splitToArray && str_contains($value, ',')) {
+                $value = $this->getArrayString($value);
             } else {
-                $out .= $this->getQuotedString($value) . ';';
+                $value = $this->getQuotedString($value);
             }
         }
 
-        return $out;
+        return sprintf('    public %s%s $%s = %s;', $nullable, $type, $key, $value);
     }
 
     protected function getQuotedString(string $value)
     {
-        return "'" . str_replace("'", "\\'", $value) . "'";
+        return "'" . trim(str_replace("'", "\\'", $value)) . "'";
+    }
+
+    protected function getArrayString(string $value): string
+    {
+        $tempArray = [];
+        foreach (explode(',', $value) as $string) {
+            $tempArray[] = $this->getQuotedString($string);
+        }
+
+        return sprintf('[%s]', implode(',', $tempArray));
     }
 }
