@@ -34,8 +34,6 @@ class Section extends BaseSection
     public const EVENT_DEFINE_IMAGE = 'defineImageEvent';
     public const EVENT_DEFINE_ICON = 'defineIconEvent';
 
-    // ATTENTION! If types are changed here, be sure to update the section scaffold template!
-
     public array $actions = [];
     public bool $allSites = false;
     public array|string $entryType = '';
