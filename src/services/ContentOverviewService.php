@@ -31,6 +31,7 @@ use yii\web\ForbiddenHttpException;
 use function collect;
 use function explode;
 use function file_exists;
+use function ucfirst;
 
 class ContentOverviewService extends BaseModel
 {
@@ -345,7 +346,15 @@ class ContentOverviewService extends BaseModel
             return $pages->firstWhere(fn(Page $page) => $page->url);
         }
 
-        return $pages->firstWhere('pageKey', $pageKey);
+        $page = $pages->firstWhere('pageKey', $pageKey);
+
+        if (!$page) {
+            $page = $this->createPage($pageKey)
+                ->label(ucfirst($pageKey))
+            ;
+        }
+
+        return $page;
     }
 
     public function getSectionByPath(string $sectionPath): Section
