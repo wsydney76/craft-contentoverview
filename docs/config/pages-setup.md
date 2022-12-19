@@ -95,3 +95,38 @@ $co->createPage('page2')
 ```
 
 ![Screenshot](/images/sidebar.jpg)
+
+## Dynamic pages
+
+Pages can be called without being configured in the `pages` config file, e.g. `/contentoverview/package?elementId=1838`.
+
+This can be used in actions, where you want to link to a page that shows specific content related to an entry.
+
+```php
+$co->createAction()
+    ->label('Details')
+    ->icon('@appicons/wand.svg')
+    ->cpUrl('contentoverview/package')
+```
+
+You must setup your own [section class](../dev/section) to handle the query parameter and resulting queries.
+
+```php
+<?php
+
+// config/contentoverview/package.php
+
+use wsydney76\contentoverview\Plugin;
+use wsydney76\package\models\PackageSection;
+
+$co = Plugin::getInstance()->contentoverview;
+
+return [
+    'sections' => [
+        $co->createSection(PackageSection::class)
+            ->section(['news'])
+    ]
+];
+```
+
+Query params will be passed through to ajax requests as `extraParams`.

@@ -3,6 +3,7 @@
 namespace wsydney76\contentoverview\controllers;
 
 use Craft;
+use craft\helpers\Json;
 use craft\web\Controller;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -38,6 +39,8 @@ class SectionController extends Controller
         $q = Craft::$app->request->getBodyParam('q');
         $filters = Craft::$app->request->getBodyParam('filters');
         $orderBy = Craft::$app->request->getBodyParam('orderBy');
+        $queryParams = Json::decodeIfJson(Craft::$app->request->getBodyParam('queryParams'));
+
 
         // Get section config
         $section = Plugin::getInstance()->contentoverview->getSectionByPath($sectionPath);
@@ -47,7 +50,8 @@ class SectionController extends Controller
             'sectionPageNo' => $sectionPageNo,
             'q' => $q,
             'filters' => $filters,
-            'orderBy' => $orderBy
+            'orderBy' => $orderBy,
+            'queryParams' => $queryParams
         ]);
 
         // Render html

@@ -1,10 +1,11 @@
-{% if sectionConfig.help %}
-    {% set help = sectionConfig.help %}
+{% set help = sectionConfig.getHelp() %}
+{% if help %}
+
     <div class="co-section-help">
 
         <div class="co-section-help-text">
             {% if help is string %}
-                {{ sectionConfig.help }}
+                {{ help|raw }}
             {% else %}
                 {% set text = help.text is defined ?
                     help.text|t('site') :

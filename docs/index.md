@@ -3,7 +3,7 @@
 This Craft CMS plugin shows configurable overviews of a site content.
 
 ::: info Latest version
-Latest tagged version: 5.1.2. Unreleased, but non-breaking changes for filter features.
+Latest tagged version: 5.2. Beta quality.
 :::
 
 ## Disclaimer

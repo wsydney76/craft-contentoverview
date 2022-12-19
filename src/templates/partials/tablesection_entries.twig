@@ -5,43 +5,55 @@
 {% set sectionPageNo = sectionPageNo ?? 1 %}
 {% set transform = sectionConfig.getTransform() %}
 
-<table class="co-table data fullwidth">
-    <thead>
-    <tr>
-        {% for column in columns %}
-            <th>{{ column.label|t('site') }}</th>
-        {% endfor %}
-    </tr>
-    </thead>
-    <tbody>
-    {% for entry in entries %}
-        {% set createEditorJs = include('contentoverview/js/createEditorJs.twig', {entry}) %}
-        <tr>
-            {% for column in columns %}
-                <td class="co-align-{{ column.align }}">
-                    {% switch column.type %}
+ {% if entries %}
 
-                    {% case "status" %}
-                        {% include 'contentoverview/partials/entry_status.twig' %}
-                    {% case "title" %}
-                        {% include 'contentoverview/partials/entry_title.twig' %}
-                    {% case "info" %}
-                        {{ view.renderObjectTemplate(sectionConfig.info, entry) }}
-                    {% case "image" %}
-                        {% include 'contentoverview/partials/entry_image.twig' %}
-                    {% case "actions" %}
-                        {% include 'contentoverview/partials/entry_actions.twig' %}
-                    {% default %}
-                        {% if column.value %}
-                            {{ view.renderObjectTemplate(column.value, entry)|raw|purify(settings.purifierConfig) }}
-                        {% else %}
-                            {{ view.renderTemplate(column.template, {entry}, 'site')|raw|purify(settings.purifierConfig) }}
-                        {% endif %}
-                    {% endswitch %}
-                </td>
-            {% endfor %}
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+     <table class="co-table data fullwidth">
+         <thead>
+         <tr>
+             {% for column in columns %}
+                 <th>{{ column.label|t('site') }}</th>
+             {% endfor %}
+         </tr>
+         </thead>
 
+
+         <tbody>
+         {% for entry in entries %}
+             {% set createEditorJs = include('contentoverview/js/createEditorJs.twig', {entry}) %}
+             <tr>
+                 {% for column in columns %}
+                     <td class="co-align-{{ column.align }}">
+                         {% switch column.type %}
+
+                         {% case "status" %}
+                             {% include 'contentoverview/partials/entry_status.twig' %}
+                         {% case "title" %}
+                             {% include 'contentoverview/partials/entry_title.twig' %}
+                         {% case "info" %}
+                             {{ view.renderObjectTemplate(sectionConfig.info, entry) }}
+                         {% case "image" %}
+                             {% include 'contentoverview/partials/entry_image.twig' %}
+                         {% case "actions" %}
+                             {% include 'contentoverview/partials/entry_actions.twig' %}
+                         {% default %}
+                             {% if column.value %}
+                                 {{ view.renderObjectTemplate(column.value, entry)|raw|purify(settings.purifierConfig) }}
+                             {% else %}
+                                 {{ view.renderTemplate(column.template, {entry}, 'site')|raw|purify(settings.purifierConfig) }}
+                             {% endif %}
+                         {% endswitch %}
+                     </td>
+                 {% endfor %}
+             </tr>
+
+         {% endfor %}
+         </tbody>
+
+
+     </table>
+
+ {% else %}
+     <div>
+         {{ "Nothing found"|t('contentoverview') }}
+     </div>
+ {% endif %}

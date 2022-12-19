@@ -28,7 +28,10 @@
                                 '{id}': siteId,
                                 '{handle}': site.handle
                             })) %}
-                            <li><a{% if selectedSiteId and siteId == selectedSiteId %} class="sel"{% endif %}  href="?site={{ site.handle }}">{{ site.name|t('site') }}</a></li>
+                            
+                            {% set params = craft.app.request.queryParams|merge({site: site.handle}) %}
+                            
+                            <li><a{% if selectedSiteId and siteId == selectedSiteId %} class="sel"{% endif %}  href="{{ url(craft.app.request.url, params) }}">{{ site.name|t('site') }}</a></li>
                         {% endfor %}
                     </ul>
                 {% endif %}

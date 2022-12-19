@@ -11,8 +11,10 @@ function co_getSectionHtml(sectionPath, sectionPageNo = 1, isRefresh = true) {
         sectionPageNo: sectionPageNo,
         q: co_getSearchValue(sectionPath),
         filters: co_getFilters(sectionPath),
-        orderBy: co_getOrderBy(sectionPath)
+        orderBy: co_getOrderBy(sectionPath),
+        queryParams: document.getElementById(sectionPath + '-params').value
     }
+
     var spinnerElement = document.getElementById(sectionPath + '-spinner')
     spinnerElement && spinnerElement.classList.add('ajax-request')
 
@@ -42,7 +44,6 @@ function co_getSectionHtml(sectionPath, sectionPageNo = 1, isRefresh = true) {
         })
 
 }
-
 
 
 /**
@@ -180,6 +181,10 @@ function co_createElementEditor(elementId, siteId, draftId, sectionPath, section
     slideout.on('submit', () => {
         co_getSectionHtml(sectionPath, sectionPageNo)
     })
+    slideout.on('close', () => {
+        co_getSectionHtml(sectionPath, sectionPageNo)
+    })
+
 }
 
 function co_deleteEntry(elementId, draftId, title, sectionPath, sectionPageNo = 1) {
@@ -200,12 +205,20 @@ function co_deleteEntry(elementId, draftId, title, sectionPath, sectionPageNo = 
 
 }
 
-function co_postAction(action, label, elementId, draftId, title, sectionPath, sectionPageNo = 1) {
+function co_postAction(action, label, elementId, draftId, title, sectionPath, sectionPageNo = 1, extraParams = {}) {
     if (!confirm('Execute "' + label + '" for entry "' + title + '"?')) {
         return
     }
 
-    Craft.sendActionRequest("POST", action, {data: {elementId: elementId, draftId: draftId}})
+    Craft.sendActionRequest("POST",
+            action,
+            {
+                data: {
+                    elementId: elementId,
+                    draftId: draftId,
+                    extraParams: extraParams
+                }
+            })
         .then((response) => {
             Craft.cp.displayNotice(response.data.message, response.data.notificationSettings)
             if (response.data.redirect) {
@@ -281,7 +294,7 @@ function co_compare(draftId, siteId, isProvisionalDraft) {
 
 // from elementmap plugin
 function co_relationships(ajaxBaseUrl, draftId, element) {
-    $.get(ajaxBaseUrl + '&draftId=' + draftId )
+    $.get(ajaxBaseUrl + '&draftId=' + draftId)
         .done(function(data) {
             hud = new Garnish.HUD(element, data, {
                 orientations: ['top', 'bottom', 'right', 'left'],
@@ -339,7 +352,7 @@ function co_onElementSelectChange(elements, filterInputId, sectionPath) {
     input = document.getElementById(filterInputId)
 
     values = [];
-    for(i = 0; i < elements.length; i++) {
+    for (i = 0; i < elements.length; i++) {
         values.push(elements[i].dataset['id'])
     }
 

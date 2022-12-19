@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 5.2.0 2022-12-19
+
+__Status: Beta__
 
 Rework of filters.
 
@@ -14,6 +16,9 @@ Rework of filters.
 * Added the `ownProvisional` value to the `scope` section setting.
 
 * Added the `ContentOverviewBaseModule` class as a base class for a custom module.
+
+* Pages can now called with out beeing configured in the `pages` config file.
+* Any query params are now passed to ajax requests as `extraParams`.
 
 * Bumped minimum Craft version to 4.3.5
 

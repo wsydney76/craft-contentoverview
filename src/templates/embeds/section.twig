@@ -2,6 +2,11 @@
 
 <div class="co-section {{ layout is defined ? "co-#{layout}" }}">
     <div class="co-btns">
+        
+        <input type="hidden"
+               id="{{ sectionPath }}-params" 
+               value="{{ craft.app.request.queryParams|json_encode }}">
+        
         <h2>
             {% if linkToPage %}
                 <a class="go"
@@ -13,13 +18,10 @@
         <div class="co-heading-actions">
             {% if sectionConfig.showRefreshButton and sectionPath is defined and permittedSections %}
 
-                <button id="{{ sectionPath }}-refresh-button" class="btn co-refresh-button" type="button" onclick="co_getSectionHtml('{{ sectionPath }}', 1, true)"
-                        title="{{ "Refresh"|t('contentoverview') }}" aria-label="{{ "Refresh"|t('contentoverview') }}">
-                    <div class="label">
-                        {{ svg('@coicons/refresh.svg') }}
-                    </div>
-                    <div class="spinner spinner-absolute"></div>
-                </button>
+            {% include [
+                '_contentoverview/partials/refresh-button.twig',
+                'contentoverview/partials/refresh-button.twig'
+            ] %}
 
             {% endif %}
             <div class="co-heading-buttons">

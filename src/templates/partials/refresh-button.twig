@@ -1,0 +1,12 @@
+
+<button id="{{ sectionPath }}-refresh-button" 
+        class="btn co-refresh-button" 
+        type="button" 
+        onclick="co_getSectionHtml('{{ sectionPath }}', 1, true, {{ craft.app.request.queryParams|json_encode }})"
+        title="{{ "Refresh"|t('contentoverview') }}" 
+        aria-label="{{ "Refresh"|t('contentoverview') }}">
+    <div class="label">
+        {{ svg('@coicons/refresh.svg') }}
+    </div>
+    <div class="spinner spinner-absolute"></div>
+</button>

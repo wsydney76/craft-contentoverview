@@ -89,9 +89,9 @@ class BaseModel extends Model
      * @param $value
      * @return string[]
      */
-    protected function _normalizeToArray($value)
+    protected function _normalizeToArray($value): array
     {
-        return is_string($value) ? [$value] : $value;
+        return (is_string($value)) ? ($value !== '' ? [$value] : []) : $value;
     }
 
     /**

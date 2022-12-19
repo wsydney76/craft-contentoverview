@@ -97,7 +97,7 @@
                     <button title="{{ action.label|t('site') }}"
                             class="co-action-icon"
                             aria-label="{{ action.label|t('site') }}"
-                            onclick="co_postAction('{{ action.cpAction }}','{{ action.label }}', {{ entry.id }}, {{ draftId }}, '{{ entry.title }}', '{{ sectionPath }}' , {{ sectionPageNo }})">
+                            onclick="co_postAction('{{ action.cpAction }}','{{ action.label }}', {{ entry.id }}, {{ draftId }}, '{{ entry.title }}', '{{ sectionPath }}' , {{ sectionPageNo }}, {{ action.extraParams|json_encode }})">
                         {{ _self.displayIcon(action.icon) }}
                     </button>
                 {% endif %}

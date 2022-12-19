@@ -12,8 +12,8 @@ class Action extends BaseModel
     public string $jsFunction = '';
     public string $slideoutTemplate = '';
     public string $popupTemplate = '';
-
     public string $cpUrl = '';
+    public array $extraParams = [];
 
     /**
      * Action label
@@ -100,6 +100,18 @@ class Action extends BaseModel
     public function slideoutTemplate(string $slideoutTemplate): self
     {
         $this->slideoutTemplate = $slideoutTemplate;
+        return $this;
+    }
+
+    /**
+     * Set addtional params for action
+     *
+     * @param array $extraParams
+     * @return $this
+     */
+    public function extraParams(array $extraParams): self
+    {
+        $this->extraParams = $extraParams;
         return $this;
     }
 

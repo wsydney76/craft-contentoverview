@@ -186,6 +186,10 @@
     display:flex;
 }
 
+.co-table .co-image {
+    max-width: 100px;
+}
+
 .co-warning {
     color: var(--red-700);
     font-weight: bold;
