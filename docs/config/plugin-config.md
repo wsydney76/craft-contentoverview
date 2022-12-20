@@ -30,6 +30,16 @@ Object template used to render the alt attribute of images, defaults to `{alt}`
 'altTemplate' => '{altText}'
 ```
 
+## configPath
+
+* Type: `string`
+* Default: `@config/contentoverview` 
+
+The directory where your page config files live.
+
+```php
+'configPath' => '@comodule/config',
+```
 
 ## customTemplateRoot 
 
