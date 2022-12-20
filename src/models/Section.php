@@ -583,11 +583,6 @@ class Section extends BaseSection
         return '';
     }
 
-    public function getHelp(): array|string
-    {
-        return $this->help;
-    }
-
     public function getLayout(): string
     {
         return $this->layout ?? Plugin::getInstance()->getSettings()->defaultLayout;

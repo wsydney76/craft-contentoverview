@@ -67,4 +67,14 @@ class BaseSection extends BaseModel
         $this->showRefreshButton = $showRefreshButton;
         return $this;
     }
+
+    /**
+     * Return help html
+     *
+     * @return array|string
+     */
+    public function getHelp(): array|string
+    {
+        return $this->help;
+    }
 }

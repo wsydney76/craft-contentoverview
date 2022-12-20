@@ -39,6 +39,19 @@ class Plugin extends \craft\base\Plugin
     {
         parent::init();
 
+
+        // Defer most setup tasks until Craft is fully initialized
+        Craft::$app->onInit(function() {
+            $this->initPlugin();
+            // ...
+        });
+    }
+
+    public function initPlugin()
+    {
+
+        parent::init();
+
         /** @var Settings $settings */
         $settings = $this->getSettings();
 
