@@ -188,6 +188,12 @@
 
 .co-table .co-image {
     max-width: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+.co-table .co-image svg {
+    margin: 6px 0;
 }
 
 .co-warning {
