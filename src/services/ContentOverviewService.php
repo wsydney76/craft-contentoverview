@@ -10,6 +10,7 @@ use craft\fields\Users;
 use craft\helpers\App;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefinePagesEvent;
+use wsydney76\contentoverview\events\RegisterActionsEvent;
 use wsydney76\contentoverview\models\Action;
 use wsydney76\contentoverview\models\BaseModel;
 use wsydney76\contentoverview\models\Column;
@@ -28,6 +29,7 @@ use wsydney76\contentoverview\models\WidgetSection;
 use wsydney76\contentoverview\Plugin;
 use yii\base\InvalidConfigException;
 use yii\web\ForbiddenHttpException;
+use function array_push;
 use function collect;
 use function explode;
 use function file_exists;
@@ -37,8 +39,11 @@ class ContentOverviewService extends BaseModel
 {
 
     public const EVENT_DEFINE_PAGES = 'eventDefinePages';
+    public const EVENT_REGISTER_ACTIONS = 'eventRegisterActions';
 
     protected ?Collection $_pages = null;
+
+    protected array $integrationActions = [];
 
 
     /**
@@ -350,8 +355,7 @@ class ContentOverviewService extends BaseModel
 
         if (!$page) {
             $page = $this->createPage($pageKey)
-                ->label(ucfirst($pageKey))
-            ;
+                ->label(ucfirst($pageKey));
         }
 
         return $page;
@@ -383,6 +387,26 @@ class ContentOverviewService extends BaseModel
         }
 
         return require $path;
+    }
+
+    public function getIntegrationActions(): array
+    {
+        if ($this->integrationActions) {
+            return $this->integrationActions;
+        }
+
+        $actions = [];
+        if ($this->hasEventHandlers(self::EVENT_REGISTER_ACTIONS)) {
+            $event = new RegisterActionsEvent();
+            $this->trigger(self::EVENT_REGISTER_ACTIONS, $event);
+            foreach ($event->actions as $key => $action) {
+                $actions[$key] = $action;
+            }
+           $this->integrationActions = $actions;
+        }
+
+        return $this->integrationActions;
+
     }
 
 }

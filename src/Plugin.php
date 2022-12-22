@@ -194,18 +194,13 @@ class Plugin extends \craft\base\Plugin
         // Register CSS an JS
         Craft::$app->view->registerAssetBundle(ContentOverviewAssetBundle::class);
 
-        Event::on(
-            Plugins::class,
-            Plugins::EVENT_AFTER_LOAD_PLUGINS,
-            function($event) use ($settings) {
-                if (Craft::$app->plugins->isPluginEnabled('work')) {
-                    Craft::$app->view->registerAssetBundle(WorkPluginAssetBundle::class);
-                }
-                if (Craft::$app->plugins->isPluginEnabled('elementmap')) {
-                    Craft::$app->view->registerAssetBundle(ElementMapBundle::class);
-                }
-            }
-        );
+
+        if (Craft::$app->plugins->isPluginEnabled('work')) {
+            Craft::$app->view->registerAssetBundle(WorkPluginAssetBundle::class);
+        }
+        if (Craft::$app->plugins->isPluginEnabled('elementmap')) {
+            Craft::$app->view->registerAssetBundle(ElementMapBundle::class);
+        }
     }
 
     protected function createSettingsModel(): ?Model

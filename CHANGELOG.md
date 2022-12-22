@@ -1,11 +1,19 @@
 # Changelog
 
+## 5.3.0 2022-12-22
+
+__Status: Beta__
+
+* Added the `cpUrlTarget` action setting.
+* Added the `ContentOverviewService::EVENT_REGISTER_ACTIONS` event.
+* Added the `RegisterActionsEvent` class.
+
 ## 5.2.1 2022-12-20
 
 * Fixed a bug where calling the `getHelp()` method from a derived section model would crash.
 * Fixed a bug where the plugin initialization was not deferred, which could conflict with other plugins.
 
-## 5.2.0 2022-12-19
+## 5.2.0 2022-12-19K
 
 __Status: Beta__
 

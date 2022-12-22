@@ -705,7 +705,14 @@ class Section extends BaseSection
     public function getActions(Entry $entry): Collection
     {
 
+        $integrationActions = Plugin::getInstance()->contentoverview->getIntegrationActions();
+
         $actions = collect($this->actions)
+            ->transform(function(Action|string $action) use ($integrationActions) {
+                return is_string($action) &&  isset($integrationActions[$action]) ?
+                    Craft::createObject($integrationActions[$action]) :
+                    $action;
+            })
             ->filter(function(Action|string $action) use ($entry) {
                 if (is_string($action)) {
                     return true;

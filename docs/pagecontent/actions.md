@@ -9,6 +9,7 @@ Actions can be:
 * view: predefined, open the entry url in a new tab (experimental for non-live entries).
 * compare: integration, shows a comparison draft <-> current in a slideout. *)
 * relationships : integration, shows the relationships for an entry in a popup. **)
+* release: integration, apply draft ***)
 * A custom javascript function.
 * A CP link to a page provided e.g. by a custom module.
 * A custom controller action (executed with user confirmation).
@@ -19,6 +20,8 @@ is available [here](https://github.com/wsydney76/work).
 
 **) Requires `elementmap` plugin. This is currently private, but an old PoC version (ported to Craft 4)
 is available [here](https://github.com/wsydney76/craft-elementmap).
+
+*** Since 5.3. Requires `package` plugin. PoC version is available [here](https://github.com/wsydney76/craft-package)
 
 
 ```php
@@ -40,6 +43,12 @@ $co->createAction()
     ->label('See version history')
     ->icon('@templates/_icons/history.svg')
     ->cpUrl('main/content/publish-release')
+```
+
+By default, links are opened in a new tab. Set `cpUrlTarget` to an empty string to open them in the current tab.
+
+```php
+->cpUrlTarget('') 
 ```
 
 ## Call a JavaScript function
