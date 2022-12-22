@@ -22,7 +22,7 @@ Event::on(
 
 Some integrations of other plugins are currently baked in as 'actions':
 
-## Compare
+### Compare
 
 Action: `compare`
 
@@ -33,7 +33,7 @@ Shows a comparison between a draft and the current version.
 Requires `work` plugin. This is currently private, but an old PoC version (ported to Craft 4)
 is available [here](https://github.com/wsydney76/work).
 
-## Relationships
+### Relationships
 
 Action: `relationships`
 
@@ -44,7 +44,7 @@ Show incoming and outgoing relations in a popup:
 Requires `elementmap` plugin. This is currently private, but an old PoC version (ported to Craft 4)
 is available [here](https://github.com/wsydney76/craft-elementmap).
 
-## Release
+### Release
 
 Releases (publishes, enables) a draft or disabled entry. 
 
