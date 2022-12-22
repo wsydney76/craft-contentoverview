@@ -13,6 +13,7 @@ class Action extends BaseModel
     public string $slideoutTemplate = '';
     public string $popupTemplate = '';
     public string $cpUrl = '';
+    public string $cpUrlTarget = '_blank';
     public array $extraParams = [];
 
     /**
@@ -76,6 +77,18 @@ class Action extends BaseModel
     public function cpUrl(string $cpUrl): self
     {
         $this->cpUrl = $cpUrl;
+        return $this;
+    }
+
+    /**
+     * Target attribut for cpUrl link
+     *
+     * @param string $cpUrlTarget
+     * @return $this
+     */
+    public function cpUrlTarget(string $cpUrlTarget): self
+    {
+        $this->cpUrlTarget = $cpUrlTarget;
         return $this;
     }
 

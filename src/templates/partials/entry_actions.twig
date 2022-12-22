@@ -106,7 +106,7 @@
                     <a class="co-action-icon"
                        aria-label="{{ action.label|t('site') }}"
                        href="{{ cpUrl(action.cpUrl, {elementId: entry.id, draftId: (draftId == 'null' ? null: draftId)}) }}"
-                       target="_blank">
+                       target="{{ action.cpUrlTarget }}">
                         {{ _self.displayIcon(action.icon) }}
                     </a>
                 {% endif %}
