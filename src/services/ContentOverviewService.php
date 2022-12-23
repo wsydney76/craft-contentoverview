@@ -10,6 +10,7 @@ use craft\fields\Users;
 use craft\helpers\App;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefinePagesEvent;
+use wsydney76\contentoverview\events\GetSectionByPathEvent;
 use wsydney76\contentoverview\events\RegisterActionsEvent;
 use wsydney76\contentoverview\models\Action;
 use wsydney76\contentoverview\models\BaseModel;
@@ -40,6 +41,7 @@ class ContentOverviewService extends BaseModel
 
     public const EVENT_DEFINE_PAGES = 'eventDefinePages';
     public const EVENT_REGISTER_ACTIONS = 'eventRegisterActions';
+    public const EVENT_GETSECTIONBYPATH = 'eventGetSectionByPath';
 
     protected ?Collection $_pages = null;
 
@@ -366,11 +368,22 @@ class ContentOverviewService extends BaseModel
         $segments = explode('-', $sectionPath);
 
 
-        // We do not need a fully initialized page here, just the getTabs() method.
-        $page = Plugin::getInstance()->contentoverview->createPage($segments[0]);
+        $section = null;
+        if ($this->hasEventHandlers(self::EVENT_GETSECTIONBYPATH)) {
+            $event = new GetSectionByPathEvent([
+                'sectionPath' => $sectionPath
+            ]);
+            $this->trigger(self::EVENT_GETSECTIONBYPATH, $event);
+            $section = $event->section;
+        }
 
-        /** @var Section $section */
-        $section = $page->getTabs()[$segments[1]]->getColumns()[$segments[2]]->getSections()[$segments[3]];
+        if (!$section) {
+            // We do not need a fully initialized page here, just the getTabs() method.
+            $page = Plugin::getInstance()->contentoverview->createPage($segments[0]);
+
+            /** @var Section $section */
+            $section = $page->getTabs()[$segments[1]]->getColumns()[$segments[2]]->getSections()[$segments[3]];
+        }
 
         if ($section->section && !$section->getPermittedSections('viewentries')) {
             throw new ForbiddenHttpException();
@@ -402,11 +415,10 @@ class ContentOverviewService extends BaseModel
             foreach ($event->actions as $key => $action) {
                 $actions[$key] = $action;
             }
-           $this->integrationActions = $actions;
+            $this->integrationActions = $actions;
         }
 
         return $this->integrationActions;
-
     }
 
 }

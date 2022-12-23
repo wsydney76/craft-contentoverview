@@ -11,7 +11,6 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\helpers\App;
 use craft\services\Dashboard;
-use craft\services\Plugins;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\Cp;
 use craft\web\twig\variables\CraftVariable;

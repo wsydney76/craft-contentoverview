@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.4.0 2022-12-23
+
+* Added the `ContentOverviewService::EVENT_GETSECTIONBYPATH` event.
+* Added the `GetSectionByPathEvent` class.
+
 ## 5.3.0 2022-12-22
 
 __Status: Beta__
