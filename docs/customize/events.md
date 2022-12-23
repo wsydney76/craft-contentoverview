@@ -246,3 +246,28 @@ Event::on(
 ```
 ![Screenshot](/images/icons.jpg)
 
+## Get Section Config for Ajax requests
+
+This is only relevant if you are using a custom `Page` model that does not read its config from a page config file.
+
+In order to enable ajax requests for a section, like refreshing its html, a `sectionPath` identifier is handled internally, in
+the form of `pageKey-tabIndex-columnIndex-sectionIndex`, e.g. `page1-0-1-3`.
+
+The ajax controller then gets the section config from the corresponding page config file.
+
+However, if a plugin uses its own page model without using a config file, this will fail.
+
+In this case a plugin can inject the section config model via an event: 
+
+```php
+Event::on(
+    ContentOverviewService::class,
+    ContentOverviewService::EVENT_GETSECTIONBYPATH,
+    function(GetSectionByPathEvent $event) {              
+        if ($event->sectionPath ===  'package-0-0-0') {
+            $event->section = $co->createSection(MyCustomSection::class);
+        }
+    }
+);
+```
+
