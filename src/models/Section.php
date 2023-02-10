@@ -7,6 +7,7 @@ use craft\db\Paginator;
 use craft\elements\Asset;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\Entry;
+use craft\errors\InvalidFieldException;
 use craft\helpers\Cp;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineActionsEvent;
@@ -686,12 +687,18 @@ class Section extends BaseSection
         if (!$image && $this->imageField) {
             $imageField = $this->getImageField($entry);
             if ($imageField) {
-                $image = $entry->getFieldValue($imageField)->one();
+                try {
+                    $image = $entry->getFieldValue($imageField)->one();
+                } catch (InvalidFieldException $e) {
+                }
             }
             if (!$image && $this->fallbackImageField) {
                 $imageField = $this->getFallbackImageField($entry);
                 if ($imageField) {
-                    $image = $entry->getFieldValue($imageField)->one();
+                    try {
+                        $image = $entry->getFieldValue($imageField)->one();
+                    } catch (InvalidFieldException $e) {
+                    }
                 }
             }
             if (!$image) {
