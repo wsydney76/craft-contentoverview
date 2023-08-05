@@ -294,7 +294,14 @@ function co_compare(draftId, siteId, isProvisionalDraft) {
 
 // from elementmap plugin
 function co_relationships(ajaxBaseUrl, draftId, element) {
-    $.get(ajaxBaseUrl + '&draftId=' + draftId)
+    // if ajaxBaseUrl contains a query string, append the draftId to it
+    if (ajaxBaseUrl.indexOf('?') !== -1) {
+        ajaxBaseUrl += '&draftId=' + draftId;
+    } else {
+        ajaxBaseUrl += '?draftId=' + draftId;
+    }
+
+    $.get(ajaxBaseUrl)
         .done(function(data) {
             hud = new Garnish.HUD(element, data, {
                 orientations: ['top', 'bottom', 'right', 'left'],

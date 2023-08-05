@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.4.2 2023-08-05
+
+* Fixed an error in elementmap integration if there is only one site. 
+
 ## 5.4.0 2022-12-23
 
 * Added the `ContentOverviewService::EVENT_GETSECTIONBYPATH` event.
