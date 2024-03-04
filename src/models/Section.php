@@ -64,6 +64,8 @@ class Section extends BaseSection
     public ?string $status = null;
     public string $titleObjectTemplate = '{title}';
 
+    public bool $useEntryTypeColors = false;
+
 
     // make it easer to detect custom sections, instead of using class names
     public bool $isCustomSection = false;
@@ -558,6 +560,18 @@ class Section extends BaseSection
     }
 
     /**
+     * Whether to use entry type colors
+     *
+     * @param string $useEntryTypeColors
+     * @return $this
+     */
+    public function useEntryTypeColors(bool $useEntryTypeColors = true): self
+    {
+        $this->useEntryTypeColors = $useEntryTypeColors;
+        return $this;
+    }
+
+    /**
      * Get heading for the section, from config if set, else section name
      *
      * @return string
@@ -575,7 +589,7 @@ class Section extends BaseSection
             }
 
             $sections = $this->_normalizeToArray($this->section);
-            $headings = array_map(fn($section) => Craft::$app->sections->getSectionByHandle($section)->name
+            $headings = array_map(fn($section) => Craft::$app->entries->getSectionByHandle($section)->name
                 , $sections);
 
             return implode(', ', $headings);
@@ -624,7 +638,7 @@ class Section extends BaseSection
 
         foreach ($this->_normalizeToArray($this->section) as $section) {
             if ($currentUser
-                ->can($permission . ':' . Craft::$app->sections->getSectionByHandle($section)->uid)) {
+                ->can($permission . ':' . Craft::$app->entries->getSectionByHandle($section)->uid)) {
                 $sections[] = $section;
             }
         }

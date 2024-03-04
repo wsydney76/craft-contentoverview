@@ -662,3 +662,185 @@
     font-size: 16px !important;
 
 }
+
+/* ENTRY TYPE COLORS ======================================================== */
+.co-entry.co-type-red {
+    background-color: var(--red-050)
+}
+.co-entry.co-type-red:hover {
+    background-color: var(--red-100)
+}
+.co-entry.co-type-red svg.co-type-red {
+    fill: var(--red-800)
+}
+.co-entry.co-type-orange {
+    background-color: var(--orange-050)
+}
+.co-entry.co-type-orange:hover {
+    background-color: var(--orange-100)
+}
+.co-entry.co-type-orange svg.co-type-orange {
+    fill: var(--orange-800)
+}
+.co-entry.co-type-amber {
+    background-color: var(--amber-050)
+}
+.co-entry.co-type-amber:hover {
+    background-color: var(--amber-100)
+}
+.co-entry.co-type-amber svg.co-type-amber {
+    fill: var(--amber-800)
+}
+.co-entry.co-type-yellow {
+    background-color: var(--yellow-050)
+}
+.co-entry.co-type-yellow:hover {
+    background-color: var(--yellow-100)
+}
+.co-entry.co-type-yellow svg.co-type-yellow {
+    fill: var(--yellow-800)
+}
+.co-entry.co-type-lime {
+    background-color: var(--lime-050)
+}
+.co-entry.co-type-lime:hover {
+    background-color: var(--lime-100)
+}
+.co-entry.co-type-lime svg.co-type-lime {
+    fill: var(--lime-800)
+}
+.co-entry.co-type-green {
+    background-color: var(--green-050)
+}
+.co-entry.co-type-green:hover {
+    background-color: var(--green-100)
+}
+.co-entry.co-type-green svg.co-type-green {
+    fill: var(--green-800)
+}
+.co-entry.co-type-emerald {
+    background-color: var(--emerald-050)
+}
+.co-entry.co-type-emerald:hover {
+    background-color: var(--emerald-100)
+}
+.co-entry.co-type-emerald svg.co-type-emerald {
+    fill: var(--emerald-800)
+}
+.co-entry.co-type-teal {
+    background-color: var(--teal-050)
+}
+.co-entry.co-type-teal:hover {
+    background-color: var(--teal-100)
+}
+.co-entry.co-type-teal svg.co-type-teal {
+    fill: var(--teal-800)
+}
+.co-entry.co-type-cyan {
+    background-color: var(--cyan-050)
+}
+.co-entry.co-type-cyan:hover {
+    background-color: var(--cyan-100)
+}
+.co-entry.co-type-cyan svg.co-type-cyan {
+    fill: var(--cyan-800)
+}
+.co-entry.co-type-sky {
+    background-color: var(--sky-050)
+}
+.co-entry.co-type-sky:hover {
+    background-color: var(--sky-100)
+}
+.co-entry.co-type-sky svg.co-type-sky {
+    fill: var(--sky-800)
+}
+.co-entry.co-type-blue {
+    background-color: var(--blue-050)
+}
+.co-entry.co-type-blue:hover {
+    background-color: var(--blue-100)
+}
+.co-entry.co-type-blue svg.co-type-blue {
+    fill: var(--blue-800)
+}
+.co-entry.co-type-indigo {
+    background-color: var(--indigo-050)
+}
+.co-entry.co-type-indigo:hover {
+    background-color: var(--indigo-100)
+}
+.co-entry.co-type-indigo svg.co-type-indigo {
+    fill: var(--indigo-800)
+}
+.co-entry.co-type-violet {
+    background-color: var(--violet-050)
+}
+.co-entry.co-type-violet:hover {
+    background-color: var(--violet-100)
+}
+.co-entry.co-type-violet svg.co-type-violet {
+    fill: var(--violet-800)
+}
+.co-entry.co-type-purple {
+    background-color: var(--purple-050)
+}
+.co-entry.co-type-purple:hover {
+    background-color: var(--purple-100)
+}
+.co-entry.co-type-purple svg.co-type-purple {
+    fill: var(--purple-800)
+}
+.co-entry.co-type-fuchsia {
+    background-color: var(--fuchsia-050)
+}
+.co-entry.co-type-fuchsia:hover {
+    background-color: var(--fuchsia-100)
+}
+.co-entry.co-type-fuchsia svg.co-type-fuchsia {
+    fill: var(--fuchsia-800)
+}
+.co-entry.co-type-pink {
+    background-color: var(--pink-050)
+}
+.co-entry.co-type-pink:hover {
+    background-color: var(--pink-100)
+}
+.co-entry.co-type-pink svg.co-type-pink {
+    fill: var(--pink-800)
+}
+.co-entry.co-type-rose {
+    background-color: var(--rose-050)
+}
+.co-entry.co-type-rose:hover {
+    background-color: var(--rose-100)
+}
+.co-entry.co-type-rose svg.co-type-rose {
+    fill: var(--rose-800)
+}
+.co-entry.co-type-white {
+    background-color: var(--white-050)
+}
+.co-entry.co-type-white:hover {
+    background-color: var(--white-100)
+}
+.co-entry.co-type-white svg.co-type-white {
+    fill: var(--white-800)
+}
+.co-entry.co-type-gray {
+    background-color: var(--gray-050)
+}
+.co-entry.co-type-gray:hover {
+    background-color: var(--gray-100)
+}
+.co-entry.co-type-gray svg.co-type-gray {
+    fill: var(--gray-800)
+}
+.co-entry.co-type-black {
+    background-color: var(--black-050)
+}
+.co-entry.co-type-black:hover {
+    background-color: var(--black-100)
+}
+.co-entry.co-type-black svg.co-type-black {
+    fill: var(--black-800)
+}

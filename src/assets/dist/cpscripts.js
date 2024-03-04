@@ -281,7 +281,7 @@ function co_respondToVisibility(element, callback, root = null) {
 // from work plugin
 function co_compare(draftId, siteId, isProvisionalDraft) {
 
-    url = `/admin/work/compare?draftId=${draftId}&siteId=${siteId}&isProvisionalDraft=${isProvisionalDraft}`
+    url = `/admin/_extras/compare?draftId=${draftId}&siteId=${siteId}&isProvisionalDraft=${isProvisionalDraft}`
     $.get(url, function(data) {
             var slideout = new Craft.Slideout(data, {
                 containerAttributes: {class: 'compare-container'}

@@ -5,6 +5,7 @@
 
 {% extends "_layouts/cp.twig" %}
 
+
 {% set selectedSubnavItem  = page.pageKey %}
 
 {# Do not output two identical headings #}
@@ -62,3 +63,18 @@
         {% include '_contentoverview/' ~ page.blocks['footer'] ignore missing %}
     {% endif %}
 {% endblock %}
+
+{# Moved to cpstyles.css
+{% css %}
+{% for color in colors %}
+	.co-entry.co-type-{{ color.value }} {
+        background-color: var(--{{ color.value}}-050)
+    }
+    .co-entry.co-type-{{ color.value }}:hover {
+        background-color: var(--{{ color.value}}-100)
+    }
+    .co-entry.co-type-{{ color.value }} svg.co-type-{{ color.value }} {
+        fill: var(--{{ color.value}}-800)
+    }
+{% endfor %}
+{% endcss %}#}

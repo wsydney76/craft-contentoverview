@@ -131,7 +131,7 @@ class BaseRelationFieldFilter extends BaseFieldFilter
         if ($field->sources !== '*') {
             $sections = [];
             foreach ($field->sources as $source) {
-                $section = Craft::$app->sections->getSectionByUid(explode(':', $source)[1]);
+                $section = Craft::$app->entries->getSectionByUid(explode(':', $source)[1]);
                 $sections[] = $section->handle;
             }
         }

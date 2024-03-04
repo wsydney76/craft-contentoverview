@@ -2,6 +2,7 @@
 
 namespace wsydney76\contentoverview\controllers;
 
+use craft\enums\Color;
 use craft\web\Controller;
 use InvalidArgumentException;
 use Twig\Error\LoaderError;
@@ -38,7 +39,8 @@ class PageController extends Controller
 
         return $this->view->renderPageTemplate('contentoverview/index.twig', [
             'page' => $page,
-            'settings' => $settings
+            'settings' => $settings,
+            'colors' => Color::cases()
         ]);
     }
 }

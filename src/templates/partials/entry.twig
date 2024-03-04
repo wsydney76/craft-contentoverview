@@ -6,7 +6,10 @@
 
 {% set createEditorJs = include('contentoverview/js/createEditorJs.twig', {entry}) %}
 
-<div class="co-entry {{ entry.isDraft ? 'draft' : 'published' }} {{ entry.isUnpublishedDraft ? 'provisional' }}">
+<div class="co-entry {{ entry.isDraft ? 'draft' : 'published' }} {{ entry.isUnpublishedDraft ? 'provisional' }} {{ sectionConfig.useEntryTypeColors and entry.type.color ? "co-type-#{entry.type.color.value}" }}"
+     
+>
+
 
     {% include [
         '_contentoverview/partials/entry_image.twig',
@@ -25,7 +28,7 @@
             ] %}
 
         </div>
-        <div class="co-text"  style="width:100%">
+        <div class="co-text" style="width:100%">
             <div class="co-title " style="width:100%">
 
                 {% include [
