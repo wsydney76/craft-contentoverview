@@ -348,6 +348,7 @@ function co_openSlideout(action, data = {}) {
 function co_registerElementSelect(elementSelectId, filterInputId, sectionPath) {
     // https://craftcms.stackexchange.com/questions/16853/how-to-watch-for-changes-on-an-element-select-relations-field
 
+    console.log(elementSelectId)
     elementSelect = $('#' + elementSelectId).data('elementSelect')
 
     elementSelect.on('selectElements', (e) => co_onElementSelectChange(e.target.$elements, filterInputId, sectionPath))
