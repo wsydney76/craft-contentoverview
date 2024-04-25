@@ -136,7 +136,7 @@ class BaseRelationFieldFilter extends BaseFieldFilter
             }
         }
         return Entry::find()
-            ->section($sections ?? null)
+            ->section($sections ?? '*')
             ->orderBy($this->orderBy)
             ->collect()
             ->map(fn($entry) => [
