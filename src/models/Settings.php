@@ -52,6 +52,7 @@ class Settings extends Model
     public bool $loadSectionsAsync = false;
     public string $linkTarget = '_blank';
     public array $pages = [];
+    public int $paginateDynamicRange = 10;
     public string $pluginTitle = 'Content Overview';
     public array|string|null $purifierConfig = null;
     public bool $replaceDashboard = false;

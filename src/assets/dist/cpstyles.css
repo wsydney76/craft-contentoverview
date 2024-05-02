@@ -30,12 +30,25 @@
     margin-right: 2px;
 }
 
-.co-paginate {
+.co-paginate-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 24px;
 }
 
-.co-paginate button {
-    font-weight: bolder;
+.co-paginate {
+    margin-top: 24px;
+    display: flex;
+}
+
+.co-paginate button, .co-paginate div {
+    /*font-weight: bolder;*/
+    margin-right: 8px;
+}
+
+.co-paginate button:hover {
+    text-decoration: underline;
 }
 
 .co-paginate .co-inactive {

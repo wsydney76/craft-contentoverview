@@ -3,27 +3,64 @@
 {# @var results \craft\db\Paginator #}
 
 {% if results.totalPages > 1 %}
-    <div class="co-paginate">
-        {% if results.currentPage > 1 %}
-            <button aria-label="{{ 'Previous page'|t('contentoverview') }}"
-                    onclick="co_getSectionHtml('{{ sectionPath }}', {{ results.currentPage - 1 }})">&lt;
-            </button>
-        {% else %}
-            <span class="co-inactive" aria-hidden="true">&lt;</span>
-        {% endif %}
+    <div class="co-paginate-wrapper">
+        <div class="co-paginate">
+            {% if results.currentPage > 1 %}
+                <button aria-label="{{ 'Previous page'|t('contentoverview') }}"
+                        onclick="co_getSectionHtml('{{ sectionPath }}', {{ results.currentPage - 1 }})">&lt;
+                </button>
+            {% else %}
+                <span class="co-inactive" aria-hidden="true">&lt;</span>
+            {% endif %}
 
-        <span class="co-pages">
+            <span class="co-pages">
             {{ "Page"|t('contentoverview') }} {{ results.currentPage }} {{ "of"|t('contentoverview') }} {{ results.totalPages }}
 
             ({{ results.totalResults }} {{ "total entries"|t('contentoverview') }})
         </span>
 
-        {% if results.currentPage < results.totalPages %}
-            <button aria-label="{{ 'Next page'|t('contentoverview') }}"
-                    onclick="co_getSectionHtml('{{ sectionPath }}', {{ results.currentPage + 1 }})">&gt;
-            </button>
-        {% else %}
-            <span class="co-inactive" aria-hidden="true">&gt;</span>
-        {% endif %}
+            {% if results.currentPage < results.totalPages %}
+                <button aria-label="{{ 'Next page'|t('contentoverview') }}"
+                        onclick="co_getSectionHtml('{{ sectionPath }}', {{ results.currentPage + 1 }})">&gt;
+                </button>
+            {% else %}
+                <span class="co-inactive" aria-hidden="true">&gt;</span>
+            {% endif %}
+        </div>
+
+        <div class="co-paginate">
+            {# Logic from craft\web\twig\variables\Paginate\dynamicRangeUrls #}
+            {% set maxUrls = craft.contentoverview.settings.paginateDynamicRange %}
+            {% set start = max(1, results.currentPage - floor(maxUrls / 2)) %}
+            {% set end = min(results.totalPages, start + maxUrls - 1) %}
+            {% if end - start < maxUrls %}
+                {% set start = max(1, end - maxUrls + 1) %}
+            {% endif %}
+
+            {% if start > 1 %}
+                <button aria-label="{{ 'Next page'|t('contentoverview') }}"
+                        onclick="co_getSectionHtml('{{ sectionPath }}', 1)">
+                    {{ 'First page'|t('contentoverview') }}
+                </button>
+            {% endif %}
+
+            {% for i in start..end %}
+                {% if i == results.currentPage %}
+                    <div style="font-weight: bold">{{ i }}</div>
+                {% else %}
+                    <button aria-label="{{ 'Next page'|t('contentoverview') }}" style="font-weight: normal"
+                            onclick="co_getSectionHtml('{{ sectionPath }}', {{ i }})">
+                        {{ i }}
+                    </button>
+                {% endif %}
+            {% endfor %}
+
+            {% if end < results.totalPages %}
+                <button aria-label="{{ 'Next page'|t('contentoverview') }}"
+                        onclick="co_getSectionHtml('{{ sectionPath }}', {{ results.totalPages }})">
+                    {{ 'Last page'|t('contentoverview') }} ({{ results.totalPages }})
+                </button>
+            {% endif %}
+        </div>
     </div>
 {% endif %}
