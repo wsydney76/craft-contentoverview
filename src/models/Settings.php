@@ -59,7 +59,7 @@ class Settings extends Model
     public bool $replaceDashboard = false;
     public bool $showLoadingIndicator = false;
     public string $showPages = 'nav';
-    public bool $showBreadCrumps = true;
+    public bool $showBreadCrumbs = true;
     public array $statusFilterOptions =  [
         ['label' => 'Drafts', 'value' => 'scope:drafts'],
         ['label' => 'My Drafts', 'value' => 'scope:drafts,ownDraftsOnly:true'],

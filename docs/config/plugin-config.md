@@ -267,7 +267,7 @@ Whether to remove dashboard link and redirect to contentoverview on login.
 'replaceDashboard' => true
 ```
 
-## showBreadCrumps
+## showBreadCrumbs
 
 * Type: `bool`
 * Default: `true`

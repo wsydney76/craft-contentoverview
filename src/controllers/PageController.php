@@ -48,7 +48,7 @@ class PageController extends Controller
 
     public function crumbs(Settings $settings): ?array
     {
-        if (!$settings->showBreadCrumps) {
+        if (!$settings->showBreadCrumbs) {
             return null;
         }
 

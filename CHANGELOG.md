@@ -8,9 +8,9 @@
 
 * Added Section Filter `$co->createSectionFilter()`
 * Added dynamic range page links to section pagination.
-* Added bread crumps to pages.
+* Added breadcrumbs to pages.
 * Added `paginateDynamicRange` plugin config
-* Added `showBreadCrumps` plugin setting
+* Added `showBreadCrumbs` plugin setting
 * Added `toponly` option to `showPages` plugin setting
 * Added `Enabled` to default `statusFilterOptions` plugin setting
 * Added `useEntryTypeColors` section setting
