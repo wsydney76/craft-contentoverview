@@ -1,5 +1,31 @@
 # Changelog
 
+## 6.0.0
+
+* Requires Craft 5
+
+### Added
+
+* Added Section Filter `$co->createSectionFilter()`
+* Added dynamic range page links to section pagination.
+* Added bread crumps to pages.
+* Added `paginateDynamicRange` plugin config
+* Added `showBreadCrumps` plugin setting
+* Added `toponly` option to `showPages` plugin setting
+* Added `Enabled` to default `statusFilterOptions` plugin setting
+* Added `useEntryTypeColors` section setting
+* Added missing `showImage()`, `showTitle()`, `showStatus()` methods to `TableSection` class.
+
+### Changed
+
+* Integrations now require the privat `_extras` plugin.
+* Updated some styling
+
+
+### Known issues
+
+* Use of element selects for filters is broken.
+
 ## 5.4.2 2023-08-05
 
 * Fixed an error in elementmap integration if there is only one site. 

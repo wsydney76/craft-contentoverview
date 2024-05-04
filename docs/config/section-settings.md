@@ -374,3 +374,14 @@ An object template that will be rendered for the title in a layout.
 ```php
 ->titleObjectTemplate('{lastName}, {firstName}')
 ```
+
+## useEntryTypeColors
+
+* Type: `bool`
+* Default: `false`
+
+Whether to use the color of the entry type for the card background.
+
+```php
+->useEntryTypeColors(true)
+```
