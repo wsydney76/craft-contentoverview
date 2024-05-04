@@ -609,7 +609,7 @@ class Section extends BaseSection
     }
 
 
-    public function getTransform(): array
+    public function getTransform(): ?array
     {
         $transform = Plugin::getInstance()->getSettings()->transforms[$this->getLayout()];
 

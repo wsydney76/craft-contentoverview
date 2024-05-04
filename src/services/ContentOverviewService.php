@@ -207,6 +207,14 @@ class ContentOverviewService extends BaseModel
         ]);
     }
 
+    public function createSectionFilter()
+    {
+        return Craft::createObject([
+            'class' => Plugin::getInstance()->getSettings()->sectionFilterClass,
+            'handle' => 'section'
+        ]);
+    }
+
     public function createCustomFilter(string $className): CustomFilter
     {
         return Craft::createObject([

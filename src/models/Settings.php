@@ -10,6 +10,7 @@ use wsydney76\contentoverview\models\filters\CustomFilter;
 use wsydney76\contentoverview\models\filters\EntriesFieldFilter;
 use wsydney76\contentoverview\models\filters\MatrixFieldFilter;
 use wsydney76\contentoverview\models\filters\OptionsFilter;
+use wsydney76\contentoverview\models\filters\SectionFilter;
 use wsydney76\contentoverview\models\filters\StatusFilter;
 use wsydney76\contentoverview\models\filters\UsersFieldFilter;
 use wsydney76\contentoverview\services\ContentOverviewService;
@@ -52,16 +53,18 @@ class Settings extends Model
     public bool $loadSectionsAsync = false;
     public string $linkTarget = '_blank';
     public array $pages = [];
-    public int $paginateDynamicRange = 10;
+    public int $paginateDynamicRange = 9;
     public string $pluginTitle = 'Content Overview';
     public array|string|null $purifierConfig = null;
     public bool $replaceDashboard = false;
     public bool $showLoadingIndicator = false;
     public string $showPages = 'nav';
+    public bool $showBreadCrumps = true;
     public array $statusFilterOptions =  [
         ['label' => 'Drafts', 'value' => 'scope:drafts'],
         ['label' => 'My Drafts', 'value' => 'scope:drafts,ownDraftsOnly:true'],
         ['label' => 'My Provisional Drafts', 'value' => 'scope:provisional,ownDraftsOnly:true'],
+        ['label' => 'Enabled', 'value' => 'status:enabled'],
         ['label' => 'Disabled', 'value' => 'status:disabled'],
         ['label' => 'Expired', 'value' => 'status:expired'],
         ['label' => 'Pending', 'value' => 'status:pending'],
@@ -86,6 +89,7 @@ class Settings extends Model
     public string $sectionClass = Section::class;
     public string $actionClass = Action::class;
     public string $filterClass = Filter::class;
+    public string $sectionFilterClass = SectionFilter::class;
     public string $statusFilterClass = StatusFilter::class;
     public string $usersFieldFilterClass = UsersFieldFilter::class;
     public string $entriesFieldFilterClass = EntriesFieldFilter::class;

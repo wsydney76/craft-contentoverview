@@ -84,7 +84,7 @@ class Plugin extends \craft\base\Plugin
 
         $showPages = $settings->getUserSetting('showPages');
 
-        if ($showPages === 'nav' || $showPages === 'sidebar') {
+        if (in_array($showPages, ['nav', 'sidebar', 'toponly'])) {
             Event::on(
                 Cp::class,
                 Cp::EVENT_REGISTER_CP_NAV_ITEMS,

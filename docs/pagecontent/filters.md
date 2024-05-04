@@ -55,6 +55,10 @@ You can use the `useSelectize` or `useElementSelect` settings (see below) for a 
 
 ### Using element select modals (experimental)
 
+::: danger This is broken in Craft 5  
+Use selectize instead.
+:::
+
 Instead of using a select box you can use Crafts element select modals to pick your filter element.
 
 ```php
@@ -86,6 +90,16 @@ $co->createElementSelectFilter('topics'),
 $co->createElementSelectFilter('cast.persons', 'in', true, 'and')
 
 $co->createElementSelectFilter('assignedTo', multipleSelect: true, operator: 'and'),
+```
+
+## Section filter
+
+Filter by section.
+
+Channel and structure section only. 
+
+```php
+$co->createSectionFilter()
 ```
 
 ## Status filter
@@ -237,8 +251,9 @@ Entries/users field filters only.
 
 Use Crafts element select modal to select elements.
 
-::: warning
+::: danger This is broken in Craft 5
 Experimental. Uses a lot of undocumented stuff, will not trigger all events or filter class methods.
+Use selectize instead.
 :::
 
 ### selectLimit

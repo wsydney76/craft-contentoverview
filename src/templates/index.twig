@@ -5,14 +5,15 @@
 
 {% extends "_layouts/cp.twig" %}
 
-
 {% set selectedSubnavItem  = page.pageKey %}
 
 {# Do not output two identical headings #}
 
 {% set pluginTitle = settings.pluginTitle|t('site') %}
 {% set pageLabel = page.label|t('site') %}
-{% set title = pluginTitle == pageLabel ? pluginTitle :  pluginTitle ~ ': ' ~ pageLabel %}
+{#{% set title = pluginTitle == pageLabel ? pluginTitle :  pluginTitle ~ ': ' ~ pageLabel %}#}
+{% set title = pluginTitle == pageLabel ? pluginTitle :  pageLabel %}
+
 
 {% set pageTabs = page.tabs %}
 
@@ -77,4 +78,4 @@
         fill: var(--{{ color.value}}-800)
     }
 {% endfor %}
-{% endcss %}#}
+{% endcss %} #}

@@ -82,4 +82,21 @@ class TableSection extends Section
     {
         return Plugin::getInstance()->getSettings()->transforms['table'];
     }
+
+    public function showImage($show = true): static
+    {
+        $this->showImage = $show;
+        return $this;
+    }
+    public function showStatus($show = true): static
+    {
+        $this->showStatus = $show;
+        return $this;
+    }
+
+    public function showTitle($show = true): static
+    {
+        $this->showTitle = $show;
+        return $this;
+    }
 }

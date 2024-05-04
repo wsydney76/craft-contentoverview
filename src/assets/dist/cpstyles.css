@@ -142,6 +142,10 @@
     margin-bottom: 8px;
 }
 
+.co-search-container input {
+    min-width: 200px;
+}
+
 .co-search {
     margin-bottom: 8px;
 }
@@ -234,7 +238,7 @@
   ==========================================*/
 
 .co-list .co-entries {
-    display: grid;
+    display: block;
 }
 
 .co-list .co-entry {
