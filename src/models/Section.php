@@ -9,6 +9,7 @@ use craft\elements\db\ElementQueryInterface;
 use craft\elements\Entry;
 use craft\errors\InvalidFieldException;
 use craft\helpers\Cp;
+use craft\services\Deprecator;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineActionsEvent;
 use wsydney76\contentoverview\events\DefineFiltersEvent;
@@ -36,7 +37,8 @@ class Section extends BaseSection
     public const EVENT_DEFINE_ICON = 'defineIconEvent';
 
     public array $actions = [];
-    public bool $allSites = false;
+    public bool $allSitesDistinct = false;
+    public bool $allSitesUnique = false;
     public array|string $entryType = '';
     public array|string $fallbackImageField = [];
     public ?array $filters = null;
@@ -89,16 +91,47 @@ class Section extends BaseSection
     }
 
     /**
-     * Whether to show (unique) entries from all sites
+     * Whether to show unique entries from all sites
+     *
+     * Default = false
+     *
+     * @param bool $allSites
+     * @return $this
+     * @deprecated use allSitesUnique instead
+     *
+     */
+    public function allSites(bool $allSites = true): self
+    {
+        (new Deprecator())->log('coAllSites', 'Section::allSites() is deprecated. Use allSitesUnique instead.');
+        $this->allSitesUnique = $allSites;
+        return $this;
+    }
+
+    /**
+     * Whether to show unique entries from all sites
      *
      * Default = false
      *
      * @param bool $allSites
      * @return $this
      */
-    public function allSites(bool $allSites): self
+    public function allSitesUnique(bool $allSites = true): self
     {
-        $this->allSites = $allSites;
+        $this->allSitesUnique = $allSites;
+        return $this;
+    }
+
+    /**
+     * Whether to show distinct entries from all sites
+     *
+     * Default = false
+     *
+     * @param bool $allSitesDistinct
+     * @return $this
+     */
+    public function allSitesDistinct(bool $allSites = true): self
+    {
+        $this->allSitesDistinct = $allSites;
         return $this;
     }
 
@@ -730,7 +763,7 @@ class Section extends BaseSection
 
         $actions = collect($this->actions)
             ->transform(function(Action|string $action) use ($integrationActions) {
-                return is_string($action) &&  isset($integrationActions[$action]) ?
+                return is_string($action) && isset($integrationActions[$action]) ?
                     Craft::createObject($integrationActions[$action]) :
                     $action;
             })
@@ -824,14 +857,15 @@ class Section extends BaseSection
             $query->status($this->status);
         }
 
-        if ($this->allSites) {
+        if ($this->allSitesUnique) {
             $query
                 ->site('*')
                 ->unique()
-                ->preferSites([$requestedSite]);
+                ->preferSites([$requestedSite->handle]);
+        } else if ($this->allSitesDistinct) {
+            $query->site('*');
         } else {
-            $query
-                ->site($requestedSite);
+            $query->site($requestedSite);
         }
 
         if ($this->imageField) {

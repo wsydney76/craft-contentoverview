@@ -5,7 +5,6 @@ namespace wsydney76\contentoverview\controllers;
 use Craft;
 use craft\enums\Color;
 use craft\web\Controller;
-use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -69,16 +68,15 @@ class PageController extends Controller
                     'items' => $pages
                         ->filter(fn($page) => $page->pageKey !== '')
                         ->map(fn($page) => [
-                        'label' => Craft::t('site', $page->label),
-                        'url' => $page->url,
-                        'selected' => $page->url === Craft::$app->request->pathInfo ||
-                            (Craft::$app->request->pathInfo === 'contentoverview' && $page->pageKey === $settings->defaultPage)
+                            'label' => Craft::t('site', $page->label),
+                            'url' => $page->url,
+                            'selected' => $page->url === Craft::$app->request->pathInfo ||
+                                (Craft::$app->request->pathInfo === 'contentoverview' && $page->pageKey === $settings->defaultPage)
                             ,
-                    ])->toArray(),
+                        ])->toArray(),
                 ],
             ];
         }
-
 
 
         // Gather other widget types and generate a disclosure-menu-compatible list:

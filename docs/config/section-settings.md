@@ -7,11 +7,12 @@ $co->createSection(
     ->layout('cards')
 ```
 
-If no default value is mentioned, the setting will default to `empty` (empty string, empty array, null, depending on the type).
+If no default value is mentioned, the setting will default to `empty` (empty string, empty array, null, depending on the
+type).
 
-## actions 
+## actions
 
-* Type: `array` 
+* Type: `array`
 
 The actions available to the section. See [Actions](../pagecontent/actions).
 
@@ -26,18 +27,33 @@ The actions available to the section. See [Actions](../pagecontent/actions).
 
 ```
 
-## allSites 
+## allSitesDistinct
 
 * Type: `bool`
-* Default: `false` 
+* Default: `false`
+
+true = display distinct entries from all sites.
+
+This is especially useful for single sections that are used in a multi-site setup.
+
+```php
+->allSitesDistinct(true)
+```
+
+## allSitesUnique
+
+* Type: `bool`
+* Default: `false`
 
 true = display unique entries from all sites.
 
+Do not use this for single sections that are used in a multi-site setup.
+
 ```php
-->allSites(true)
+->allSitesUnique(true)
 ```
 
-## entryType 
+## entryType
 
 * Type: `array|string`
 
@@ -47,7 +63,7 @@ Narrow query results by entryType handle
 ->entryType('privacy')
 ```
 
-## fallbackImageField 
+## fallbackImageField
 
 * Type: `array|string`
 
@@ -57,7 +73,7 @@ Name of an image field to use if there is no image set in `imageField`.
 ->fallbackImageField('photo')
 ```
 
-## filters 
+## filters
 
 * Type: `array`
 
@@ -85,7 +101,7 @@ Positions of filter inputs.
 ->filtersPosition('bottom')
 ```
 
-## heading 
+## heading
 
 * Type: `string`
 
@@ -95,7 +111,7 @@ Heading of the section. The `Section::getHeading()` method will return Crafts se
 ->heading('Upcoming Events')
 ```
 
-## help 
+## help
 
 * Type: `array|string`
 
@@ -105,7 +121,7 @@ Help text for the section. See [Help](../pagecontent/help) for more options.
 ->help('Help is on the way!')
 ```
 
-## icon 
+## icon
 
 * Type: `array|string`
 
@@ -117,10 +133,10 @@ See [Multi Section Setup](./page-config#multi-section-setup).
 ->icon('@appicons/wand.svg')
 ```
 
-## iconBgColor 
+## iconBgColor
 
 * Type: `string`
-* Default: `var(--gray-200)` 
+* Default: `var(--gray-200)`
 
 The background color for an icon.
 
@@ -128,7 +144,7 @@ The background color for an icon.
 ->iconBgColor('#e4e4e4')
 ```
 
-## imageField 
+## imageField
 
 * Type: `array|string`
 
@@ -140,7 +156,7 @@ See [Multi Section Setup](./page-config#multi-section-setup).
 ->imageField('featuredImage')
 ```
 
-## imageRatio 
+## imageRatio
 
 * Type: `float`
 
@@ -152,7 +168,7 @@ If empty, the [transforms](./plugin-config#transforms) setting wil determine the
 ->imageRatio(5/4)
 ```
 
-## info 
+## info
 
 * Type: `string|array`
 
@@ -164,11 +180,19 @@ See [Multi Section Setup](./page-config#multi-section-setup).
 ->info('{postDate|date("short")}')
 ```
 
-## infoTemplate 
+This is a full [object twig template](https://craftcms.com/docs/5.x/system/object-templates.html), so you can use any
+twig code you like.
+
+```php
+->info('{{ "Page"|t }}: {{ object.pages.eagerly().all|map(p => p.link)|join(", ")}}')
+````
+
+## infoTemplate
 
 * Type: `string|array`
 
-Path to a twig template inside the [custom template root](./plugin-config#customtemplateroot). Will be called with `entry` and `sectionConfig` variable.
+Path to a twig template inside the [custom template root](./plugin-config#customtemplateroot). Will be called
+with `entry` and `sectionConfig` variable.
 
 See [Multi Section Setup](./page-config#multi-section-setup).
 
@@ -176,22 +200,23 @@ See [Multi Section Setup](./page-config#multi-section-setup).
 ->infoTemplate('infos/workflowstatus.twig')
 ```
 
-## layout 
+## layout
 
 * Type: `string`
 
 The layout used to display entries. (list|cardlets|cards|line|table)
 
-The `Section::getLayout()` method will take the [defaultLayout](./plugin-config#defaultlayout) plugin setting into account, if this setting is empty.
+The `Section::getLayout()` method will take the [defaultLayout](./plugin-config#defaultlayout) plugin setting into
+account, if this setting is empty.
 
 ```php
 ->layout('cards')
 ```
 
-## limit 
+## limit
 
 * Type: `int`
-* Default: `9999` 
+* Default: `9999`
 
 Number of entries to show on one section page.
 
@@ -199,9 +224,9 @@ Number of entries to show on one section page.
 ->limit(12)
 ```
 
-## linkToPage 
+## linkToPage
 
-* Type: `string` 
+* Type: `string`
 
 The key of a page the heading is linked to. May contain an anchor, e.g. `page1#tab1`.
 
@@ -221,10 +246,10 @@ See [docs](https://craftcms.com/docs/4.x/entries.html#orderby)
 ->orderBy('postDate desc')
 ```
 
-## ownDraftsOnly 
+## ownDraftsOnly
 
 * Type: `bool`
-* Default: `false` 
+* Default: `false`
 
 If true and scope is defined: show only drafts created by the current user.
 
@@ -232,7 +257,7 @@ If true and scope is defined: show only drafts created by the current user.
 ->ownDraftsOnly(true)
 ```
 
-## query 
+## query
 
 * Type: `ElementQuery`
 
@@ -245,9 +270,9 @@ use craft\elements\Entry;
 ->query(Entry::find()->customField('value'))
 ```
 
-## scope 
+## scope
 
-* Type: `string` 
+* Type: `string`
 
 Whether drafts should be shown.
 
@@ -262,10 +287,10 @@ If empty, only 'published' entries will be included.
 ->scope('drafts')
 ```
 
-## search 
+## search
 
 * Type: `bool`
-* Default: `false` 
+* Default: `false`
 
 Whether search will be enabled.
 
@@ -286,22 +311,23 @@ Prefixes for search. See [Searching](../pagecontent/search#search-attributes).
 ])
 ``` 
 
-## section 
+## section
 
 * Type: `array|string`
 
 Craft section handle(s).
 
-Will be passed to the section query, however if a `query` setting is set, it will only be used for default headings/permission checks.
+Will be passed to the section query, however if a `query` setting is set, it will only be used for default
+headings/permission checks.
 
 ```php
 ->section('news')
 ```
 
-## showIndexButton 
+## showIndexButton
 
 * Type: `bool`
-* Default: `true` 
+* Default: `true`
 
 Whether button 'All entries' will be shown.
 
@@ -309,7 +335,7 @@ Whether button 'All entries' will be shown.
 ->showIndexButton(false)
 ```
 
-## showNewButton 
+## showNewButton
 
 * Type: `bool`
 * Default: `true`
@@ -320,8 +346,7 @@ Whether button 'New entry' will be shown.
 ->showNewButton(false)
 ```
 
-
-## showRefreshButton 
+## showRefreshButton
 
 * Type: `bool`
 * Default: `true`
@@ -332,8 +357,7 @@ Whether to show a refresh button for this section.
 ->showRefreshButton(false)
 ```
 
-
-## size 
+## size
 
 string, the grid colum size of an entry for layouts card, cardlet. (tiny|small|medum|large|card)
 
@@ -341,7 +365,7 @@ string, the grid colum size of an entry for layouts card, cardlet. (tiny|small|m
 ->size('small')
 ```
 
-## sortByScore 
+## sortByScore
 
 * Type: `bool`
 * Default: `false`
@@ -352,7 +376,7 @@ Whether search results will be sorted by score.
 ->sortByScore(true)
 ```
 
-## status 
+## status
 
 * Type: `string|array`
 
@@ -364,10 +388,10 @@ If empty, all entries with all status (live, disabled, pending, expired) will be
 ->status('pending')
 ```
 
-## titleObjectTemplate 
+## titleObjectTemplate
 
 * Type: `string`
-* Default: `{title}` 
+* Default: `{title}`
 
 An object template that will be rendered for the title in a layout.
 

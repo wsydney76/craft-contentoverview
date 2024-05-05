@@ -20,9 +20,10 @@
             {% set altText = view.renderObjectTemplate(settings.altTemplate, image) %}
             {% if settings.useImagerX and craft.app.plugins.pluginEnabled('imager-x') %}
                 {% set transformedImage = craft.imager.transformImage(image, transform) %}
-                <img src="{{ transformedImage.url }}" alt="{{ altText }}">
+                <img src="{{ transformedImage.url }}" alt="{{ altText }}"
+                     title="{{ 'Edit in slideout'|t('contentoverview') }}">
             {% else %}
-                {{ image.img(transform)|attr({alt: altText}) }}
+                {{ image.img(transform)|attr({alt: altText, title: 'Edit in slideout'|t('contentoverview')}) }}
             {% endif %}
 
         {% else %}
