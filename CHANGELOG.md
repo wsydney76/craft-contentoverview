@@ -22,6 +22,8 @@
 * Updated some styling
 * Split the `allSites()` section setting into `allSitesUnique` and `allSitesDistinct`
 * Deprecated the `allSites()` section setting
+* The values for the `size()` section settings are now by default `tiny`, `small`, `medium`, `large` and `huge`, the
+  corresponding CSS width values are now significantly smaller and take the container width into account.
 
 ### Known issues
 

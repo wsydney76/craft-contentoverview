@@ -44,10 +44,11 @@ class Settings extends Model
     ];
     // 'min,max' 1fr = fill up grid row
     public array $layoutWidth = [
-        'tiny' => '10rem,1fr',
-        'small' => '16rem,1fr',
-        'medium' => '24rem,1fr',
-        'large' => '36rem,1fr',
+        'tiny' => '6rem,1fr',
+        'small' => '9rem,1fr',
+        'medium' => '12rem,1fr',
+        'large' => '15rem,1fr',
+        'huge' => '18rem,1fr',
         'card' => '280px,450px' // don't let cards exceed the image width
     ];
     public bool $loadSectionsAsync = false;
@@ -60,7 +61,7 @@ class Settings extends Model
     public bool $showLoadingIndicator = false;
     public string $showPages = 'nav';
     public bool $showBreadCrumbs = true;
-    public array $statusFilterOptions =  [
+    public array $statusFilterOptions = [
         ['label' => 'Drafts', 'value' => 'scope:drafts'],
         ['label' => 'My Drafts', 'value' => 'scope:drafts,ownDraftsOnly:true'],
         ['label' => 'My Provisional Drafts', 'value' => 'scope:provisional,ownDraftsOnly:true'],

@@ -136,7 +136,8 @@ class Section extends BaseSection
     }
 
     /**
-     * Sets horizontal size of layouts: small, medium, large
+     * Sets horizontal size of layouts: by default: tiny, small, medium, large, huge
+     * or as defined in plugin setting 'layoutWidth'
      *
      * @param string $size
      * @return $this
