@@ -45,6 +45,7 @@ class Section extends BaseSection
     public string $filtersPosition = 'inline';
     public array|string $icon = [];
     public string $iconBgColor = 'var(--gray-200)';
+    public string $iconTooltip = '';
     public array|string $imageField = [];
     public ?float $imageRatio = null;
     public array|string $info = '';
@@ -76,6 +77,7 @@ class Section extends BaseSection
 
     protected $_layouts = ['list', 'cardlets', 'cards', 'line', 'table'];
 
+    protected mixed $fallbackImage = 'undefined';
 
     /**
      * Array of actions
@@ -240,6 +242,19 @@ class Section extends BaseSection
     }
 
     /**
+     * Tooltip for icon, will be displayed on hover
+     *
+     * @param string $iconBgColor
+     * @return $this
+     */
+    public function iconTooltip(string $iconTooltip): self
+    {
+        $this->iconTooltip = $iconTooltip;
+        return $this;
+    }
+
+
+    /**
      * Get icon for entry
      *
      * @param $entry
@@ -249,22 +264,25 @@ class Section extends BaseSection
     {
         $icon = $this->_getConfigForEntry('icon', $entry);
         $iconBgColor = $this->_getConfigForEntry('iconBgColor', $entry);
-
+        $iconTooltip = $this->_getConfigForEntry('iconTooltip', $entry);
 
         if ($this->hasEventHandlers(self::EVENT_DEFINE_ICON)) {
             $event = new DefineIconEvent([
                 'entry' => $entry,
                 'icon' => $icon,
-                'iconBgColor' => $iconBgColor
+                'iconBgColor' => $iconBgColor,
+                'iconTooltip' => $iconTooltip,
             ]);
             $this->trigger(self::EVENT_DEFINE_ICON, $event);
             $icon = $event->icon;
             $iconBgColor = $event->iconBgColor;
+            $iconTooltip = $event->iconTooltip;
         }
 
         return [
             'icon' => $icon,
-            'iconBgColor' => $iconBgColor
+            'iconBgColor' => $iconBgColor,
+            'iconTooltip' => $iconTooltip
         ];
     }
 
@@ -359,9 +377,10 @@ class Section extends BaseSection
      * @param Entry $entry
      * @return array|string
      */
-    public function getInfo(Entry $entry): string
+    public function getInfo(Entry $entry): array|string
     {
-        return $this->_getConfigForEntry('info', $entry);
+        return $this->info;
+        // return $this->_getConfigForEntry('info', $entry);
     }
 
     /**
@@ -381,7 +400,16 @@ class Section extends BaseSection
         $info = $this->getInfo($entry);
 
         if ($info) {
-            return Craft::$app->view->renderObjectTemplate($info, $entry);
+
+            if (is_string($info)) {
+                return Craft::$app->view->renderObjectTemplate($info, $entry);
+            }
+
+            $content = [];
+            foreach ($info as $line) {
+                $content[] = Craft::$app->view->renderObjectTemplate($line, $entry);
+            }
+            return implode('<br>', $content);
         }
 
         $infoTemplate = $this->getInfoTemplate($entry);
@@ -750,11 +778,34 @@ class Section extends BaseSection
                 }
             }
             if (!$image) {
-                $image = Plugin::getInstance()->getSettings()->fallbackImage;
+                // \Craft::dd($this->getFallbackImage());
+                $image = $this->getFallbackImage();
             }
         }
 
         return $image;
+    }
+
+    protected function getFallbackImage(): ?Asset
+    {
+
+        if ($this->fallbackImage !== 'undefined') {
+            return $this->fallbackImage;
+        }
+
+        $imageSource = Plugin::getInstance()->getSettings()->fallbackImageSource;
+
+        if ($imageSource && is_array($imageSource) && isset($imageSource['section']) && isset($imageSource['field'])) {
+            $fallbackEntry = Entry::find()
+                ->section($imageSource['section'])
+                ->one();
+
+            if ($fallbackEntry) {
+                $this->fallbackImage = $fallbackEntry->getFieldValue($imageSource['field'])->one();
+            }
+        }
+
+        return $this->fallbackImage;
     }
 
     public function getActions(Entry $entry): Collection

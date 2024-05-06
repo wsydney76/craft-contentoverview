@@ -12,4 +12,5 @@ class DefineIconEvent extends Event
     public Entry $entry;
     public ?string $icon = null;
     public ?string $iconBgColor = null;
+    public ?string $iconTooltip = null;
 }

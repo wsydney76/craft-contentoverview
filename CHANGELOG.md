@@ -12,6 +12,7 @@
 * Added `paginateDynamicRange` plugin config
 * Added `showBreadCrumbs` plugin setting
 * Added `toponly` option to `showPages` plugin setting
+* Added `fallbackImageSource` plugin setting
 * Added `Enabled` to default `statusFilterOptions` plugin setting
 * Added `useEntryTypeColors` section setting
 * Added missing `showImage()`, `showTitle()`, `showStatus()` methods to `TableSection` class.
@@ -22,12 +23,18 @@
 * Updated some styling
 * Split the `allSites()` section setting into `allSitesUnique` and `allSitesDistinct`
 * Deprecated the `allSites()` section setting
+* Deprecated the `fallbackImage` plugin setting
 * The values for the `size()` section settings are now by default `tiny`, `small`, `medium`, `large` and `huge`, the
   corresponding CSS width values are now significantly smaller and take the container width into account.
+
+### Fixed
+
+* Fixed a bug where nothing was displayed if the `info()` section method was called with an array of object templates.
 
 ### Known issues
 
 * Use of element selects for filters is broken.
+* There is a styling issue in breadcrumbs in multi-site installations.
 
 ## 5.4.2 2023-08-05
 

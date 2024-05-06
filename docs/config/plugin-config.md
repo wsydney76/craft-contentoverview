@@ -138,14 +138,34 @@ Whether to enable dashboard widgets that display a single tab.
 
 ## fallbackImage 
 
+_Deprecated, use fallbackImageSource instead_
+
+Reason: Placing this in a config file will lead to warnings that the query is executed before Craft is fully initialized.
+
 * Type: `Asset`
 
 An image that will be used in a layout if no image is set on an entry.
 
 ```php
-'fallbackImage' => GlobalSet::find()
-    ->handle('siteInfo')->one()
+'fallbackImage' => Entry::find()
+    ->section('siteInfo')->one()
     ->featuredImage->one(),
+```
+
+## fallbackImageSource
+
+* Type: `array{section: string, field: string}`
+
+The source of an image that will be used in a layout if no image is set on an entry.
+
+`section`: The handle of a single section
+`field`: The handle of an assets field
+
+```php
+'fallbackImageSource' => [
+    'section' => 'siteInfo',
+    'field' => 'featuredImage'
+],
 ```
 
 ## hideUnpermittedSections 

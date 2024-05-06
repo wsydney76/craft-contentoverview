@@ -35,7 +35,12 @@ class Settings extends Model
     public bool $enableWidgets = true;
     public array $externalCssFiles = [];
     public array $extraPermissions = [];
+
+    /** @deprecated use fallbackImageSource instead */
     public ?Asset $fallbackImage = null;
+
+    /** keys: section,field  */
+    public ?array $fallbackImageSource = null;
     public bool $hideUnpermittedSections = false;
     public array $iconSize = ['width' => '20px', 'height' => '20px'];
     public array $layoutSizes = [
@@ -73,7 +78,7 @@ class Settings extends Model
 
     ];
     public array $transforms = [
-        'list' => ['width' => 50, 'height' => 50, 'format' => 'webp'],
+        'list' => ['width' => 50, 'height' => 80, 'format' => 'webp'],
         'cardlets' => ['width' => 150, 'height' => 150, 'format' => 'webp'],
         'cards' => ['width' => 450, 'height' => 225, 'format' => 'webp'],
         'line' => null, // no image in line layout
