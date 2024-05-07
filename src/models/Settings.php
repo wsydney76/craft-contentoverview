@@ -36,9 +36,6 @@ class Settings extends Model
     public array $externalCssFiles = [];
     public array $extraPermissions = [];
 
-    /** @deprecated use fallbackImageSource instead */
-    public ?Asset $fallbackImage = null;
-
     /** keys: section,field  */
     public ?array $fallbackImageSource = null;
     public bool $hideUnpermittedSections = false;

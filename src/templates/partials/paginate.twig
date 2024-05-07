@@ -40,8 +40,12 @@
             {% if start > 1 %}
                 <button aria-label="{{ 'Next page'|t('contentoverview') }}"
                         onclick="co_getSectionHtml('{{ sectionPath }}', 1)">
-                    {{ 'First page'|t('contentoverview') }}
+                    1
                 </button>
+            {% endif %}
+
+            {% if start > 2 %}
+                <div>...</div>
             {% endif %}
 
             {% for i in start..end %}
@@ -55,10 +59,14 @@
                 {% endif %}
             {% endfor %}
 
+            {% if end < (results.totalPages - 1) %}
+                <div>...</div>
+            {% endif %}
+
             {% if end < results.totalPages %}
                 <button aria-label="{{ 'Next page'|t('contentoverview') }}"
                         onclick="co_getSectionHtml('{{ sectionPath }}', {{ results.totalPages }})">
-                    {{ 'Last page'|t('contentoverview') }} ({{ results.totalPages }})
+                    {{ results.totalPages }}
                 </button>
             {% endif %}
         </div>

@@ -778,7 +778,6 @@ class Section extends BaseSection
                 }
             }
             if (!$image) {
-                // \Craft::dd($this->getFallbackImage());
                 $image = $this->getFallbackImage();
             }
         }
@@ -802,7 +801,11 @@ class Section extends BaseSection
 
             if ($fallbackEntry) {
                 $this->fallbackImage = $fallbackEntry->getFieldValue($imageSource['field'])->one();
+            } else {
+                $this->fallbackImage = null;
             }
+        } else {
+            $this->fallbackImage = null;
         }
 
         return $this->fallbackImage;
@@ -850,6 +853,9 @@ class Section extends BaseSection
      */
     public function getEntries(array $params = []): Paginator
     {
+
+        // DumpPanel::dump($params, __FILE__, __LINE__);
+
         $query = $this->getQuery($params);
         return new Paginator($query, [
             'currentPage' => $params['sectionPageNo'] ?? 1,
