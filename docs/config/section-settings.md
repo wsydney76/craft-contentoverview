@@ -152,7 +152,8 @@ The tooltip for an icon, that will be displayed on hover.
 
 If used as a section setting, this tooltip will be displayed for all entries in the section.
 
-However, this is particularly useful if, depending on the entry data, different icons are set via the `EVENT_DEFINE_ICON` event or the `getIconData()` method of a user-defined section class.
+However, this is particularly useful if, depending on the entry data, different icons are set via
+the `EVENT_DEFINE_ICON` event or the `getIconData()` method of a user-defined section class.
 
 ```php
 ->iconTooltip('Storage location no longer available')
@@ -336,6 +337,14 @@ headings/permission checks.
 
 ```php
 ->section('news')
+->section(['news', 'events'])
+```
+
+If a string is passed that ends with `*`, all sections starting with this string will be included.
+
+```php 
+/* Will match 'homepage', 'homepage-en', 'homepage-de', etc. */
+->section('homepage*')
 ```
 
 ## showIndexButton

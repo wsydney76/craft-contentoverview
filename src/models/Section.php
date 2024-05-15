@@ -26,6 +26,7 @@ use function in_array;
 use function is_array;
 use function is_string;
 use function round;
+use function str_replace;
 
 class Section extends BaseSection
 {
@@ -492,7 +493,19 @@ class Section extends BaseSection
      */
     public function section(array|string $section): self
     {
-        $this->section = $section;
+
+        // if $this->section ends with *, we will search for all sections with a handle starting with $this->section
+        if (is_string($section) && str_ends_with($section, '*')) {
+            $selectedSections = [];
+            foreach (Craft::$app->entries->getAllSections() as $curSection) {
+                if (str_starts_with($curSection->handle, str_replace('*', '', $section))) {
+                    $selectedSections[] = $curSection->handle;
+                }
+            }
+            $this->section = $selectedSections;
+        } else {
+            $this->section = $section;
+        }
         return $this;
     }
 

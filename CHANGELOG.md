@@ -26,6 +26,7 @@
 * Removed the `fallbackImage` plugin setting
 * The values for the `size()` section settings are now by default `tiny`, `small`, `medium`, `large` and `huge`, the
   corresponding CSS width values are now significantly smaller and take the container width into account.
+* The `section()` section setting now accepts a string ending with a wildcard, e.g. `->section('homepage*')`.
 
 ### Fixed
 
