@@ -986,7 +986,7 @@ class Section extends BaseSection
         switch ($this->scope) {
             case 'drafts':
             {
-                $query->drafts(true);
+                $query->drafts(true)->savedDraftsOnly();
                 break;
             }
             case 'provisional':
