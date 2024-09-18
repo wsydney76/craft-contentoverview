@@ -16,7 +16,7 @@ use function explode;
  */
 class BaseRelationFieldFilter extends BaseFieldFilter
 {
-    public string $orderBy = '';
+    public string|array $orderBy = '';
     public int $selectLimit = 1;
     public string $multiSelectOperator = 'or';
     public string $direction = 'both';
@@ -27,7 +27,7 @@ class BaseRelationFieldFilter extends BaseFieldFilter
      * @param string $orderBy
      * @return $this
      */
-    public function orderBy(string $orderBy): self
+    public function orderBy(string|array $orderBy): self
     {
         $this->orderBy = $orderBy;
         return $this;
