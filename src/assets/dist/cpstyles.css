@@ -10,6 +10,7 @@
 .co-title {
     display: flex;
     align-items: flex-start;
+
 }
 
 .co-title .co-action-icon {
@@ -231,6 +232,11 @@
 .co-slideout-body {
     padding: 24px;
 
+}
+
+
+.co-entry {
+    overflow: hidden;
 }
 
 /* ========================================
