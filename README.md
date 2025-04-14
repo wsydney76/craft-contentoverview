@@ -2,6 +2,10 @@
 
 This plugin shows configurable overviews of a site's content.
 
+## Craft 5
+
+Tagged 6.0.0: Provisionally updated for Craft 5. Tested only the subset of features currently used specific projects, so things may break elsewhere.
+
 ## Documentation
 
 Detailed docs are available at [https://wsydney76.github.io/craft-contentoverview/](https://wsydney76.github.io/craft-contentoverview/).
