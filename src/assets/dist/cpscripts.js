@@ -293,13 +293,8 @@ function co_compare(draftId, siteId, isProvisionalDraft) {
 }
 
 // from elementmap plugin
-function co_relationships(ajaxBaseUrl, draftId, element) {
+function co_relationships(ajaxBaseUrl, element) {
     // if ajaxBaseUrl contains a query string, append the draftId to it
-    if (ajaxBaseUrl.indexOf('?') !== -1) {
-        ajaxBaseUrl += '&draftId=' + draftId;
-    } else {
-        ajaxBaseUrl += '?draftId=' + draftId;
-    }
 
     $.get(ajaxBaseUrl)
         .done(function(data) {
@@ -309,7 +304,7 @@ function co_relationships(ajaxBaseUrl, draftId, element) {
             });
         })
         .fail(function() {
-            alert("error");
+            alert("Error");
         });
 }
 

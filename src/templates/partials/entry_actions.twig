@@ -79,9 +79,9 @@
 
             {% case "relationships" %}
                 {% if craft.app.plugins.pluginEnabled('_extras') %}
-                    {% set ajaxBaseUrl = cpUrl("elementmap-getrelations/#{entry.site.handle}/entry/#{entry.canonicalId}") %}
+                    {% set ajaxBaseUrl = cpUrl("elementmap-getrelations/#{entry.site.id}/#{entry.canonicalId}") %}
                     <button type="button"  aria-label="{{ 'Relationships'|t('contentoverview') }}" title="{{ 'Relationships'|t('contentoverview') }}"
-                            onclick="co_relationships('{{ ajaxBaseUrl }}', {{ entry.draftId ?? 0 }}, this)">
+                            onclick="co_relationships('{{ ajaxBaseUrl }}', this)">
                         {{ _self.displayIcon('@coicons/relationships.svg') }}
                     </button>
                 {% endif %}
