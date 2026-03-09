@@ -11,11 +11,16 @@
 
         {% if filter.useElementSelect %}
 
-            {% set elementSelectId = (name ~ '-elementSelect-' ~ filter.handle)|id %}
-            {% set filterInputId = (name ~ '-elementInput-' ~ filter.handle)|id %}
+            {% set elementSelectId = (name ~ '-elementSelect-' ~ filter.handle)|replace('.', '-')|id %}
+            {% set filterInputId = (name ~ '-elementInput-' ~ filter.handle)|replace('.', '-')|id %}
 
             {% set searchCriteria = null %}
-            {% if filter.useElementSelectSearch %}
+            {% if filter.searchCriteria %}
+
+                {% set searchCriteria = filter.searchCriteria %}
+
+            {% elseif filter.useElementSelectSearch %}
+
                 {% set sources = filter.field.sources %}
                 {% if sources|length == 1 %}
                     {% set parts = sources[0]|split(':') %}
@@ -78,12 +83,12 @@
 
             {% if filter.useSelectize %}
                 {# TODO: Fix: Is reset to selection when clicking outside of select #}
-                {#{% set config = config|merge(
+                {# {% set config = config|merge(
                     {selectizeOptions: {
                         allowEmptyOption: true,
                         allowClear: true,
                         placeholder: config.options[0].label
-                    }}) %}#}
+                    }}) %} #}
                 {{ forms.selectize(config) }}
             {% else %}
                 {{ forms.select(config) }}

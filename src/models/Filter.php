@@ -22,7 +22,7 @@ class Filter extends BaseModel
     public bool $useElementSelect = false;
 
     public bool $useElementSelectSearch = false;
-
+    public array $searchCriteria = [];
     public int $requestedSiteId = 0;
     
 
@@ -71,7 +71,7 @@ class Filter extends BaseModel
     }
 
     /**
-     * Add search box to Craft element select modal
+     * Add search box to Craft element select modal, if section can be derived from field
      *
      * @param bool $useElementSelectSearch
      * @return $this
@@ -79,6 +79,18 @@ class Filter extends BaseModel
     public function useElementSelectSearch(bool $useElementSelectSearch = true): self
     {
         $this->useElementSelectSearch = $useElementSelectSearch;
+        return $this;
+    }
+
+    /**
+     * Add search box to Craft element select modal
+     *
+     * @param array $searchCriteria
+     * @return $this
+     */
+    public function searchCriteria(array $searchCriteria = []): self
+    {
+        $this->searchCriteria = $searchCriteria;
         return $this;
     }
 

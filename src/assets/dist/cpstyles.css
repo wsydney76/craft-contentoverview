@@ -154,7 +154,7 @@
 .co-filters-container {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: start;
 }
 
 .co-filters-top, .co-filters-bottom {
