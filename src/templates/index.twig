@@ -5,13 +5,17 @@
 
 {% extends "_layouts/cp.twig" %}
 
+
+
 {% set selectedSubnavItem  = page.pageKey %}
 
 {# Do not output two identical headings #}
 
 {% set pluginTitle = settings.pluginTitle|t('site') %}
 {% set pageLabel = page.label|t('site') %}
-{% set title = pluginTitle == pageLabel ? pluginTitle :  pluginTitle ~ ': ' ~ pageLabel %}
+{# {% set title = pluginTitle == pageLabel ? pluginTitle :  pluginTitle ~ ': ' ~ pageLabel %} #}
+{% set title = pluginTitle == pageLabel ? pluginTitle :  pageLabel %}
+
 
 {% set pageTabs = page.tabs %}
 
@@ -62,3 +66,27 @@
         {% include '_contentoverview/' ~ page.blocks['footer'] ignore missing %}
     {% endif %}
 {% endblock %}
+
+{# Moved to cpstyles.css
+{% css %}
+{% for color in colors %}
+	.co-entry.co-type-{{ color.value }} {
+        background-color: var(--{{ color.value}}-050)
+    }
+    .co-entry.co-type-{{ color.value }}:hover {
+        background-color: var(--{{ color.value}}-100)
+    }
+    .co-entry.co-type-{{ color.value }} svg.co-type-{{ color.value }} {
+        fill: var(--{{ color.value}}-800)
+    }
+{% endfor %}
+{% endcss %} #}
+
+{# Bugfix #}
+{% if craft.app.isMultiSite %}
+    {% css %}
+    .context-menu-container button {
+        margin-left: 40px !important;
+    }
+    {% endcss %}
+{% endif %}

@@ -1,8 +1,11 @@
 {% css %}
 
 {% for size, width in settings.layoutWidth %}
-    .co-entries.co-{{ size }} {
-        grid-template-columns: repeat(auto-fill, minmax({{ width }}));
+    {% set min = width|split(',')[0] %}
+    @container (min-width: {{ min }}) {
+        .co-entries.co-{{ size }} {
+            grid-template-columns: repeat(auto-fill, minmax({{ width }}));
+        }
     }
 {% endfor %}
 

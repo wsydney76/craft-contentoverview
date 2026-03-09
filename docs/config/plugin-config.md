@@ -138,14 +138,34 @@ Whether to enable dashboard widgets that display a single tab.
 
 ## fallbackImage 
 
+_Deprecated, use fallbackImageSource instead_
+
+Reason: Placing this in a config file will lead to warnings that the query is executed before Craft is fully initialized.
+
 * Type: `Asset`
 
 An image that will be used in a layout if no image is set on an entry.
 
 ```php
-'fallbackImage' => GlobalSet::find()
-    ->handle('siteInfo')->one()
+'fallbackImage' => Entry::find()
+    ->section('siteInfo')->one()
     ->featuredImage->one(),
+```
+
+## fallbackImageSource
+
+* Type: `array{section: string, field: string}`
+
+The source of an image that will be used in a layout if no image is set on an entry.
+
+`section`: The handle of a single section
+`field`: The handle of an assets field
+
+```php
+'fallbackImageSource' => [
+    'section' => 'siteInfo',
+    'field' => 'featuredImage'
+],
 ```
 
 ## hideUnpermittedSections 
@@ -219,6 +239,18 @@ Whether to load section html via ajax request. Loads section content when it bec
 'loadSectionsAsync' => true
 ```
 
+## paginateDynamicRange
+
+* Type: `int`
+* Default: `9`
+
+How many page numbers will be shown in the pagination. Best with an odd number.
+
+
+```php
+'paginateDynamicRange' => 13
+```
+
 ## pluginTitle 
 
 * Type: `string`
@@ -255,6 +287,17 @@ Whether to remove dashboard link and redirect to contentoverview on login.
 'replaceDashboard' => true
 ```
 
+## showBreadCrumbs
+
+* Type: `bool`
+* Default: `true`
+
+Whether to show a breadcrumb navigation.
+
+```php
+'showBreadCrumps' => true
+```
+
 ## showLoadingIndicator 
 
 * Type: `bool`
@@ -275,8 +318,9 @@ Where to show multiple pages:
 
 * nav: in main navigation
 * sidebar: in sidebar
+* toponly: show only the top level link in main navigation. Use breadcrumbs to navigate.
 * no: not at all
-* 
+
 ```php
 'showPages' => 'sidebar'
 ```
@@ -291,6 +335,7 @@ Where to show multiple pages:
     ['label' => 'Drafts', 'value' => 'scope:drafts'],
     ['label' => 'My Drafts', 'value' => 'scope:drafts,ownDraftsOnly:true'],
     ['label' => 'My Provisional Drafts', 'value' => 'scope:provisional,ownDraftsOnly:true'],
+    ['label' => 'Enabled', 'value' => 'status:enabled'],
     ['label' => 'Disabled', 'value' => 'status:disabled'],
     ['label' => 'Expired', 'value' => 'status:expired'],
     ['label' => 'Pending', 'value' => 'status:pending'],

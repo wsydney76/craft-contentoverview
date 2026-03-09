@@ -10,6 +10,7 @@ use wsydney76\contentoverview\models\filters\CustomFilter;
 use wsydney76\contentoverview\models\filters\EntriesFieldFilter;
 use wsydney76\contentoverview\models\filters\MatrixFieldFilter;
 use wsydney76\contentoverview\models\filters\OptionsFilter;
+use wsydney76\contentoverview\models\filters\SectionFilter;
 use wsydney76\contentoverview\models\filters\StatusFilter;
 use wsydney76\contentoverview\models\filters\UsersFieldFilter;
 use wsydney76\contentoverview\services\ContentOverviewService;
@@ -34,7 +35,9 @@ class Settings extends Model
     public bool $enableWidgets = true;
     public array $externalCssFiles = [];
     public array $extraPermissions = [];
-    public ?Asset $fallbackImage = null;
+
+    /** keys: section,field  */
+    public ?array $fallbackImageSource = null;
     public bool $hideUnpermittedSections = false;
     public array $iconSize = ['width' => '20px', 'height' => '20px'];
     public array $layoutSizes = [
@@ -43,24 +46,28 @@ class Settings extends Model
     ];
     // 'min,max' 1fr = fill up grid row
     public array $layoutWidth = [
-        'tiny' => '10rem,1fr',
-        'small' => '16rem,1fr',
-        'medium' => '24rem,1fr',
-        'large' => '36rem,1fr',
+        'tiny' => '6rem,1fr',
+        'small' => '9rem,1fr',
+        'medium' => '12rem,1fr',
+        'large' => '15rem,1fr',
+        'huge' => '18rem,1fr',
         'card' => '280px,450px' // don't let cards exceed the image width
     ];
     public bool $loadSectionsAsync = false;
     public string $linkTarget = '_blank';
     public array $pages = [];
+    public int $paginateDynamicRange = 9;
     public string $pluginTitle = 'Content Overview';
     public array|string|null $purifierConfig = null;
     public bool $replaceDashboard = false;
     public bool $showLoadingIndicator = false;
     public string $showPages = 'nav';
-    public array $statusFilterOptions =  [
+    public bool $showBreadCrumbs = true;
+    public array $statusFilterOptions = [
         ['label' => 'Drafts', 'value' => 'scope:drafts'],
         ['label' => 'My Drafts', 'value' => 'scope:drafts,ownDraftsOnly:true'],
         ['label' => 'My Provisional Drafts', 'value' => 'scope:provisional,ownDraftsOnly:true'],
+        ['label' => 'Enabled', 'value' => 'status:enabled'],
         ['label' => 'Disabled', 'value' => 'status:disabled'],
         ['label' => 'Expired', 'value' => 'status:expired'],
         ['label' => 'Pending', 'value' => 'status:pending'],
@@ -68,7 +75,7 @@ class Settings extends Model
 
     ];
     public array $transforms = [
-        'list' => ['width' => 50, 'height' => 50, 'format' => 'webp'],
+        'list' => ['width' => 50, 'height' => 80, 'format' => 'webp'],
         'cardlets' => ['width' => 150, 'height' => 150, 'format' => 'webp'],
         'cards' => ['width' => 450, 'height' => 225, 'format' => 'webp'],
         'line' => null, // no image in line layout
@@ -85,6 +92,7 @@ class Settings extends Model
     public string $sectionClass = Section::class;
     public string $actionClass = Action::class;
     public string $filterClass = Filter::class;
+    public string $sectionFilterClass = SectionFilter::class;
     public string $statusFilterClass = StatusFilter::class;
     public string $usersFieldFilterClass = UsersFieldFilter::class;
     public string $entriesFieldFilterClass = EntriesFieldFilter::class;

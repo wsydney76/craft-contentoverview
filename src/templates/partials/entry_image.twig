@@ -7,10 +7,14 @@
 
 {% set iconData = sectionConfig.getIconData(entry) %}
 
+
+
 {% if sectionConfig.getLayout() != 'line' %}
     <div class="co-image {{ settings.enableSlideoutEditor ? 'co-slideout' }}"
          style="background-color: {{ iconData.iconBgColor }}"
-         onclick="{{ createEditorJs }}">
+         onclick="{{ createEditorJs }}"
+         title="{{ iconData.iconTooltip }}"
+    >
 
         {% set image = sectionConfig.getImage(entry) %}
 
@@ -18,14 +22,24 @@
             {% set altText = view.renderObjectTemplate(settings.altTemplate, image) %}
             {% if settings.useImagerX and craft.app.plugins.pluginEnabled('imager-x') %}
                 {% set transformedImage = craft.imager.transformImage(image, transform) %}
-                <img src="{{ transformedImage.url }}" alt="{{ altText }}">
+                <img src="{{ transformedImage.url }}" alt="{{ altText }}"
+                     title="{{ 'Edit in slideout'|t('contentoverview') }}">
             {% else %}
-                {{ image.img(transform)|attr({alt: altText}) }}
+                {{ image.img(transform)|attr({alt: altText, title: 'Edit in slideout'|t('contentoverview')}) }}
             {% endif %}
 
         {% else %}
-            {% set icon = iconData.icon ? view.renderObjectTemplate(iconData.icon, entry) : settings.defaultIcon %}
-            {{ svg(icon)|attr(settings.iconSize) }}
+            {% set icon = iconData.icon ?
+                view.renderObjectTemplate(iconData.icon, entry) :
+                (entry.type.icon ? ("@appicons/#{entry.type.icon}.svg"): settings.defaultIcon) %}
+
+            {% set svgAttrs = settings.iconSize %}
+            {% if sectionConfig.useEntryTypeColors and entry.type.color %}
+                {% set svgAttrs = svgAttrs|merge({class: "co-type-#{entry.type.color.value}"}) %}
+            {% endif %}
+
+
+            {{ svg(icon)|attr(svgAttrs) }}
         {% endif %}
     </div>
 {% endif %}

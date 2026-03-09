@@ -7,8 +7,7 @@ return [
     'All entries in' => 'Alle Einträge in',
     'All entries' => 'Alle Einträge',
     'Content Overview' => 'Inhaltsübersicht',
-    'Edit in slide out' => 'Edit in slide out',
-    'Edit in slideout' => 'Edit in slideout',
+    'Edit in slideout' => 'In Slideout bearbeiten',
     'entries total' => 'Einträge insgesamt',
     'Information' => 'Information',
     'New entry in' => 'Neuer Eintrag in',
@@ -30,4 +29,6 @@ return [
     'Widget must be at least two columns wide if "Two" is selected, or at least four columns if "All" is selected' => 'Das Widget muss mindestens zwei Spalten breit sein, wenn "Zwei" ausgewählt ist, oder mindestens vier Spalten, wenn "Alle" ausgewählt ist.',
     'Order by' => 'Sortieren nach',
     'Filter by' => 'Filtern nach',
+    'First page' => 'Erste Seite',
+    'Last page' => 'Letzte Seite',
 ];

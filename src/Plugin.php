@@ -23,7 +23,7 @@ use wsydney76\contentoverview\services\ContentOverviewService;
 use wsydney76\contentoverview\variables\ContentOverviewVariable;
 use wsydney76\contentoverview\widgets\ContentOverviewLinksWidget;
 use wsydney76\contentoverview\widgets\ContentOverviewTabWidget;
-use wsydney76\elementmap\assets\ElementMapBundle;
+use wsydney76\extras\web\assets\elementmap\ElementMapAsset;
 use yii\base\Event;
 use function array_merge;
 use function array_splice;
@@ -42,15 +42,12 @@ class Plugin extends \craft\base\Plugin
         // Defer most setup tasks until Craft is fully initialized
         Craft::$app->onInit(function() {
             $this->initPlugin();
-            // ...
         });
     }
 
-    public function initPlugin()
+
+    protected function initPlugin()
     {
-
-        parent::init();
-
         /** @var Settings $settings */
         $settings = $this->getSettings();
 
@@ -87,7 +84,7 @@ class Plugin extends \craft\base\Plugin
 
         $showPages = $settings->getUserSetting('showPages');
 
-        if ($showPages === 'nav' || $showPages === 'sidebar') {
+        if (in_array($showPages, ['nav', 'sidebar', 'toponly'])) {
             Event::on(
                 Cp::class,
                 Cp::EVENT_REGISTER_CP_NAV_ITEMS,
@@ -190,15 +187,14 @@ class Plugin extends \craft\base\Plugin
             );
         }
 
-        // Register CSS an JS
+        // Register CSS and JS
         Craft::$app->view->registerAssetBundle(ContentOverviewAssetBundle::class);
 
 
-        if (Craft::$app->plugins->isPluginEnabled('work')) {
+        // Register CSS and JS from _extras plugin, used for relationships/compare actions
+        if (Craft::$app->plugins->isPluginEnabled('_extras')) {
             Craft::$app->view->registerAssetBundle(WorkPluginAssetBundle::class);
-        }
-        if (Craft::$app->plugins->isPluginEnabled('elementmap')) {
-            Craft::$app->view->registerAssetBundle(ElementMapBundle::class);
+            Craft::$app->view->registerAssetBundle(ElementMapAsset::class);
         }
     }
 

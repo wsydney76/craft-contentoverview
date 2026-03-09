@@ -281,7 +281,7 @@ function co_respondToVisibility(element, callback, root = null) {
 // from work plugin
 function co_compare(draftId, siteId, isProvisionalDraft) {
 
-    url = `/admin/work/compare?draftId=${draftId}&siteId=${siteId}&isProvisionalDraft=${isProvisionalDraft}`
+    url = `/admin/_extras/compare?draftId=${draftId}&siteId=${siteId}&isProvisionalDraft=${isProvisionalDraft}`
     $.get(url, function(data) {
             var slideout = new Craft.Slideout(data, {
                 containerAttributes: {class: 'compare-container'}
@@ -293,13 +293,8 @@ function co_compare(draftId, siteId, isProvisionalDraft) {
 }
 
 // from elementmap plugin
-function co_relationships(ajaxBaseUrl, draftId, element) {
+function co_relationships(ajaxBaseUrl, element) {
     // if ajaxBaseUrl contains a query string, append the draftId to it
-    if (ajaxBaseUrl.indexOf('?') !== -1) {
-        ajaxBaseUrl += '&draftId=' + draftId;
-    } else {
-        ajaxBaseUrl += '?draftId=' + draftId;
-    }
 
     $.get(ajaxBaseUrl)
         .done(function(data) {
@@ -309,7 +304,7 @@ function co_relationships(ajaxBaseUrl, draftId, element) {
             });
         })
         .fail(function() {
-            alert("error");
+            alert("Error");
         });
 }
 
@@ -348,6 +343,7 @@ function co_openSlideout(action, data = {}) {
 function co_registerElementSelect(elementSelectId, filterInputId, sectionPath) {
     // https://craftcms.stackexchange.com/questions/16853/how-to-watch-for-changes-on-an-element-select-relations-field
 
+    console.log(elementSelectId)
     elementSelect = $('#' + elementSelectId).data('elementSelect')
 
     elementSelect.on('selectElements', (e) => co_onElementSelectChange(e.target.$elements, filterInputId, sectionPath))

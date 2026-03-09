@@ -9,6 +9,7 @@ use craft\elements\db\ElementQueryInterface;
 use craft\elements\Entry;
 use craft\errors\InvalidFieldException;
 use craft\helpers\Cp;
+use craft\services\Deprecator;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineActionsEvent;
 use wsydney76\contentoverview\events\DefineFiltersEvent;
@@ -25,6 +26,7 @@ use function in_array;
 use function is_array;
 use function is_string;
 use function round;
+use function str_replace;
 
 class Section extends BaseSection
 {
@@ -36,13 +38,15 @@ class Section extends BaseSection
     public const EVENT_DEFINE_ICON = 'defineIconEvent';
 
     public array $actions = [];
-    public bool $allSites = false;
+    public bool $allSitesDistinct = false;
+    public bool $allSitesUnique = false;
     public array|string $entryType = '';
     public array|string $fallbackImageField = [];
     public ?array $filters = null;
     public string $filtersPosition = 'inline';
     public array|string $icon = [];
     public string $iconBgColor = 'var(--gray-200)';
+    public string $iconTooltip = '';
     public array|string $imageField = [];
     public ?float $imageRatio = null;
     public array|string $info = '';
@@ -64,6 +68,8 @@ class Section extends BaseSection
     public ?string $status = null;
     public string $titleObjectTemplate = '{title}';
 
+    public bool $useEntryTypeColors = false;
+
 
     // make it easer to detect custom sections, instead of using class names
     public bool $isCustomSection = false;
@@ -72,6 +78,7 @@ class Section extends BaseSection
 
     protected $_layouts = ['list', 'cardlets', 'cards', 'line', 'table'];
 
+    protected mixed $fallbackImage = 'undefined';
 
     /**
      * Array of actions
@@ -87,21 +94,53 @@ class Section extends BaseSection
     }
 
     /**
-     * Whether to show (unique) entries from all sites
+     * Whether to show unique entries from all sites
+     *
+     * Default = false
+     *
+     * @param bool $allSites
+     * @return $this
+     * @deprecated use allSitesUnique instead
+     *
+     */
+    public function allSites(bool $allSites = true): self
+    {
+        (new Deprecator())->log('coAllSites', 'Section::allSites() is deprecated. Use allSitesUnique instead.');
+        $this->allSitesUnique = $allSites;
+        return $this;
+    }
+
+    /**
+     * Whether to show unique entries from all sites
      *
      * Default = false
      *
      * @param bool $allSites
      * @return $this
      */
-    public function allSites(bool $allSites): self
+    public function allSitesUnique(bool $allSites = true): self
     {
-        $this->allSites = $allSites;
+        $this->allSitesUnique = $allSites;
         return $this;
     }
 
     /**
-     * Sets horizontal size of layouts: small, medium, large
+     * Whether to show distinct entries from all sites
+     *
+     * Default = false
+     *
+     * @param bool $allSitesDistinct
+     * @return $this
+     */
+    public function allSitesDistinct(bool $allSites = true): self
+    {
+        $this->allSitesDistinct = $allSites;
+        return $this;
+    }
+
+    /**
+     * Sets horizontal size of layouts: by default: tiny, small, medium, large, huge
+     * or as defined in plugin setting 'layoutWidth'
      *
      * @param string $size
      * @return $this
@@ -204,6 +243,19 @@ class Section extends BaseSection
     }
 
     /**
+     * Tooltip for icon, will be displayed on hover
+     *
+     * @param string $iconBgColor
+     * @return $this
+     */
+    public function iconTooltip(string $iconTooltip): self
+    {
+        $this->iconTooltip = $iconTooltip;
+        return $this;
+    }
+
+
+    /**
      * Get icon for entry
      *
      * @param $entry
@@ -213,22 +265,25 @@ class Section extends BaseSection
     {
         $icon = $this->_getConfigForEntry('icon', $entry);
         $iconBgColor = $this->_getConfigForEntry('iconBgColor', $entry);
-
+        $iconTooltip = $this->_getConfigForEntry('iconTooltip', $entry);
 
         if ($this->hasEventHandlers(self::EVENT_DEFINE_ICON)) {
             $event = new DefineIconEvent([
                 'entry' => $entry,
                 'icon' => $icon,
-                'iconBgColor' => $iconBgColor
+                'iconBgColor' => $iconBgColor,
+                'iconTooltip' => $iconTooltip,
             ]);
             $this->trigger(self::EVENT_DEFINE_ICON, $event);
             $icon = $event->icon;
             $iconBgColor = $event->iconBgColor;
+            $iconTooltip = $event->iconTooltip;
         }
 
         return [
             'icon' => $icon,
-            'iconBgColor' => $iconBgColor
+            'iconBgColor' => $iconBgColor,
+            'iconTooltip' => $iconTooltip
         ];
     }
 
@@ -323,9 +378,10 @@ class Section extends BaseSection
      * @param Entry $entry
      * @return array|string
      */
-    public function getInfo(Entry $entry): string
+    public function getInfo(Entry $entry): array|string
     {
-        return $this->_getConfigForEntry('info', $entry);
+        return $this->info;
+        // return $this->_getConfigForEntry('info', $entry);
     }
 
     /**
@@ -345,7 +401,16 @@ class Section extends BaseSection
         $info = $this->getInfo($entry);
 
         if ($info) {
-            return Craft::$app->view->renderObjectTemplate($info, $entry);
+
+            if (is_string($info)) {
+                return Craft::$app->view->renderObjectTemplate($info, $entry);
+            }
+
+            $content = [];
+            foreach ($info as $line) {
+                $content[] = Craft::$app->view->renderObjectTemplate($line, $entry);
+            }
+            return implode('<br>', $content);
         }
 
         $infoTemplate = $this->getInfoTemplate($entry);
@@ -428,7 +493,19 @@ class Section extends BaseSection
      */
     public function section(array|string $section): self
     {
-        $this->section = $section;
+
+        // if $this->section ends with *, we will search for all sections with a handle starting with $this->section
+        if (is_string($section) && str_ends_with($section, '*')) {
+            $selectedSections = [];
+            foreach (Craft::$app->entries->getAllSections() as $curSection) {
+                if (str_starts_with($curSection->handle, str_replace('*', '', $section))) {
+                    $selectedSections[] = $curSection->handle;
+                }
+            }
+            $this->section = $selectedSections;
+        } else {
+            $this->section = $section;
+        }
         return $this;
     }
 
@@ -558,6 +635,18 @@ class Section extends BaseSection
     }
 
     /**
+     * Whether to use entry type colors
+     *
+     * @param string $useEntryTypeColors
+     * @return $this
+     */
+    public function useEntryTypeColors(bool $useEntryTypeColors = true): self
+    {
+        $this->useEntryTypeColors = $useEntryTypeColors;
+        return $this;
+    }
+
+    /**
      * Get heading for the section, from config if set, else section name
      *
      * @return string
@@ -575,7 +664,7 @@ class Section extends BaseSection
             }
 
             $sections = $this->_normalizeToArray($this->section);
-            $headings = array_map(fn($section) => Craft::$app->sections->getSectionByHandle($section)->name
+            $headings = array_map(fn($section) => Craft::$app->entries->getSectionByHandle($section)->name
                 , $sections);
 
             return implode(', ', $headings);
@@ -595,7 +684,7 @@ class Section extends BaseSection
     }
 
 
-    public function getTransform(): array
+    public function getTransform(): ?array
     {
         $transform = Plugin::getInstance()->getSettings()->transforms[$this->getLayout()];
 
@@ -624,7 +713,7 @@ class Section extends BaseSection
 
         foreach ($this->_normalizeToArray($this->section) as $section) {
             if ($currentUser
-                ->can($permission . ':' . Craft::$app->sections->getSectionByHandle($section)->uid)) {
+                ->can($permission . ':' . Craft::$app->entries->getSectionByHandle($section)->uid)) {
                 $sections[] = $section;
             }
         }
@@ -702,11 +791,37 @@ class Section extends BaseSection
                 }
             }
             if (!$image) {
-                $image = Plugin::getInstance()->getSettings()->fallbackImage;
+                $image = $this->getFallbackImage();
             }
         }
 
         return $image;
+    }
+
+    protected function getFallbackImage(): ?Asset
+    {
+
+        if ($this->fallbackImage !== 'undefined') {
+            return $this->fallbackImage;
+        }
+
+        $imageSource = Plugin::getInstance()->getSettings()->fallbackImageSource;
+
+        if ($imageSource && is_array($imageSource) && isset($imageSource['section']) && isset($imageSource['field'])) {
+            $fallbackEntry = Entry::find()
+                ->section($imageSource['section'])
+                ->one();
+
+            if ($fallbackEntry) {
+                $this->fallbackImage = $fallbackEntry->getFieldValue($imageSource['field'])->one();
+            } else {
+                $this->fallbackImage = null;
+            }
+        } else {
+            $this->fallbackImage = null;
+        }
+
+        return $this->fallbackImage;
     }
 
     public function getActions(Entry $entry): Collection
@@ -716,7 +831,7 @@ class Section extends BaseSection
 
         $actions = collect($this->actions)
             ->transform(function(Action|string $action) use ($integrationActions) {
-                return is_string($action) &&  isset($integrationActions[$action]) ?
+                return is_string($action) && isset($integrationActions[$action]) ?
                     Craft::createObject($integrationActions[$action]) :
                     $action;
             })
@@ -751,6 +866,9 @@ class Section extends BaseSection
      */
     public function getEntries(array $params = []): Paginator
     {
+
+        // DumpPanel::dump($params, __FILE__, __LINE__);
+
         $query = $this->getQuery($params);
         return new Paginator($query, [
             'currentPage' => $params['sectionPageNo'] ?? 1,
@@ -810,14 +928,15 @@ class Section extends BaseSection
             $query->status($this->status);
         }
 
-        if ($this->allSites) {
+        if ($this->allSitesUnique) {
             $query
                 ->site('*')
                 ->unique()
-                ->preferSites([$requestedSite]);
+                ->preferSites([$requestedSite->handle]);
+        } else if ($this->allSitesDistinct) {
+            $query->site('*');
         } else {
-            $query
-                ->site($requestedSite);
+            $query->site($requestedSite);
         }
 
         if ($this->imageField) {
@@ -867,7 +986,7 @@ class Section extends BaseSection
         switch ($this->scope) {
             case 'drafts':
             {
-                $query->drafts(true);
+                $query->drafts(true)->savedDraftsOnly();
                 break;
             }
             case 'provisional':

@@ -11,9 +11,30 @@
 
         {% if filter.useElementSelect %}
 
-            {% set elementSelectId = (name ~ '-elementSelect-' ~ filter.handle)|id %}
-            {% set filterInputId = (name ~ '-elementInput-' ~ filter.handle)|id %}
+            {% set elementSelectId = (name ~ '-elementSelect-' ~ filter.handle)|replace('.', '-')|id %}
+            {% set filterInputId = (name ~ '-elementInput-' ~ filter.handle)|replace('.', '-')|id %}
 
+            {% set searchCriteria = null %}
+            {% if filter.searchCriteria %}
+
+                {% set searchCriteria = filter.searchCriteria %}
+
+            {% elseif filter.useElementSelectSearch %}
+
+                {% set sources = filter.field.sources %}
+                {% if sources|length == 1 %}
+                    {% set parts = sources[0]|split(':') %}
+                    {% if parts|length == 2 and parts[0] == 'section' %}
+                        {% set section = craft.app.entries.sectionByUid(parts[1]) %}
+                        {% if section %}
+                            {% set searchCriteria = {
+                                sectionId: section.id,
+                                editable: null
+                            } %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
 
             {# Hidden input that lets us handle an elementSelect like a select input  #}
             {# Value is set via JavaScript #}
@@ -26,7 +47,8 @@
                     }
                 }
             }) }}
-            
+
+
             {{ forms.elementSelect({
                 id: elementSelectId,
                 name: "#{sectionPath}-elementIds-#{filter.handle}",
@@ -34,8 +56,11 @@
                 sources: filter.getSources(),
                 selectionLabel: 'Filter by'|t('contentoverview') ~ ': ' ~ filter.getLabel|t('site'), value: '',
                 limit: filter.selectLimit,
-                single: filter.selectLimit == 1
+                single: filter.selectLimit == 1,
+                searchCriteria: searchCriteria,
+                criteria: {siteId: filter.requestedSiteId}
             }) }}
+
 
             {# Listen for change events, update our hidden input and refresh section html #}
             {% js %}
@@ -44,10 +69,12 @@
 
         {% else %}
 
+            {% set emptyLabel = 'Filter by'|t('contentoverview') ~ ': ' ~ filter.getLabel|t('site') %}
+
             {% set config = {
                 name: name,
                 options: filter.getOptions()
-                    .prepend({label: 'Filter by'|t('contentoverview') ~ ': ' ~ filter.getLabel|t('site'), value: ''}),
+                    .prepend({label: emptyLabel, value: ''}),
                 inputAttributes: {
                     data: {
                         'handle': filter.handle
@@ -57,6 +84,12 @@
             } %}
 
             {% if filter.useSelectize %}
+                 {% set config = config|merge(
+                    {selectizeOptions: {
+                        allowEmptyOption: true,
+                        placeholder: emptyLabel,
+                        plugins: ['clear_button']
+                    }}) %}
                 {{ forms.selectize(config) }}
             {% else %}
                 {{ forms.select(config) }}

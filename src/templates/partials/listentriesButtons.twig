@@ -5,10 +5,13 @@
     <div>
         {% if permittedSections|length == 1 %}
             {% set section = permittedSections[0] %}
-            <a class="btn" href="{{ cpUrl("entries/#{section}") }}">
-                {{ "All entries"|t('contentoverview') }}
-                : {{ craft.app.sections.sectionByHandle(section).name|t('site') }}
-            </a>
+            {% set sectionModel = craft.app.entries.sectionByHandle(section) %}
+            {% if sectionModel %}
+                <a class="btn" href="{{ cpUrl("entries/#{section}") }}">
+                    {{ "All entries"|t('contentoverview') }}
+                    : {{ sectionModel.name|t('site') }}
+                </a>
+            {% endif %}
         {% else %}
             <div class="btngroup">
                 <button class="btn">{{ "All entries"|t('contentoverview') }}</button>
@@ -21,7 +24,7 @@
                         {% for section in permittedSections %}
                             <li>
                                 <a href="{{ cpUrl("entries/#{section}") }}">
-                                    {{ "All entries in"|t('contentoverview') }} "{{ craft.app.sections.sectionByHandle(section).name|t('site') }}"
+                                    {{ "All entries in"|t('contentoverview') }} "{{ craft.app.entries.sectionByHandle(section).name|t('site') }}"
                                 </a>
                             </li>
                         {% endfor %}

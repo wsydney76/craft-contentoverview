@@ -1,8 +1,58 @@
 # Changelog
 
+## 6.1.0 2026-03-09
+
+* Requires Craft 5.9
+
+### Added
+
+* Added `withSearch` param to `useElementSelect()`.
+* Added `searchCriteria` config setting to element select filters.
+
+### Fixed
+
+* Fixed a bug where `useElementSelect()` filters did not work for nested entries.
+
+## 6.0.0
+
+* Requires Craft 5
+
+### Added
+
+* Added Section Filter `$co->createSectionFilter()`
+* Added dynamic range page links to section pagination.
+* Added breadcrumbs to pages.
+* Added `paginateDynamicRange` plugin config
+* Added `showBreadCrumbs` plugin setting
+* Added `toponly` option to `showPages` plugin setting
+* Added `fallbackImageSource` plugin setting
+* Added `Enabled` to default `statusFilterOptions` plugin setting
+* Added `useEntryTypeColors` section setting
+* Added missing `showImage()`, `showTitle()`, `showStatus()` methods to `TableSection` class.
+
+### Changed
+
+* Integrations now require the privat `_extras` plugin.
+* Updated some styling
+* Split the `allSites()` section setting into `allSitesUnique` and `allSitesDistinct`
+* Deprecated the `allSites()` section setting
+* Removed the `fallbackImage` plugin setting
+* The values for the `size()` section settings are now by default `tiny`, `small`, `medium`, `large` and `huge`, the
+  corresponding CSS width values are now significantly smaller and take the container width into account.
+* The `section()` section setting now accepts a string ending with a wildcard, e.g. `->section('homepage*')`.
+
+### Fixed
+
+* Fixed a bug where nothing was displayed if the `info()` section method was called with an array of object templates.
+
+### Known issues
+
+* Use of element selects for filters is broken.
+* There is a styling issue in breadcrumbs in multi-site installations.
+
 ## 5.4.2 2023-08-05
 
-* Fixed an error in elementmap integration if there is only one site. 
+* Fixed an error in elementmap integration if there is only one site.
 
 ## 5.4.0 2022-12-23
 
@@ -28,7 +78,8 @@ __Status: Beta__
 
 Rework of filters.
 
-* Added the `createFieldFilter`, `createStatusFilter`, `createCustomFilter`, `createElementSelectFilter` factory methods.
+* Added the `createFieldFilter`, `createStatusFilter`, `createCustomFilter`, `createElementSelectFilter` factory
+  methods.
 * Added support for `CustomFilter` classes.
 * Added the `useElementSelect`, `selectLimit`, `multiSelectOperator`, `direction` filter settings.
 * Deprecated the `createFilter($type)` method.
@@ -46,8 +97,10 @@ Rework of filters.
 
 ### Breaking change
 
-* Improved consistency: The `infoTemplate` section settings now takes the `customTemplatePath` plugin setting into account.
-* Renamed the `customTemplatePath` plugin setting to `customTemplateRoot`. Now contains a full (aliased) path to the templates root folder. 
+* Improved consistency: The `infoTemplate` section settings now takes the `customTemplatePath` plugin setting into
+  account.
+* Renamed the `customTemplatePath` plugin setting to `customTemplateRoot`. Now contains a full (aliased) path to the
+  templates root folder.
 
 ## 5.1.2 2022-12-10
 
@@ -87,14 +140,16 @@ Status: Ready for testing.
 
 ### Changed
 
-* __Breaking Change__: The configuration of sub-pages is moved from the `config/contentoverview.php` file to a dedictated `config/contentoverview/pages.php` file and uses fluent config.
+* __Breaking Change__: The configuration of sub-pages is moved from the `config/contentoverview.php` file to a
+  dedictated `config/contentoverview/pages.php` file and uses fluent config.
 * Config objects are hidden for users that do not match the `permission` and `group` settings.
 
 ### Upgrading from 4.x
 
 If you did not use sub-pages, stop reading, nothing has changed.
 
-* Create a file `config/contentoverview/pages.php` and set up your config as described in the 'Multi Page Setup' chapter in `README.md`. 
+* Create a file `config/contentoverview/pages.php` and set up your config as described in the 'Multi Page Setup' chapter
+  in `README.md`.
 * Setting names and values have not changed.
 * Exception: Omit a url setting, if used previously.
 * Remove the `pages` config setting from `config/contentoverview.php`
@@ -106,20 +161,24 @@ Status: Ready for testing.
 ### Added
 
 * Added a `useImagerX` plugin setting. Defaults to true.
-* Added a `custom` plugin setting that can hold any data you want to use somewhere in your config. Defaults to empty array.
+* Added a `custom` plugin setting that can hold any data you want to use somewhere in your config. Defaults to empty
+  array.
 * Added a `altTemplate` plugin setting that should be used to render a valid `alt` image attribute. Defaults to `{alt}`
 
 ### Changed
 
-* Image transforms are now created via the Imager X plugin, if it is available and the `useImagerX` plugin setting is set to `true`.
+* Image transforms are now created via the Imager X plugin, if it is available and the `useImagerX` plugin setting is
+  set to `true`.
 * The `group` param in the page settings can now be an array. Users can see the page if they are in one of the groups.
 * Some changes to Readme.
 
 ### Fixed
 
 * The `DefineTableColumns` event missed the obligatory `user` attribute, has been added.
-* Fixed a bug where the plugin crashed trying to find a section heading if both `heading` and `section` settings were missing. Displays 'Untitled section' now.
-* Fixed a bug where 'New entry' and 'All entries' buttons were missing if both `query` and `section` config settings are set.
+* Fixed a bug where the plugin crashed trying to find a section heading if both `heading` and `section` settings were
+  missing. Displays 'Untitled section' now.
+* Fixed a bug where 'New entry' and 'All entries' buttons were missing if both `query` and `section` config settings are
+  set.
 
 ## 4.0.0 2022-12-02
 
@@ -129,7 +188,9 @@ Status: Ready for testing.
 * Added `query` section setting.
 * Added `imageRatio` section setting.
 * Added `fallbackImageField` section config setting.
-* * A new (temporary) plugin setting `useCSS` can be set to `all` to load the old CSS for legacy browsers, or `modern` to load a polyfill.
+*
+    * A new (temporary) plugin setting `useCSS` can be set to `all` to load the old CSS for legacy browsers, or `modern`
+      to load a polyfill.
 * Added a `fallbackImage` plugin setting (defaults to null) that will be used if no image is available for an entry.
 * Added `titleObjectTemplate` section config setting (defaults to `{title}`)
 * Added `table` layout
@@ -137,7 +198,8 @@ Status: Ready for testing.
 * Added `iconBgColor` section config setting.
 * Added `DefineImageEvent`, `DefineIconEvent`
 * Added `purifierConfig` plugin setting.
-* Added `config` param to `ContentOverviewService::createSection`. This allows to create default settings and apply them to multiple sections.
+* Added `config` param to `ContentOverviewService::createSection`. This allows to create default settings and apply them
+  to multiple sections.
 * Added `layoutSizes` and `layoutWidths` plugin config setting.
 * Improved CSS for arranging cards/cardlets inside their container.
 * Added `loadSectionsAsync`, `showLoadingIndicator` plugin settings.
@@ -159,10 +221,12 @@ New possibilities to make adjustments to a project have been introduced.
 This is to prevent minor, very specific requirements from leading to a change request for the plugin.
 
 * It is now possible to overwrite the Page/Tab/Column/Section/Action classes.
-* Actions are now created as an Action model, that has an `isActiveForEntry` method taken into accout by the `getActions` method.
+* Actions are now created as an Action model, that has an `isActiveForEntry` method taken into accout by
+  the `getActions` method.
 * Filters are now created as a Filter model.
 * Added `DefinePagesEvent`, `DefineTabsEvent`, `DefineColumnsEvent`, `DefineSectionsEvent`, `DefineActionsEvent`.
-* Added `DefineUserSetting` event and `Settings::getUserSetting()` method, be able to overwrite any setting on a user basis.
+* Added `DefineUserSetting` event and `Settings::getUserSetting()` method, be able to overwrite any setting on a user
+  basis.
 
 ## 3.0.0 2022-11-18
 
@@ -182,7 +246,6 @@ new ideas...
 * Custom actions can be added to an entry.
 * Added 'showNewButton', 'showIndexButton' section config settings.
 * Added 'elementType' section config setting.
-
 
 ### Breaking changes
 

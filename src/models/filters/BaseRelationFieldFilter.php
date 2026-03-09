@@ -16,7 +16,7 @@ use function explode;
  */
 class BaseRelationFieldFilter extends BaseFieldFilter
 {
-    public string $orderBy = '';
+    public string|array $orderBy = '';
     public int $selectLimit = 1;
     public string $multiSelectOperator = 'or';
     public string $direction = 'both';
@@ -27,7 +27,7 @@ class BaseRelationFieldFilter extends BaseFieldFilter
      * @param string $orderBy
      * @return $this
      */
-    public function orderBy(string $orderBy): self
+    public function orderBy(string|array $orderBy): self
     {
         $this->orderBy = $orderBy;
         return $this;
@@ -131,12 +131,12 @@ class BaseRelationFieldFilter extends BaseFieldFilter
         if ($field->sources !== '*') {
             $sections = [];
             foreach ($field->sources as $source) {
-                $section = Craft::$app->sections->getSectionByUid(explode(':', $source)[1]);
+                $section = Craft::$app->entries->getSectionByUid(explode(':', $source)[1]);
                 $sections[] = $section->handle;
             }
         }
         return Entry::find()
-            ->section($sections ?? null)
+            ->section($sections ?? '*')
             ->orderBy($this->orderBy)
             ->collect()
             ->map(fn($entry) => [

@@ -70,7 +70,7 @@
 
             {% case "compare" %}
                 
-                {% if craft.app.plugins.pluginEnabled('work') and entry.draftId and not entry.isCanonical %}
+                {% if craft.app.plugins.pluginEnabled('_extras') and entry.draftId and not entry.isCanonical %}
                     <button type="button"  aria-label="{{ 'Compare with current'|t('contentoverview') }}" title="{{ 'Compare with current'|t('contentoverview') }}"
                             onclick="co_compare({{ entry.draftId }}, {{ entry.siteId }}, {{ entry.isProvisionalDraft ? 1 : 0 }})">
                         {{ _self.displayIcon('@coicons/compare.svg') }}
@@ -78,10 +78,10 @@
                 {% endif %}
 
             {% case "relationships" %}
-                {% if craft.app.plugins.pluginEnabled('elementmap') %}
-                    {% set ajaxBaseUrl = cpUrl("elementmap-getrelations/#{entry.site.handle}/entry/#{entry.canonicalId}") %}
+                {% if craft.app.plugins.pluginEnabled('_extras') %}
+                    {% set ajaxBaseUrl = cpUrl("elementmap-getrelations/#{entry.site.id}/#{entry.canonicalId}") %}
                     <button type="button"  aria-label="{{ 'Relationships'|t('contentoverview') }}" title="{{ 'Relationships'|t('contentoverview') }}"
-                            onclick="co_relationships('{{ ajaxBaseUrl }}', {{ entry.draftId ?? 0 }}, this)">
+                            onclick="co_relationships('{{ ajaxBaseUrl }}', this)">
                         {{ _self.displayIcon('@coicons/relationships.svg') }}
                     </button>
                 {% endif %}

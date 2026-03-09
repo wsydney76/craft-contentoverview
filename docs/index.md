@@ -3,7 +3,7 @@
 This Craft CMS plugin shows configurable overviews of a site content.
 
 ::: info Latest version
-Latest tagged version: 5.4. Beta quality.
+Latest tagged version: 6.1 for Craft 5.9. Beta quality.
 :::
 
 ## Disclaimer
@@ -25,9 +25,15 @@ Latest tagged version: 5.4. Beta quality.
 * **We are not able to offer any support.**
 * Feel free to use it/fork it/adopt it/do whatever you want with it.
 
+## Craft 5
+
+Provisionally updated/extended for Craft 5.
+
+Only tested for features that are actively used in reference projects, so there may be some issues here and there.
+
 ## Requirements
 
-This plugin requires Craft CMS 4.3 or later.
+This plugin requires Craft CMS 5.0.0 or later.
 
 ## Installation
 

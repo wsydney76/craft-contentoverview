@@ -34,12 +34,12 @@
                             {% if useSlideout %}
                                 <button onclick="co_createEntry('{{ section }}', {{ requestedSite.id }}, '{{ sectionPath }}', {{ sectionPageNo }})">
                                     {{ "New entry in"|t('contentoverview') }}
-                                    "{{ craft.app.sections.sectionByHandle(section).name|t('site') }}"
+                                    "{{ craft.app.entries.sectionByHandle(section).name|t('site') }}"
                                 </button>
                             {% else %}
                                 <a href="{{ cpUrl("entries/#{section}/new") }}">
                                     {{ "New entry in"|t('contentoverview') }}
-                                    "{{ craft.app.sections.sectionByHandle(section).name|t('site') }}"
+                                    "{{ craft.app.entries.sectionByHandle(section).name|t('site') }}"
                                 </a>
                             {% endif %}
                         </li>

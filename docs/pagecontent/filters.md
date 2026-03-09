@@ -74,6 +74,27 @@ $co->createFieldFilter('topics')
 * The operator `or` (default) will find entries that have a relation to at least one selected element. 
 * The operator `and`  will find entries that have relations to all selected elements.
 
+#### Adding a searchbox to the element select modal
+
+For a better user experience you can also add a search box to the element select modal (Craft 5.8+):
+
+For a simple field with exactly one source, add a `withSearch` parameter to `useElementSelect`:
+
+```php
+$co->createFieldFilter('series')
+    ->useElementSelect(withSearch: true)
+    ->orderBy('title')
+```
+
+For matrix sub-fields use the `searchCriteria` setting to specify the criteria for the search box:
+
+```php
+$co->->createFieldFilter('cast.person')
+    ->useElementSelect()
+    ->searchCriteria([
+        'sectionId' => Craft::$app->getEntries()->getSectionByHandle('person')->id,
+    ])
+```
 
 ![Snapshot](/images/elementselect.jpg)
 
@@ -86,6 +107,16 @@ $co->createElementSelectFilter('topics'),
 $co->createElementSelectFilter('cast.persons', 'in', true, 'and')
 
 $co->createElementSelectFilter('assignedTo', multipleSelect: true, operator: 'and'),
+```
+
+## Section filter
+
+Filter by section.
+
+Channel and structure section only. 
+
+```php
+$co->createSectionFilter()
 ```
 
 ## Status filter
@@ -237,8 +268,9 @@ Entries/users field filters only.
 
 Use Crafts element select modal to select elements.
 
-::: warning
+::: danger This is broken in Craft 5
 Experimental. Uses a lot of undocumented stuff, will not trigger all events or filter class methods.
+Use selectize instead.
 :::
 
 ### selectLimit

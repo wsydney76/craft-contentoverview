@@ -12,7 +12,7 @@ class WorkPluginAssetBundle extends AssetBundle
 {
     public function init()
     {
-        $this->sourcePath = Craft::$app->plugins->getPlugin('work')->basePath . '/templates/css';
+        $this->sourcePath = Craft::$app->plugins->getPlugin('_extras')->basePath . '/templates/css';
         $this->css = [
             'work.css'
         ];

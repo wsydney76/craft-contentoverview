@@ -5,6 +5,8 @@ namespace wsydney76\contentoverview\models\filters;
 use craft\base\Field;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\Entry;
+use craft\fields\Matrix;
+use craft\models\EntryType;
 use craft\models\MatrixBlockType;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\models\Section;
@@ -29,12 +31,12 @@ class MatrixFieldFilter extends BaseRelationFieldFilter
             throw new InvalidConfigException("Invalid matrix handle (field.blockType.subField)");
         }
 
-        /** @var MatrixBlockType $blockType */
+        /** @var EntryType $blockType */
         if (count($segments) == 2) {
-            $blockType = $this->field->getBlockTypes()[0];
+            $blockType = $this->field->getEntryTypes()[0];
             $subFieldHandle = $segments[1];
         } else {
-            $blockType = collect($this->field->getBlockTypes())->firstWhere('handle', $segments[1]);
+            $blockType = collect($this->field->getEntryTypes())->firstWhere('handle', $segments[1]);
             if (!$blockType) {
                 throw new InvalidConfigException("Invalid blocktype handle $segments[1]");
             }

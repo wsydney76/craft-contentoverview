@@ -32,9 +32,8 @@ class OptionsFilter extends BaseFieldFilter
      */
     public function modifyQuery(Section $sectionConfig, array $filter, ElementQueryInterface $query)
     {
-        $columnName = ElementHelper::fieldColumnFromField($this->field);
-
-        $query->andWhere([$columnName => $filter['value']]);
+        $handle = $this->field->handle;
+        $query->$handle($filter['value']);
     }
 
 }

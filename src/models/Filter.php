@@ -4,6 +4,7 @@ namespace wsydney76\contentoverview\models;
 
 use Craft;
 use craft\elements\db\ElementQueryInterface;
+use craft\helpers\Cp;
 use Illuminate\Support\Collection;
 use wsydney76\contentoverview\events\DefineCustomFilterOptionsEvent;
 use yii\base\InvalidConfigException;
@@ -19,7 +20,16 @@ class Filter extends BaseModel
     public string $filterType = '';
     public bool $useSelectize = false;
     public bool $useElementSelect = false;
+
+    public bool $useElementSelectSearch = false;
+    public array $searchCriteria = [];
+    public int $requestedSiteId = 0;
     
+
+    public function init(): void
+    {
+        $this->requestedSiteId = Cp::requestedSite()->id;
+    }
 
     /**
      * Set label for select / empty option
@@ -51,9 +61,36 @@ class Filter extends BaseModel
      * @param bool $useElementSelect
      * @return $this
      */
-    public function useElementSelect(bool $useElementSelect = true): self
+    public function useElementSelect(bool $useElementSelect = true, bool $withSearch = false): self
     {
         $this->useElementSelect = $useElementSelect;
+        if ($withSearch) {
+            $this->useElementSelectSearch = $withSearch;
+        }
+        return $this;
+    }
+
+    /**
+     * Add search box to Craft element select modal, if section can be derived from field
+     *
+     * @param bool $useElementSelectSearch
+     * @return $this
+     */
+    public function useElementSelectSearch(bool $useElementSelectSearch = true): self
+    {
+        $this->useElementSelectSearch = $useElementSelectSearch;
+        return $this;
+    }
+
+    /**
+     * Add search box to Craft element select modal
+     *
+     * @param array $searchCriteria
+     * @return $this
+     */
+    public function searchCriteria(array $searchCriteria = []): self
+    {
+        $this->searchCriteria = $searchCriteria;
         return $this;
     }
 

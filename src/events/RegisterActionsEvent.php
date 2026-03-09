@@ -11,5 +11,5 @@ class RegisterActionsEvent extends Event
      *
      * @var array
      */
-    public array $actions;
+    public array $actions = [];
 }
