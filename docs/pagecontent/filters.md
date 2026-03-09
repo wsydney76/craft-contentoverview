@@ -74,28 +74,6 @@ $co->createFieldFilter('topics')
 * The operator `or` (default) will find entries that have a relation to at least one selected element. 
 * The operator `and`  will find entries that have relations to all selected elements.
 
-#### Adding a searchbox to the element select modal
-
-For a better user experience you can also add a search box to the element select modal (Craft 5.8+):
-
-For a simple field with exactly one source, add a `withSearch` parameter to `useElementSelect`:
-
-```php
-$co->createFieldFilter('series')
-    ->useElementSelect(withSearch: true)
-    ->orderBy('title')
-```
-
-For matrix sub-fields use the `searchCriteria` setting to specify the criteria for the search box:
-
-```php
-$co->->createFieldFilter('cast.person')
-    ->useElementSelect()
-    ->searchCriteria([
-        'sectionId' => Craft::$app->getEntries()->getSectionByHandle('person')->id,
-    ])
-```
-
 ![Snapshot](/images/elementselect.jpg)
 
 There is also a shortcut for this:
@@ -268,10 +246,34 @@ Entries/users field filters only.
 
 Use Crafts element select modal to select elements.
 
-::: danger This is broken in Craft 5
-Experimental. Uses a lot of undocumented stuff, will not trigger all events or filter class methods.
-Use selectize instead.
-:::
+#### Adding a searchbox to the element select modal
+
+For a better user experience you can also add a search box to the element select modal (Craft 5.8+):
+
+For a simple field with exactly one source, add a `withSearch` parameter to `useElementSelect`:
+
+```php
+$co->createFieldFilter('series')
+    ->useElementSelect(withSearch: true)
+    ->orderBy('title')
+```
+
+For matrix sub-fields use the `searchCriteria` setting to specify the criteria for the search box:
+
+### searchCriteria
+
+* Type: `array`
+* Default: `[]`
+
+Specifies search criteria for the element select search box. Only relevant if `useElementSelect` is set.
+
+```php
+$co->->createFieldFilter('cast.person')
+    ->useElementSelect()
+    ->searchCriteria([
+        'sectionId' => Craft::$app->getEntries()->getSectionByHandle('person')->id,
+    ])
+```
 
 ### selectLimit
 

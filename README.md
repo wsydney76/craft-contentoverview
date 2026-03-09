@@ -4,6 +4,7 @@ This plugin shows configurable overviews of a site's content.
 
 ## Craft 5
 
+Tagged 6.1.0: Improved element select filter.
 Tagged 6.0.0: Provisionally updated for Craft 5. Tested only the subset of features currently used specific projects, so things may break elsewhere.
 
 ## Documentation
