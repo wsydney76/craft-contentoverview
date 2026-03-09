@@ -1,5 +1,18 @@
 # Changelog
 
+## 6.1.0 2026-03-09
+
+* Requires Craft 5.9
+
+### Added
+
+* Added `withSearch` param to `useElementSelect()`.
+* Added `searchCriteria` config setting to element select filters.
+
+### Fixed
+
+* Fixed a bug where `useElementSelect()` filters did not work for nested entries.
+
 ## 6.0.0
 
 * Requires Craft 5

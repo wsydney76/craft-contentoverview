@@ -69,10 +69,12 @@
 
         {% else %}
 
+            {% set emptyLabel = 'Filter by'|t('contentoverview') ~ ': ' ~ filter.getLabel|t('site') %}
+
             {% set config = {
                 name: name,
                 options: filter.getOptions()
-                    .prepend({label: 'Filter by'|t('contentoverview') ~ ': ' ~ filter.getLabel|t('site'), value: ''}),
+                    .prepend({label: emptyLabel, value: ''}),
                 inputAttributes: {
                     data: {
                         'handle': filter.handle
@@ -82,13 +84,12 @@
             } %}
 
             {% if filter.useSelectize %}
-                {# TODO: Fix: Is reset to selection when clicking outside of select #}
-                {# {% set config = config|merge(
+                 {% set config = config|merge(
                     {selectizeOptions: {
                         allowEmptyOption: true,
-                        allowClear: true,
-                        placeholder: config.options[0].label
-                    }}) %} #}
+                        placeholder: emptyLabel,
+                        plugins: ['clear_button']
+                    }}) %}
                 {{ forms.selectize(config) }}
             {% else %}
                 {{ forms.select(config) }}

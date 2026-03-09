@@ -1,7 +1,7 @@
 {
   "name": "wsydney76/craft-contentoverview",
   "description": "Content Overview",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "type": "craft-plugin",
   "keywords": ["craft", "plugin", "cp"],
   "license": "MIT",
@@ -18,7 +18,7 @@
     "docs": "https://wsydney76.github.io/craft-contentoverview/"
   },
   "require": {
-    "craftcms/cms": "^5.0.0-beta.5"
+    "craftcms/cms": "^5.9.0"
   },
   "autoload": {
     "psr-4": {
