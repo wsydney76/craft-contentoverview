@@ -6,6 +6,15 @@ const $config = {
     title: 'Content Overview',
     description: 'Content Overview Craft Plugin',
     base: '/craft-contentoverview/',
+    vite: {
+        server: {
+            host: '0.0.0.0',
+            port: 5173,
+            allowedHosts: [
+                'contentoverview.ddev.site'
+            ]
+        }
+    },
     themeConfig: {
         logo: '/wsydney76.jpg',
         socialLinks: [

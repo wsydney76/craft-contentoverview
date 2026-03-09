@@ -253,10 +253,12 @@ For a better user experience you can also add a search box to the element select
 For a simple field with exactly one source, add a `withSearch` parameter to `useElementSelect`:
 
 ```php
-$co->createFieldFilter('series')
+$co->createFieldFilter('manufacturer')
     ->useElementSelect(withSearch: true)
-    ->orderBy('title')
+    ->orderBy('title'),
 ```
+
+![Snapshot](/images/elementselect-search.jpg)
 
 For matrix sub-fields use the `searchCriteria` setting to specify the criteria for the search box:
 
