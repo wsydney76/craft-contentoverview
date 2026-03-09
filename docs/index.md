@@ -33,9 +33,22 @@ Only tested for features that are actively used in reference projects, so there 
 
 ## Requirements
 
-This plugin requires Craft CMS 5.0.0 or later.
+This plugin requires Craft CMS 5.9.0 or later.
 
 ## Installation
+
+As a private plugin, it is not on Packagist, so make sure your `composer.json` file points to the GitHub repository.
+
+```json
+{
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/wsydney76/craft-contentoverview"
+    }
+  ]
+}
+```
 
 Run `composer require wsydney76/craft-contentoverview`
 
@@ -50,7 +63,7 @@ Make sure your `composer.json` file points to the latest version or `dev-main` f
 ```json
 {
   "require": {
-    "wsydney76/craft-contentoverview": "^5.0.0"
+    "wsydney76/craft-contentoverview": "^6.1.0"
   }
 }
 ```
