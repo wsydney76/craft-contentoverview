@@ -7,7 +7,7 @@
         <a class="label-link" href="{{ entry.cpEditUrl }}" title="{{ entry.title }}"
            target="{{ settings.linkTarget }}">{{ view.renderObjectTemplate(sectionConfig.titleObjectTemplate, entry) ?: 'Untitled entry'|t('app') }}</a>
     </craft-element-label>
-    {% if entry.isProvisionalDraft %}
+    {% if entry.hasProvisionalChanges %}
         <span class="status-label blue"><span class="cp-icon puny blue">
             <svg xmlns="http://www.w3.org/2000/svg"
                  viewBox="0 0 512 512" focusable="false"
