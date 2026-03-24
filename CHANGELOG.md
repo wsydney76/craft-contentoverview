@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Fixed a bug where the `Edited` badge did not always appear.
+
 ## 6.2.0 2026-03-24
 
 ### Added
