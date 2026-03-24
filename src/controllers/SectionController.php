@@ -58,7 +58,7 @@ class SectionController extends Controller
         $entries = $results->getPageResults();
 
         // Replace with provisional drafts
-        if (!$section->scope) {
+        if ($section->loadProvisionalChanges) {
             ElementHelper::loadProvisionalChanges($entries);
         }
 

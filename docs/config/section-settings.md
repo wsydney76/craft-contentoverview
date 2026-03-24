@@ -249,6 +249,19 @@ The key of a page the heading is linked to. May contain an anchor, e.g. `page1#t
 ->linkToPage('page1')
 ```
 
+## loadProvisionalChanges
+
+* Type: `bool`
+* Default: `true`
+
+Whether to load provisional changes (overwriting a canonical entry with a provisional draft) for entries in this section. 
+
+Depending on `scope` setting, you may want to disable this to achieve required results, e.g. if you configure different sections for different scopes.
+
+```php
+->loadProvisionalChanges(false)
+```
+
 ## orderBy
 
 * Type: `string|array`
@@ -297,7 +310,7 @@ Whether drafts should be shown.
 * ownProvisional: Show own 'provisional' drafts
 * all: Show all drafts and all 'published' entries
 
-If empty, only 'published' entries will be included. If a provisional draft exists for the current user, it will be shown with an `Edited` badge.
+If empty, only 'published' entries will be included. If a provisional draft exists for the current user, it will be shown with an `Edited` badge, if `loadProvisionalChanges` is set to `true`.
 
 ```php
 ->scope('drafts')

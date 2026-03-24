@@ -53,6 +53,8 @@ class Section extends BaseSection
     public array|string $infoTemplate = '';
     public ?string $layout = null;
     public ?int $limit = null;
+
+    public bool $loadProvisionalChanges = true;
     public array|string $orderBy = '';
     public bool $ownDraftsOnly = false;
     public ?ElementQueryInterface $query = null;
@@ -461,6 +463,17 @@ class Section extends BaseSection
         return $this;
     }
 
+    /**
+     * Whether to load provisional changes into result
+     *
+     * @param bool $loadProvisionalChanges
+     * @return $this
+     */
+    public function loadProvisionalChanges(bool $loadProvisionalChanges = true): self
+    {
+        $this->loadProvisionalChanges = $loadProvisionalChanges;
+        return $this;
+    }
 
     /**
      * Order criteria, will be passed as is to the entry query orderBy param.

@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Fixed a bug where the `Edited` badge did not always appear.
+* Added the `loadProvisionalChanges` section setting.
 
 ## 6.2.0 2026-03-24
 
