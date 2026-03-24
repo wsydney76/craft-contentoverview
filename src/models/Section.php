@@ -70,6 +70,8 @@ class Section extends BaseSection
 
     public bool $useEntryTypeColors = false;
 
+    public bool $showStatusBadge = false;
+
 
     // make it easer to detect custom sections, instead of using class names
     public bool $isCustomSection = false;
@@ -643,6 +645,18 @@ class Section extends BaseSection
     public function useEntryTypeColors(bool $useEntryTypeColors = true): self
     {
         $this->useEntryTypeColors = $useEntryTypeColors;
+        return $this;
+    }
+
+    /**
+     * Whether to show status badge
+     *
+     * @param string $showStatusBadge
+     * @return $this
+     */
+    public function showStatusBadge(bool $showStatusBadge = true): self
+    {
+        $this->showStatusBadge = $showStatusBadge;
         return $this;
     }
 

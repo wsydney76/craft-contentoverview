@@ -1,0 +1,16 @@
+{# @params entry #}
+
+{# @var entry \craft\elements\Entry #}
+
+
+{# see craft\enums\Color #}
+{% set colors = {
+    live: 'teal',
+    active: 'teal',
+    enabled: 'teal',
+    expired: 'red',
+    pending: 'orange',
+    default: 'grey'
+} %}
+
+<div style="margin-top:4px;" class="status-label {{ colors[entry.status] ?? entry.status }}"><span class="status {{ entry.status }}"></span> <span class="status-label-text">{{ entry.status|t('app') }}</span></div>

@@ -288,6 +288,7 @@ use craft\elements\Entry;
 ## scope
 
 * Type: `string`
+* Default: null
 
 Whether drafts should be shown.
 
@@ -296,7 +297,7 @@ Whether drafts should be shown.
 * ownProvisional: Show own 'provisional' drafts
 * all: Show all drafts and all 'published' entries
 
-If empty, only 'published' entries will be included.
+If empty, only 'published' entries will be included. If a provisional draft exists for the current user, it will be shown with an `Edited` badge.
 
 ```php
 ->scope('drafts')
@@ -378,6 +379,18 @@ Whether to show a refresh button for this section.
 
 ```php
 ->showRefreshButton(false)
+```
+
+## showStatusBadge
+
+* Type: `bool`
+* Default: `false`
+* Since: 6.2.0
+
+Whether to show status badge (colored badge with status icon and status text).
+
+```php
+->showStatusBadge(true)
 ```
 
 ## size

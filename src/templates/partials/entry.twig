@@ -22,10 +22,12 @@
     <div class="co-content co-level-{{ entry.level }}" style="{{ levelStyle }};">
         <div class="co-status" ondblclick="{{ createEditorJs }}">
 
-            {% include [
-                '_contentoverview/partials/entry_status.twig',
-                'contentoverview/partials/entry_status.twig'
-            ] %}
+            {% if not sectionConfig.showStatusBadge %}
+                {% include [
+                    '_contentoverview/partials/entry_status.twig',
+                    'contentoverview/partials/entry_status.twig'
+                ] %}
+            {% endif %}
 
         </div>
         <div class="co-text" style="width:100%">
@@ -35,7 +37,18 @@
                     '_contentoverview/partials/entry_title.twig',
                     'contentoverview/partials/entry_title.twig'
                 ] %}
+
+
+
+
             </div>
+
+            {% if sectionConfig.showStatusBadge %}
+                {% include [
+                    '_contentoverview/partials/entry_statusbadge.twig',
+                    'contentoverview/partials/entry_statusbadge.twig'
+                ] %}
+            {% endif %}
 
             <div class="co-info">
                 {% include [

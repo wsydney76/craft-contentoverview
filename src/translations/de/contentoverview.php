@@ -8,6 +8,7 @@ return [
     'All entries' => 'Alle Einträge',
     'Content Overview' => 'Inhaltsübersicht',
     'Edit in slideout' => 'In Slideout bearbeiten',
+    'Edited' => 'Bearbeitet',
     'entries total' => 'Einträge insgesamt',
     'Information' => 'Information',
     'New entry in' => 'Neuer Eintrag in',

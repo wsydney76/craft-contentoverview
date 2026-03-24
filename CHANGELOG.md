@@ -1,5 +1,15 @@
 # Changelog
 
+## 6.2.0 2026-03-24
+
+### Added
+
+* Added `showStatusBadge` section setting.
+
+### Changed
+
+* If the `scope` section setting is not set, canonical entries are replaced with provisional draft for current user, if they exist.
+
 ## 6.1.0 2026-03-09
 
 * Requires Craft 5.9

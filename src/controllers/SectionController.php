@@ -3,6 +3,7 @@
 namespace wsydney76\contentoverview\controllers;
 
 use Craft;
+use craft\helpers\ElementHelper;
 use craft\helpers\Json;
 use craft\web\Controller;
 use Twig\Error\LoaderError;
@@ -54,13 +55,20 @@ class SectionController extends Controller
             'queryParams' => $queryParams
         ]);
 
+        $entries = $results->getPageResults();
+
+        // Replace with provisional drafts
+        if (!$section->scope) {
+            ElementHelper::loadProvisionalChanges($entries);
+        }
+
         // Render html
         return $this->asJson([
             'entriesHtml' => $this->view->renderTemplate("contentoverview/partials/{$section->entriesTemplate}", [
                 'sectionConfig' => $section,
                 'settings' => Plugin::getInstance()->getSettings(),
                 'sectionPath' => $sectionPath,
-                'entries' => $results->getPageResults(),
+                'entries' => $entries,
                 'sectionPageNo' => $sectionPageNo,
                 'orderBy' => $orderBy,
                 'transform' => $section->getTransform()
@@ -94,7 +102,7 @@ class SectionController extends Controller
             throw new InvalidCallException("Invalid entry id $entryId");
         }
 
-        $template =  '_contentoverview/' . Craft::$app->request->getRequiredParam('template');
+        $template = '_contentoverview/' . Craft::$app->request->getRequiredParam('template');
 
         return $this->renderTemplate($template, [
             'sectionConfig' => $sectionConfig,
